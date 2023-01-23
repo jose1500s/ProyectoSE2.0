@@ -3,8 +3,9 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-use resources\js\Pages\Auth\Login;
-
+use Illuminate\Support\Facades\Auth;
+// importar el componente Register.vue de la carpeta Auth dentro de pages
+use resources\js\pages\Auth\Login;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -17,8 +18,8 @@ use resources\js\Pages\Auth\Login;
 */
 
 Route::get('/', function () {
-    return Inertia::render('Login', [
-        'canLogin' => Route::has('login'),
+    return Inertia::render('Auth/Login', [ // si quiero renderizar un componente que no esta en la carpeta pages, debo poner la ruta completa ejemplo: 'resources\js\pages\Auth\Login'
+        'canResetPassword' => Route::has('password.request'),
         'canRegister' => Route::has('register'),
         'laravelVersion' => Application::VERSION,
         'phpVersion' => PHP_VERSION,
@@ -33,4 +34,5 @@ Route::middleware([
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');
     })->name('dashboard');
+
 });
