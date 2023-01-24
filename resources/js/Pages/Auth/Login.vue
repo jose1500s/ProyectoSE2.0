@@ -29,61 +29,96 @@ const submit = () => {
 };
 </script>
 
+
 <template>
     <Head title="Log in" />
-
-    <AuthenticationCard>
-        <template #logo>
-            <AuthenticationCardLogo />
-        </template>
 
         <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
             {{ status }}
         </div>
 
-        <form @submit.prevent="submit">
-            <div>
-                <InputLabel for="email" value="Email" />
-                <TextInput
-                    id="email"
-                    v-model="form.email"
-                    type="email"
-                    class="mt-1 block w-full"
-                    required
-                    autofocus
-                />
-                <InputError class="mt-2" :message="form.errors.email" />
-            </div>
-
-            <div class="mt-4">
-                <InputLabel for="password" value="Password" />
-                <TextInput
-                    id="password"
-                    v-model="form.password"
-                    type="password"
-                    class="mt-1 block w-full"
-                    required
-                    autocomplete="current-password"
-                />
-                <InputError class="mt-2" :message="form.errors.password" />
-            </div>
-
-            <div class="block mt-4">
-                <label class="flex items-center">
-                    <Checkbox v-model:checked="form.remember" name="remember" />
-                    <span class="ml-2 text-sm text-gray-600">Remember me</span>
-                </label>
-            </div>
-
-            <div class="flex items-center justify-end mt-4">
-                <Link v-if="canResetPassword" :href="route('password.request')" class="underline text-sm text-gray-600 hover:text-gray-900">
-                    Forgot your password?
-                </Link>
-
-                <PrimaryButton class="ml-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                    Log in
-                </PrimaryButton>
-            </div>
-        </form>
-    </AuthenticationCard>
+    <section class="bg-white">
+        <div class="lg:grid lg:min-h-screen lg:grid-cols-12">
+          <aside
+            class="relative block h-16 lg:order-last lg:col-span-5 lg:h-full xl:col-span-6"
+          >
+            <img
+              alt="Pattern"
+              src="https://images.unsplash.com/photo-1605106702734-205df224ecce?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80"
+              class="absolute inset-0 h-full w-full object-cover"
+            />
+          </aside>
+      
+          <main
+            aria-label="Main"
+            class="flex items-center justify-center px-8 py-8 sm:px-12 lg:col-span-7 lg:py-12 lg:px-16 xl:col-span-6"
+          >
+            <div class="max-w-xl lg:max-w-3xl">
+              <a class="block text-blue-600" href="/">
+                <span class="sr-only">Home</span>
+                
+              </a>
+      
+              <h1
+                class="mt-6 text-2xl font-bold text-gray-900 sm:text-3xl md:text-4xl"
+              >
+                Servicios Escolares 📖
+              </h1>
+      
+              <p class="mt-4 leading-relaxed text-gray-500">
+                por si acaso
+              </p>
+              <form @submit.prevent="submit" class="mt-8 grid grid-cols-6 gap-6">
+                
+                <div class="col-span-6">
+                  <div>
+                    <InputLabel for="email" value="Email" />
+                    <TextInput
+                        id="email"
+                        v-model="form.email"
+                        type="email"
+                        class="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
+                        required
+                        autofocus
+                    />
+                    <InputError class="mt-2" :message="form.errors.email" />
+                </div>
+                 
+                </div>
+      
+                <div class="col-span-6">
+                  <InputLabel for="password" value="Password" />
+                    <TextInput
+                        id="password"
+                        v-model="form.password"
+                        type="password"
+                        class="mt-1 block w-full"
+                        required
+                        autocomplete="current-password"
+                    />
+                    <InputError class="mt-2" :message="form.errors.password" />
+                </div>
+      
+                <div class="col-span-6 sm:flex sm:items-center sm:gap-4">
+                  <PrimaryButton 
+                    class="inline-block shrink-0 rounded-md border border-blue-600 bg-blue-600 px-12 py-3 text-sm font-medium text-white transition hover:bg-transparent hover:text-blue-600 focus:outline-none focus:ring active:text-blue-500" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+                    Acceder
+                  </PrimaryButton> 
+      
+                  <p class="mt-4 text-sm text-gray-500 sm:mt-0">
+                        <Link v-if="canResetPassword" :href="route('register')" class="text-gray-700 underline">
+                            Registrarse
+                        </Link>
+                  </p>
+                  <p class="mt-4 text-sm text-gray-500 sm:mt-0">
+                        <Link v-if="canResetPassword" :href="route('password.request')" class="text-gray-700 underline">
+                            ¿Olvidaste tu contraseña?
+                        </Link>
+                  </p>
+                </div>
+              </form>
+          </div>
+        </main>
+      </div>
+    </section>
 </template>
