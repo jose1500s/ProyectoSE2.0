@@ -56,7 +56,7 @@ const submit = () => {
               </h1>
       
               <p class="mt-4 leading-relaxed text-gray-500">
-                Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.
+                ¿Olvidaste tu contraseña? No hay problema. Solo dejanos tu direccion de correo electronico y te enviaremos un email para resetear tu contraseña.
               </p>
               <form @submit.prevent="submit" class="mt-8 grid grid-cols-6 gap-6">
                 
@@ -79,7 +79,7 @@ const submit = () => {
                 <div class="col-span-6 sm:flex sm:items-center sm:gap-4">
                   <PrimaryButton 
                     class="inline-block shrink-0 rounded-md border border-blue-600 bg-blue-600 px-12 py-3 text-sm font-medium text-white transition hover:bg-transparent hover:text-blue-600 focus:outline-none focus:ring active:text-blue-500" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                    Email Password Reset Link
+                    Enviar correo de recuperacion
                   </PrimaryButton> 
                 </div>
               </form>
