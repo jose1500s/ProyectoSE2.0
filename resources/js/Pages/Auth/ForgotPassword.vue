@@ -45,6 +45,11 @@ const submit = () => {
           >
             <div class="max-w-xl lg:max-w-3xl">
               <a class="block text-blue-600" href="/">
+                <img
+              alt="Pattern"
+              src="https://visionindustrial.com.mx/wp-content/uploads/2016/08/UPQ-logo.jpg"
+              class="mt-6 inset-0 h-20 w-25"
+              />
                 <span class="sr-only">Home</span>
                 
               </a>
