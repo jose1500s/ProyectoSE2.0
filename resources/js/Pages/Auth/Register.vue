@@ -49,7 +49,7 @@ const submit = () => {
         </a>
 
         <h2 class="mt-6 text-2xl font-bold text-white sm:text-3xl md:text-4xl">
-          Welcome to Squid 🦑
+          Servicios Estudiantiles 🦑
         </h2>
 
         <p class="mt-4 leading-relaxed text-white/90">
@@ -86,7 +86,7 @@ const submit = () => {
           <h1
             class="mt-2 text-2xl font-bold text-gray-900 sm:text-3xl md:text-4xl"
           >
-            Welcome to Squid 🦑
+            Servicios Estudiantiles 🦑
           </h1>
 
           <p class="mt-4 leading-relaxed text-gray-500">

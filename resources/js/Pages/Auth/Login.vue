@@ -71,7 +71,7 @@ const submit = () => {
               </h1>
       
               <p class="mt-4 leading-relaxed text-gray-500">
-                por si acaso
+                Lorem ipsum, dolor sit amet consectetur adipisicing elit. Exercitationem aperiam perferendis accusantium repellat ex architecto reiciendis laborum, maxime!
               </p>
               <form @submit.prevent="submit" class="mt-8 grid grid-cols-6 gap-6">
                 
