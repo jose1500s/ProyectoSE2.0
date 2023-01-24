@@ -36,7 +36,7 @@ const logout = () => {
                 <nav class="lg:hidden py-6 px-6 bg-gray-800">
                     <div class="flex items-center justify-between">
                     <Link class="text-2xl text-white font-semibold" href="#">
-                        <img class="h-10" src="images/LogoUPQ.png" alt="logo" width="auto">
+                        <img class="h-10" src="https://visionindustrial.com.mx/wp-content/uploads/2016/08/UPQ-logo.jpg" alt="logo" width="auto">
                     </Link>
                     <button class="navbar-burger flex items-center rounded focus:outline-none">
                         <svg class="text-white bg-indigo-500 hover:bg-indigo-600 block h-8 w-8 p-2 rounded" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
@@ -52,7 +52,7 @@ const logout = () => {
                     <nav class="fixed top-0 left-0 bottom-0 flex flex-col w-3/4 lg:w-80 sm:max-w-xs pt-6 pb-8 bg-gray-800 overflow-y-auto overflow-y-hidden">
                     <div class="flex w-full items-center px-6 pb-6 mb-6 lg:border-b border-gray-700">
                         <a class="text-xl text-white font-semibold" href="#">
-                        <img id="logoUPQ" class="h-8" src="images/logoDefinitivo.png" alt="">
+                        <img id="logoUPQ" class="h-8" src="https://visionindustrial.com.mx/wp-content/uploads/2016/08/UPQ-logo.jpg" alt="">
                         </a>
                     </div>
                         <div class="px-4 pb-6">
