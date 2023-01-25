@@ -732,7 +732,6 @@ export default defineComponent({
               </ul>
               <div class="a absolute bottom-0 w-[95%] h-[200px]">
                 <div class="avatar flex justify-center">
-                    <p>hola</p>
                   <Avatar
                     :label="$page.props.user.name.charAt(0)"
                     class="mr-2"
