@@ -6,6 +6,7 @@ use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
 // importar el componente Register.vue de la carpeta Auth dentro de pages
 use resources\js\pages\Auth\Login;
+use App\Http\Controllers\main;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
