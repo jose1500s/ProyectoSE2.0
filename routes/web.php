@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 // importar el componente Register.vue de la carpeta Auth dentro de pages
 use resources\js\pages\Auth\Login;
 use App\Http\Controllers\main;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -36,4 +37,7 @@ Route::middleware([
         return Inertia::render('Dashboard');
     })->name('dashboard');
 
+    // ruta para abrir el perfil del usuario
+    Route::get('/perfil', [main::class, 'perfil'])->name('usuario.perfil');
+    
 });
