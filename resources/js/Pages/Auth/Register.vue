@@ -27,36 +27,33 @@ const submit = () => {
 
   <section class="bg-white">
     <div class="lg:grid lg:min-h-screen lg:grid-cols-12">
-      <section
-        class="relative flex h-32 items-end bg-gray-900 lg:col-span-5 lg:h-full xl:col-span-6"
-      >
-        <img
-          alt="Night"
-          src="https://instagram.fqro3-1.fna.fbcdn.net/v/t39.30808-6/326772626_571218561657861_2871428478941625678_n.jpg?stp=c0.0.1020.679a_dst-jpg_e15_s720x720&_nc_ht=instagram.fqro3-1.fna.fbcdn.net&_nc_cat=109&_nc_ohc=hrRxn5wUBfkAX9VKOTu&tn=AYryxUEIGWX04rCG&edm=ACWDqb8AAAAA&ccb=7-5&ig_cache_key=MzAyMTcwNTU5MTM5MjAyNzgxNA%3D%3D.2-ccb7-5&oh=00_AfAHgYj08h-PJ1ICf-OdpQ-ArGElBvRJDhJk7m5_jyMYEw&oe=63D45F69&_nc_sid=1527a3"
-          class="absolute inset-0 h-full w-full object-cover opacity-80"
-        />
+      
+      <aside
+            class="relative block h-16 lg:order-last lg:col-span-5 lg:h-full xl:col-span-6"
+          >
+            <img
+              alt="Pattern"
+              src="https://mx.arauco.com/medias/Arauco-Negro1.jpg-515Wx515H?context=bWFzdGVyfGltYWdlc3wxMDA0MDl8aW1hZ2UvanBlZ3xoZDAvaGUxLzkwNTE4MTkwNDg5OTAvQXJhdWNvX05lZ3JvMS5qcGdfNTE1V3g1MTVIfDI1OWZlZTU1NGZmZjJjNmQ1OTkyMjZiYjk1MzRiNzVjYTQ0YzI1NWZhZjI3NTJmNDMyZDVjOGU5M2M4MjdhNDE"
+              class="absolute inset-0 h-full w-full object-cover"
+            />
 
         <div class="hidden lg:relative lg:block lg:p-12">
           <a class="block text-blue-200" href="/">
-              <img
-              alt="Pattern"
-              src="https://visionindustrial.com.mx/wp-content/uploads/2016/08/UPQ-logo.jpg"
-              class="mt-6 inset-0 h-20 w-25"
-              />
+            <img src="images/UPQLOGOREDONDO.png" alt="" width="60" height="60">
                 <span class="sr-only">Home</span>
                 
               </a>
 
-          <h2 class="mt-6 text-2xl font-bold text-black sm:text-3xl md:text-4xl">
-            Servicios Estudiantiles 🦑
+          <h2 class="mt-6 text-2xl font-bold text-white sm:text-3xl md:text-4xl">
+            Servicios Estudiantiles 🐦
           </h2>
 
-          <p class="mt-4 leading-relaxed text-black/90">
+          <p class="mt-4 leading-relaxed text-white/90">
             Lorem, ipsum dolor sit amet consectetur adipisicing elit. Eligendi nam
             dolorum aliquam, quibusdam aperiam voluptatum.
           </p>
         </div>
-      </section>
+      </aside>
 
       <main
         aria-label="Main"
@@ -129,7 +126,7 @@ const submit = () => {
 
               <p class="mt-4 text-sm text-gray-500 sm:mt-0">
                 Already have an account?
-                <a href="#" class="text-gray-700 underline">Log in</a>.
+                <a href="/login" class="text-gray-700 underline">Log in</a>.
               </p>
             </div>
           </form>
