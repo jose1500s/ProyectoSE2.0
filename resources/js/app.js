@@ -8,9 +8,10 @@ import { ZiggyVue } from '../../vendor/tightenco/ziggy/dist/vue.m';
 
 // prime vue imports
 import PrimeVue from 'primevue/config';
+import ConfirmationService from 'primevue/confirmationservice'; // notificacion de confirmacion
+import ToastService from 'primevue/toastservice';
 
 // estylos de prime vue
-
 import 'primevue/resources/themes/saga-blue/theme.css';       //theme
 import 'primevue/resources/primevue.min.css';                 //core css
 import 'primeicons/primeicons.css';      
@@ -26,6 +27,8 @@ createInertiaApp({
             .use(plugin)
             .use(ZiggyVue, Ziggy)
             .use(PrimeVue) 
+            .use(ConfirmationService)
+            .use(ToastService)
             .mount(el);
     },
     progress: {
