@@ -362,8 +362,7 @@ export default defineComponent({
                             <div class="a absolute bottom-0 w-[95%]  h-[200px]">
                                 <div class="avatar flex justify-center">
                                     <Avatar
-                                        :label="$page.props.user.name.charAt(0) + $page.props.user.name.split(' ')[1].charAt(0)"
-                                        class="mr-2" size="large" style="background-color:#2196F3; color: #ffffff" />
+                                        :label="$page.props.user.name.charAt(0)" class="mr-2" size="large" style="background-color:#2196F3; color: #ffffff" />
                                 </div>
                                 <h2 class="text-center">
                                     {{ $page.props.user.name }}
