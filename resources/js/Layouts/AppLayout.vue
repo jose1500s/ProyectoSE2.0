@@ -185,35 +185,6 @@ export default defineComponent({
         </Link>
         <div class="menus">
           <ul>
-            <li>
-              <Link class="
-                      inline-flex
-                      items-center
-                      w-full
-                      px-4
-                      py-2
-                      mt-1
-                      text-base text-gray-900
-                      transition
-                      duration-500
-                      ease-in-out
-                      transform
-                      rounded-lg
-                      bg-gray-50
-                      hover:bg-gray-200
-                      focus:shadow-outline
-                      hover:cursor-pointer
-                      text-center
-                    " white="" :href="route('dashboard')" :active="route().current('dashboard')">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-5 h-5">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
-              </svg>
-
-              <span class="ml-4">Inicio</span>
-              </Link>
-            </li>
 
             <li>
               <Link class="
@@ -510,7 +481,7 @@ export default defineComponent({
 
               <div class="card">
                 <div class="grid flex-column">
-                  <div class="p-col flex justify-center gap-5 mt-5">
+                  <div class="p-col flex justify-center gap-5">
                     <!-- btn cerrar sesion con confirmacion -->
                     <Button @click="confirmPosition('bottomleft')" icon="pi pi-sign-out"
                       class="p-button-rounded p-button-secondary" />
@@ -540,7 +511,6 @@ export default defineComponent({
       <div class="flex flex-col w-64">
         <div class="
             flex flex-col flex-grow
-            pt-5
             overflow-y-auto
             bg-white
             border-r border-gray-50
@@ -563,35 +533,6 @@ export default defineComponent({
           <div class="flex flex-col flex-grow px-4 mt-5">
             <nav class="flex-1 space-y-1 bg-white">
               <ul>
-                <li>
-                  <Link class="
-                      inline-flex
-                      items-center
-                      w-full
-                      px-4
-                      py-2
-                      mt-1
-                      text-base text-gray-900
-                      transition
-                      duration-500
-                      ease-in-out
-                      transform
-                      rounded-lg
-                      bg-gray-50
-                      hover:bg-gray-200
-                      focus:shadow-outline
-                      hover:cursor-pointer
-                      text-center
-                    " white="" :href="route('dashboard')" :active="route().current('dashboard')">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                    stroke="currentColor" class="w-5 h-5">
-                    <path stroke-linecap="round" stroke-linejoin="round"
-                      d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
-                  </svg>
-
-                  <span class="ml-4">Inicio</span>
-                  </Link>
-                </li>
 
                 <li>
                   <Link class="
@@ -858,7 +799,7 @@ export default defineComponent({
                   </Link>
                 </li>
               </ul>
-              <div class="a absolute bottom-0 w-[95%] h-[200px]">
+              <div class="a absolute bottom-0 w-[95%] h-auto ">
                 <div class="avatar flex justify-center">
                   <Avatar :label="$page.props.user.name.charAt(0)" class="mr-2" size="large"
                     style="background-color: #2196f3; color: #ffffff" />
@@ -869,7 +810,7 @@ export default defineComponent({
                 <h2 class="text-center">
                   {{ $page.props.user.email }}
                 </h2>
-                <div class="botones">
+                <div class="botones p-5">
                   <div>
                     <Toast />
                     <ConfirmDialog></ConfirmDialog>
@@ -885,7 +826,7 @@ export default defineComponent({
 
                     <div class="card">
                       <div class="grid flex-column">
-                        <div class="p-col flex justify-center gap-5 mt-5">
+                        <div class="p-col flex justify-center gap-5">
                           <!-- btn cerrar sesion con confirmacion -->
                           <Button @click="confirmPosition('bottomleft')" icon="pi pi-sign-out"
                             class="p-button-rounded p-button-secondary" />
