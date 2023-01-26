@@ -38,6 +38,6 @@ Route::middleware([
     })->name('dashboard');
 
     // ruta para abrir el perfil del usuario
-    Route::get('/perfil', [main::class, 'perfil'])->name('usuario.perfil');
+    Route::get('/ingreso', [main::class, 'ingreso'])->name('usuario.ingreso');
     
 });
