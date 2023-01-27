@@ -456,8 +456,20 @@ export default defineComponent({
 
         <div class="footerSideBarResponsive mt-8">
           <div class="avatar flex justify-center">
-            <Avatar :label="$page.props.user.name.charAt(0)" class="mr-2" size="large"
-              style="background-color: #2196f3; color: #ffffff" />
+            <Avatar
+                    v-if="$page.props.user.name.split(' ').length > 1"
+                    :label="$page.props.user.name.charAt(0) + $page.props.user.name.split(' ')[1].charAt(0)"
+                    class="mr-2"
+                    size="large"
+                    style="background-color: #2196f3; color: #ffffff"
+                  />
+            <Avatar
+                    v-else-if="$page.props.user.name.split(' ').length == 1"
+                    :label="$page.props.user.name.charAt(0)"
+                    class="mr-2"
+                    size="large"
+                    style="background-color: #2196f3; color: #ffffff"
+                  />
           </div>
           <h2 class="text-center">
             {{ $page.props.user.name }}
@@ -801,8 +813,20 @@ export default defineComponent({
               </ul>
               <div class="a absolute bottom-0 w-[95%] h-auto ">
                 <div class="avatar flex justify-center">
-                  <Avatar :label="$page.props.user.name.charAt(0)" class="mr-2" size="large"
-                    style="background-color: #2196f3; color: #ffffff" />
+                  <Avatar
+                    v-if="$page.props.user.name.split(' ').length > 1"
+                    :label="$page.props.user.name.charAt(0) + $page.props.user.name.split(' ')[1].charAt(0)"
+                    class="mr-2"
+                    size="large"
+                    style="background-color: #2196f3; color: #ffffff"
+                  />
+            <Avatar
+                    v-else-if="$page.props.user.name.split(' ').length == 1"
+                    :label="$page.props.user.name.charAt(0)"
+                    class="mr-2"
+                    size="large"
+                    style="background-color: #2196f3; color: #ffffff"
+                  />
                 </div>
                 <h2 class="text-center">
                   {{ $page.props.user.name }}
