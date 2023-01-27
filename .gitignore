@@ -1,4 +1,1 @@
-# .gitignore
-# ignore node_modules and .vite folder
-node_modules/
-.vite/
+
