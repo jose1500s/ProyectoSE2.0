@@ -12,4 +12,10 @@ class main extends Controller
    {
       return Inertia::render('menusComponentes/Ingreso');
    }
+
+   // ruta para administrador
+   public function administrador()
+   {
+      return Inertia::render('menusComponentes/Administrador');
+   }
 }
