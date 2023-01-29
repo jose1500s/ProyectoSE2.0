@@ -39,5 +39,8 @@ Route::middleware([
 
     // ruta para abrir el perfil del usuario
     Route::get('/ingreso', [main::class, 'ingreso'])->name('usuario.ingreso');
+
+    // ruta para abrir el menu de bajas
+    Route::get('/bajas', [main::class, 'bajas'])->name('usuario.bajas');
     
 });
