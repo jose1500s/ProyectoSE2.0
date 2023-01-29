@@ -12,4 +12,8 @@ class main extends Controller
    {
       return Inertia::render('menusComponentes/Ingreso');
    }
+
+   public function bajas() {
+      return Inertia::render('menusComponentes/Bajas');
+   }
 }
