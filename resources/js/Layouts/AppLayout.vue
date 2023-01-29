@@ -170,7 +170,7 @@ export default defineComponent({
 
 <template>
 
-  <Head :title="title" /> 
+  <Head :title="title" />
 
  
 
