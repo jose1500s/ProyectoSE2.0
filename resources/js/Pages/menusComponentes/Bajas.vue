@@ -7,7 +7,7 @@ export default {
     };
   },
   created() {
-    
+    // comentario desde mi rama JAPP
   },
   mounted() {
 
