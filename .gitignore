@@ -3,3 +3,6 @@ node_modules
 vendor
 # ignore node_modules\.vite\deps  y todos los archivos dentro
 node_modules\.vite\deps\**\*
+
+#public-hot
+public/hot
