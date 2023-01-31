@@ -1,51 +1,110 @@
-<script setup>
-import ApplicationLogo from '@/Components/ApplicationLogo.vue';
+<script>
+import Card from 'primevue/card';
+import Chart from 'primevue/chart';
+import { ref } from "vue";
+
+export default {
+    components: {
+        Card,
+        Chart
+    },
+    setup() {
+        const matriculaData = ref({
+            labels: ['Mujeres', 'Hombres'],
+            datasets: [
+                {
+                    data: [2230, 3960],
+                    backgroundColor: ["#42A5F5", "#66BB6A"],
+                    hoverBackgroundColor: ["#64B5F6", "#81C784"]
+                }
+            ]
+        });
+
+        const bajasData = ref({
+            labels: ['Temporal', 'Voluntaria', 'Academica', 'Administrativa'],
+            datasets: [
+                {
+                    data: [34, 124, 12, 5],
+                    backgroundColor: ["#42A5F5", "#66BB6A", "#FFA726", "#EF5350"],
+                    hoverBackgroundColor: ["#64B5F6", "#81C784", "#FFB74D", "#E57373"]
+                }
+            ]
+        });
+
+        const lightOptions = ref({
+            plugins: {
+                legend: {
+                    labels: {
+                        color: '#495057',
+                    }
+                }
+            },
+            responsive: true,
+        });
+
+        return { matriculaData, bajasData, lightOptions }
+    }
+}
 </script>
 
 <template>
     <section class="bg-white">
-        <div class="mx-auto max-w-screen-xl px-4 py-12 sm:px-6 md:py-16 lg:px-8">
-            <div class="mx-auto max-w-3xl text-center">
-                <h2 class="text-3xl font-bold text-gray-900 sm:text-4xl">
-                    Bienvenido a el sistema de servicios Estudiantiles de la Universidad Politécnica de Querétaro
-                </h2>
-
-                <p class="mt-4 text-gray-500 sm:text-xl">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Ratione dolores
-                    laborum labore provident impedit esse recusandae facere libero harum
-                    sequi.
-                </p>
-            </div>
-
-            <div class="mt-8 sm:mt-12">
-                <dl class="grid grid-cols-1 gap-4 sm:grid-cols-3">
-                    <div class="flex flex-col rounded-lg border border-gray-100 px-4 py-8 text-center">
-                        <dt class="order-last text-lg font-medium text-gray-500">
-                            Ingresos
-                        </dt>
-
-                        <dd class="text-4xl font-extrabold text-blue-600 md:text-5xl">
-                            $4.8m
-                        </dd>
+        <div class="mx-auto max-w-screen-xl px-4 sm:px-6 md:py-16 lg:px-8">
+            <div class="w-full text-center">
+                <!-- {{ $page.props.user.name}} -->
+                <div class="flex flex-col justify-between gap-6" id="upSide">
+                    <div class="titulo">
+                        <div class="text-3xl font-bold" id="nombreDashboard">
+                            <h2>Bienvenido al Sistema de SE, {{ $page.props.user.name }}</h2>
+                        </div>
+                        <div class="text-lg mt-4" id="parrafoDashboard">
+                            Aqui podras ver un resumen de todos los indicadores actuales.
+                        </div>
                     </div>
-
-                    <div class="flex flex-col rounded-lg border border-gray-100 px-4 py-8 text-center">
-                        <dt class="order-last text-lg font-medium text-gray-500">
-                            Graduados
-                        </dt>
-
-                        <dd class="text-4xl font-extrabold text-blue-600 md:text-5xl">24,000</dd>
+                    <div class="tarjetas flex justify-center gap-10">
+                        <Card style="width: 20rem; margin-bottom: 2em">
+                            <template #title>
+                                Matricula
+                            </template>
+                            <template #content>
+                                <!-- aqui va la grafica de matricula -->
+                                <div class="" id="contenedorGrafica">
+                                    <Chart type="pie" :data="matriculaData" :options="lightOptions" />
+                                </div>
+                            </template>
+                        </Card>
+                        <Card style="width: 20rem; margin-bottom: 2em">
+                            <template #title>
+                                Bajas
+                            </template>
+                            <template #content>
+                                <!-- aqui la grafica de bajas -->
+                                <div class="" id="contenedorGrafica">
+                                    <Chart type="pie" :data="bajasData" :options="lightOptions" />
+                                </div>
+                            </template>
+                        </Card>
                     </div>
-
-                    <div class="flex flex-col rounded-lg border border-gray-100 px-4 py-8 text-center">
-                        <dt class="order-last text-lg font-medium text-gray-500">
-                            Profesores de calidad
-                        </dt>
-
-                        <dd class="text-4xl font-extrabold text-blue-600 md:text-5xl">+100</dd>
+                </div>
+                <div id="downSide" class="flex justify-between gap-4">
+                    <div class="downSide__left">
+                        <div id="downSide__card">
+                            <div class="titulo">
+                                <h2 class="">Matricula</h2>
+                            </div>
+                        </div>
                     </div>
-                </dl>
+                    <div class="right">
+                        <h2>lado derecho</h2>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 </template>
+
+<style scoped>
+Card {
+    cursor: pointer;
+}
+</style>
