@@ -5,9 +5,11 @@
     </template>
     <section class="bg-white">
       <div class="mx-auto max-w-screen-xl px-4 py-12 sm:px-6 md:py-16 lg:px-8">
-        <div class="max-w-md mx-auto">
-          <Chart type="doughnut" :data="chartData" :options="lightOptions" />
-        </div>
+        <!-- apartir de aqui todo  -->
+        <h2>
+          alaverga
+        </h2>
+
       </div>
     </section>
   </AppLayout>
