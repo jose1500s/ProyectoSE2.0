@@ -261,7 +261,7 @@ export default defineComponent({
                       hover:bg-gray-200
                       focus:shadow-outline
                       hover:cursor-pointer
-                    " white="" href="#">
+                    " white="" :href="route('usuario.matricula')">
               <!-- :href="route('posts.index')" :active="route().current('post.index')" -->
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                 stroke="currentColor" class="w-6 h-6">
@@ -291,7 +291,7 @@ export default defineComponent({
                       hover:bg-gray-200
                       focus:shadow-outline
                       hover:cursor-pointer
-                    " white="" href="#">
+                    " white="" :href="route('usuario.egresados')">
               <!-- :href="route('posts.index')" :active="route().current('post.index')" -->
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                 stroke="currentColor" class="w-5 h-5">
@@ -320,7 +320,7 @@ export default defineComponent({
                       hover:bg-gray-200
                       focus:shadow-outline
                       hover:cursor-pointer
-                    " white="" href="#">
+                    " white="" :href="route('usuario.titulados')">
               <!-- :href="route('posts.index')" :active="route().current('post.index')" -->
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                 stroke="currentColor" class="w-6 h-6">
@@ -350,7 +350,7 @@ export default defineComponent({
                       hover:bg-gray-200
                       focus:shadow-outline
                       hover:cursor-pointer
-                    " white="" href="#">
+                    " white="" :href="route('usuario.becas')">
               <!-- :href="route('posts.index')" :active="route().current('post.index')" -->
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                 stroke="currentColor" class="w-5 h-5">
@@ -380,7 +380,7 @@ export default defineComponent({
                       hover:bg-gray-200
                       focus:shadow-outline
                       hover:cursor-pointer
-                    " white="" href="#">
+                    " white="" :href="route('usuario.transporte')">
               <!-- :href="route('posts.index')" :active="route().current('post.index')" -->
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                 stroke="currentColor" class="w-5 h-5">
@@ -410,7 +410,7 @@ export default defineComponent({
                       hover:bg-gray-200
                       focus:shadow-outline
                       hover:cursor-pointer
-                    " white="" href="#">
+                    " white="" :href="route('usuario.cambio_de_carrera')">
               <!-- :href="route('posts.index')" :active="route().current('post.index')" -->
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                 stroke="currentColor" class="w-5 h-5">
@@ -439,7 +439,7 @@ export default defineComponent({
                       hover:bg-gray-200
                       focus:shadow-outline
                       hover:cursor-pointer
-                    " white="" href="#">
+                    " white="" :href="route('usuario.equivalencia')">
               <!-- :href="route('posts.index')" :active="route().current('post.index')" -->
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                 stroke="currentColor" class="w-5 h-5">
@@ -621,7 +621,7 @@ export default defineComponent({
                       hover:bg-gray-200
                       focus:shadow-outline
                       hover:cursor-pointer
-                    " white="" href="#">
+                    " white="" :href="route('usuario.matricula')">
                   <!-- :href="route('posts.index')" :active="route().current('post.index')" -->
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                     stroke="currentColor" class="w-6 h-6">
@@ -651,7 +651,7 @@ export default defineComponent({
                       hover:bg-gray-200
                       focus:shadow-outline
                       hover:cursor-pointer
-                    " white="" href="#">
+                    " white="" :href="route('usuario.egresados')">
                   <!-- :href="route('posts.index')" :active="route().current('post.index')" -->
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                     stroke="currentColor" class="w-5 h-5">
@@ -680,7 +680,7 @@ export default defineComponent({
                       hover:bg-gray-200
                       focus:shadow-outline
                       hover:cursor-pointer
-                    " white="" href="#">
+                    " white="" :href="route('usuario.titulados')">
                   <!-- :href="route('posts.index')" :active="route().current('post.index')" -->
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                     stroke="currentColor" class="w-6 h-6">
@@ -710,7 +710,7 @@ export default defineComponent({
                       hover:bg-gray-200
                       focus:shadow-outline
                       hover:cursor-pointer
-                    " white="" href="#">
+                    " white="" :href="route('usuario.becas')">
                   <!-- :href="route('posts.index')" :active="route().current('post.index')" -->
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                     stroke="currentColor" class="w-5 h-5">
@@ -740,7 +740,7 @@ export default defineComponent({
                       hover:bg-gray-200
                       focus:shadow-outline
                       hover:cursor-pointer
-                    " white="" href="#">
+                    " white="" :href="route('usuario.transporte')">
                   <!-- :href="route('posts.index')" :active="route().current('post.index')" -->
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                     stroke="currentColor" class="w-5 h-5">
@@ -770,7 +770,7 @@ export default defineComponent({
                       hover:bg-gray-200
                       focus:shadow-outline
                       hover:cursor-pointer
-                    " white="" href="#">
+                    " white="" :href="route('usuario.cambio_de_carrera')">
                   <!-- :href="route('posts.index')" :active="route().current('post.index')" -->
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                     stroke="currentColor" class="w-5 h-5">
@@ -799,7 +799,7 @@ export default defineComponent({
                       hover:bg-gray-200
                       focus:shadow-outline
                       hover:cursor-pointer
-                    " white="" href="#">
+                    " white="" :href="route('usuario.equivalencia')">
                   <!-- :href="route('posts.index')" :active="route().current('post.index')" -->
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                     stroke="currentColor" class="w-5 h-5">
