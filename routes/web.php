@@ -43,4 +43,25 @@ Route::middleware([
     // ruta para abrir el menu de bajas
     Route::get('/bajas', [main::class, 'bajas'])->name('usuario.bajas');
     
+    // Ruta para abrir el menu de matricula
+    Route::get('/matricula', [main::class, 'matricula'])->name('usuario.matricula');
+    
+    // Ruta para abrir el menu de egresados
+    Route::get('/egresados', [main::class, 'egresados'])->name('usuario.egresados');
+
+    // Ruta para abrir el menu de titulados
+    Route::get('/titulados', [main::class, 'titulados'])->name('usuario.titulados');
+
+    // Ruta para abrir el menu de becas
+    Route::get('/becas', [main::class, 'becas'])->name('usuario.becas');
+
+    // Ruta para abrir el menu de transporte
+    Route::get('/transporte', [main::class, 'transporte'])->name('usuario.transporte');
+
+    // Ruta para abrir el menu de cambio de carrera
+    Route::get('/cambio-de-carrera', [main::class, 'cambioDeCarrera'])->name('usuario.cambio_de_carrera');
+
+    // Ruta para abrir el menu de equivalencia
+    Route::get('/equivalencia', [main::class, 'equivalencia'])->name('usuario.equivalencia');
+
 });
