@@ -23,7 +23,10 @@ export default {
 
 
 <template>
-  <AppLayout title="Bajas"> 
+  <AppLayout title="Titulados">
+    <template #header>
+      <h2 class="font-semibold text-xl text-gray-800 leading-tight">Titulados</h2>
+    </template>
 
   </AppLayout>
 </template>
