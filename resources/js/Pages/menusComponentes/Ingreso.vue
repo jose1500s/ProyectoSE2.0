@@ -70,10 +70,10 @@ export default {
             <div class="flex gap-5 justify-center">
               <Button icon="pi pi-external-link" label="Export Excel" @click="exportCSV($event)" />
               <select v-model="filters.carrera.value">
-                <option class="" v-for="carrera in filtrarCarreras()" :value="carrera">{{ carrera }}</option>
+                <option class="" v-for="carrera in filtrarCarreras()" :key="carrera" :value="carrera">{{ carrera }}</option>
               </select>
               <select v-model="filters.Proceso.value">
-                <option class="" v-for="procesos in filtrarProcesos()" :value="procesos">{{ procesos }}
+                <option class="" v-for="procesos in filtrarProcesos()" :key="procesos" :value="procesos">{{ procesos }}
                 </option>
               </select>
             </div>
