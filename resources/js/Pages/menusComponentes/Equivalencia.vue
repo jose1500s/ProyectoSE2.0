@@ -23,7 +23,10 @@ export default {
 
 
 <template>
-  <AppLayout title="Bajas"> 
+  <AppLayout title="Equivalencia">
+    <template #header>
+      <h2 class="font-semibold text-xl text-gray-800 leading-tight">Equivalencia</h2>
+    </template>
 
   </AppLayout>
 </template>

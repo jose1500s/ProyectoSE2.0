@@ -23,7 +23,10 @@ export default {
 
 
 <template>
-  <AppLayout title="Bajas"> 
+  <AppLayout title="Matrícula">
+    <template #header>
+      <h2 class="font-semibold text-xl text-gray-800 leading-tight">Matrícula</h2>
+    </template>
 
   </AppLayout>
 </template>

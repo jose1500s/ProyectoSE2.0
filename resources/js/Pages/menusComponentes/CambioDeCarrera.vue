@@ -23,7 +23,10 @@ export default {
 
 
 <template>
-  <AppLayout title="Bajas"> 
+  <AppLayout title="Cambio de carrera">
+    <template #header>
+      <h2 class="font-semibold text-xl text-gray-800 leading-tight">Cambio de carrera</h2>
+    </template>
 
   </AppLayout>
 </template>
