@@ -61,10 +61,10 @@ export default {
     </template>
     <section class="bg-white">
 
-      <div class="mx-auto max-w-screen-xl px-4 py-12 sm:px-6 md:py-16 lg:px-8">
+      <div class="mx-auto max-w-screen-xl px-4 py-12 sm:px-6 md:py-16 lg:px-8 p-[20px]">
 
 
-        <DataTable :value="ingresos" :paginator="true" class="p-datatable-customers" :rows="10" ref="dt"
+        <DataTable :value="ingresos" :paginator="true" class="p-datatable-customers" :rows="10" ref="dt" 
           v-model:filters="filters">
           <div class="text-center mb-5">
             <div class="flex gap-5 justify-center">

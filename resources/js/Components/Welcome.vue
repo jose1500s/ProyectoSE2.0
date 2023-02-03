@@ -2,11 +2,12 @@
 import Card from 'primevue/card';
 import Chart from 'primevue/chart';
 import { ref } from "vue";
-
+import {Link} from '@inertiajs/vue3'
 export default {
     components: {
         Card,
-        Chart
+        Chart,
+        Link,
     },
     setup() {
         const matriculaData = ref({
@@ -55,16 +56,17 @@ export default {
                 <div class="flex flex-col justify-between gap-6" id="upSide">
                     <div class="titulo">
                         <div class="text-3xl font-bold" id="nombreDashboard">
-                            <h2>Bienvenido al Sistema de SE, {{ $page.props.user.name }}</h2>
+                            <h2>Bienvenido {{ $page.props.user.name }}</h2>
                         </div>
                         <div class="text-lg mt-4" id="parrafoDashboard">
                             Aqui podras ver un resumen de todos los indicadores actuales.
                         </div>
                     </div>
-                    <div class="tarjetas flex justify-center gap-10">
-                        <Card style="width: 20rem; margin-bottom: 2em">
+                    <div class="tarjetas flex justify-center gap-10 flex-wrap">
+                        <Link :href="route('usuario.ingreso')">
+                        <Card style="width: 20rem; margin-bottom: 2em" class="transform hover:scale-105 duration-100">
                             <template #title>
-                                Matricula
+                                Ingreso
                             </template>
                             <template #content>
                                 <!-- aqui va la grafica de matricula -->
@@ -73,7 +75,9 @@ export default {
                                 </div>
                             </template>
                         </Card>
-                        <Card style="width: 20rem; margin-bottom: 2em">
+                    </Link>
+                    <Link :href="route('usuario.bajas')">
+                        <Card style="width: 20rem; margin-bottom: 2em" class="transform hover:scale-105 duration-100">
                             <template #title>
                                 Bajas
                             </template>
@@ -84,6 +88,21 @@ export default {
                                 </div>
                             </template>
                         </Card>
+                    </Link>
+                    <Link :href="route('usuario.matricula')">
+                        <Card style="width: 20rem; margin-bottom: 2em" class="transform hover:scale-105 duration-100">
+                            <template #title>
+                                Matricula
+                            </template>
+                            <template #content>
+                                <!-- aqui va la grafica de matricula -->
+                                <div class="" id="contenedorGrafica">
+                                    <Chart type="pie" :data="matriculaData" :options="lightOptions" />
+                                </div>
+                            </template>
+                        </Card>
+                    </Link>
+                    
                     </div>
                 </div>
                 <div id="downSide" class="flex justify-between gap-4">
