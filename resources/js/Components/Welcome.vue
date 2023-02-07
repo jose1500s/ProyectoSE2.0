@@ -10,6 +10,18 @@ export default {
         Link,
     },
     setup() {
+
+        const ingresosData = ref({
+            labels: ['Mujeres', 'Hombres'],
+            datasets: [
+                {
+                    data: [2230, 2960],
+                    backgroundColor: ["#42A5F5", "#66BB6A"],
+                    hoverBackgroundColor: ["#64B5F6", "#81C784"]
+                }
+            ]
+        });
+
         const matriculaData = ref({
             labels: ['Mujeres', 'Hombres'],
             datasets: [
@@ -22,7 +34,7 @@ export default {
         });
 
         const bajasData = ref({
-            labels: ['Temporal', 'Voluntaria', 'Academica', 'Administrativa'],
+            labels: ['Temporal', 'Voluntaria', 'Académica', 'Administrativa'],
             datasets: [
                 {
                     data: [34, 124, 12, 5],
@@ -43,7 +55,7 @@ export default {
             responsive: true,
         });
 
-        return { matriculaData, bajasData, lightOptions }
+        return { ingresosData, matriculaData, bajasData, lightOptions }
     }
 }
 </script>
@@ -76,7 +88,7 @@ export default {
                             <template #content>
                                 <!-- aqui va la grafica de matricula -->
                                 <div class="" id="contenedorGrafica">
-                                    <Chart type="pie" :data="matriculaData" :options="lightOptions" />
+                                    <Chart type="pie" :data="ingresosData" :options="lightOptions" />
                                 </div>
                             </template>
                         </Card>
