@@ -110,7 +110,7 @@ export default {
     <section class="bg-white" id="tablaIngreso">
       <div class="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8 p-[20px]">
         <div class="text-center mb-5">
-          <div class="flex gap-5 justify-center">
+          <div class="flex gap-5 justify-center flex-wrap">
 
             <!-- model para abrir grafica -->
             <Button label="Grafica" icon="pi pi-chart-bar" @click="openResponsive" />
@@ -129,7 +129,6 @@ export default {
 
             <Button icon="pi pi-external-link" label="Exportar Excel" @click="exportCSV($event)" />
 
-
             <MultiSelect v-model="filters.carrera.value" :options="filtrarCarreras()" placeholder="Carrera"
               display="chip" />
 
@@ -140,12 +139,10 @@ export default {
 
             <Button icon="pi pi-times" label="Limpiar" @click="limpiarFiltros()" />
 
-
           </div>
         </div>
 
-        <DataTable :value="ingresos" :paginator="true" class="p-datatable-customers" :rows="5" ref="dt"
-          v-model:filters="filters" :emptyMessage="noDataMessage">
+        <DataTable :value="ingresos" :paginator="true" class="p-datatable-customers" :rows="7" ref="dt" v-model:filters="filters" :emptyMessage="noDataMessage" stripedRows sortMode="multiple" removableSort > 
 
           <Column field="carrera" header="Carrera" :sortable="true"></Column>
           <Column field="aspirantes" header="Aspirantes" :sortable="true"></Column>
