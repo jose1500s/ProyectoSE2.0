@@ -92,7 +92,7 @@ export default {
                     <Link :href="route('usuario.matricula')">
                         <Card style="width: 20rem; margin-bottom: 2em" class="transform hover:scale-105 duration-100">
                             <template #title>
-                                Matricula
+                                Matrícula
                             </template>
                             <template #content>
                                 <!-- aqui va la grafica de matricula -->
@@ -109,12 +109,12 @@ export default {
                     <div class="downSide__left">
                         <div id="downSide__card">
                             <div class="titulo">
-                                <h2 class="">Matricula</h2>
+                                
                             </div>
                         </div>
                     </div>
                     <div class="right">
-                        <h2>lado derecho</h2>
+                        
                     </div>
                 </div>
             </div>
