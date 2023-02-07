@@ -13,7 +13,7 @@ class main extends Controller
       // traer de la tabla tb_ingreso todos los registros
       $ingresos = tb_ingreso::all();
       // retornar con Inertia a menusComponentes/Ingreso y pasarle los registros
-      return Inertia::render('menusComponentes/Ingreso', ['ingresos' => $ingresos]);
+      return Inertia::render('menusComponentes/Ingreso/Ingreso', ['ingresos' => $ingresos]);
    }
 
    public function bajas() {
