@@ -102,7 +102,7 @@ export default {
                         <Card style="width: 20rem; margin-bottom: 2em" class="transform hover:scale-105 duration-100">
                             <template #title>
                                 <Link :href="route('usuario.matricula')">
-                                Matricula
+                                Matrícula
                                 </Link>
                             </template>
                             <template #content>
@@ -120,12 +120,12 @@ export default {
                     <div class="downSide__left">
                         <div id="downSide__card">
                             <div class="titulo">
-                                <h2 class="">Matricula</h2>
+                                
                             </div>
                         </div>
                     </div>
                     <div class="right">
-                        <h2>lado derecho</h2>
+                        
                     </div>
                 </div>
             </div>
