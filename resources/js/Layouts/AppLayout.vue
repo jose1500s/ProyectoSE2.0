@@ -175,7 +175,7 @@ export default defineComponent({
  
 
   <!-- Boton para abrir el sideBar responsive (en dispositivos moviles) -->
-  <div class="absolute top-1/2">
+  <div class="absolute top-1/2 z-40">
     <div class="fixed top-1/2">
       <Button icon="pi pi-arrow-right" @click="visibleLeft = true" class="mr-2" />
       <Sidebar v-model:visible="visibleLeft" :baseZIndex="10000">
@@ -510,7 +510,7 @@ export default defineComponent({
   </div>
 
   <!-- sideBar empiezo -->
-  <div class="absolute left-0 h-screen flex">
+  <div class="absolute left-0 h-screen flex z-50">
     <div class="
         fixed
         h-screen
