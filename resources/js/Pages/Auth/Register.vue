@@ -125,8 +125,8 @@ const submit = () => {
               </button>
 
               <p class="mt-4 text-sm text-gray-500 sm:mt-0">
-                Already have an account?
-                <a href="/login" class="text-gray-700 underline">Log in</a>.
+                ¿Ya tienes una cuenta? 
+                <a href="/login" class="text-gray-700 underline">Ingresar</a>.
               </p>
             </div>
           </form>
