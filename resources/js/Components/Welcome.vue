@@ -63,11 +63,16 @@ export default {
                         </div>
                     </div>
                     <div class="tarjetas flex justify-center gap-10 flex-wrap">
-                        <Link :href="route('usuario.ingreso')">
+
+                   
                         <Card style="width: 20rem; margin-bottom: 2em" class="transform hover:scale-105 duration-100">
+                            
                             <template #title>
+                                <Link :href="route('usuario.ingreso')">
                                 Ingreso
+                                </Link>
                             </template>
+                            
                             <template #content>
                                 <!-- aqui va la grafica de matricula -->
                                 <div class="" id="contenedorGrafica">
@@ -75,11 +80,14 @@ export default {
                                 </div>
                             </template>
                         </Card>
-                    </Link>
-                    <Link :href="route('usuario.bajas')">
+                    
+
+                    
                         <Card style="width: 20rem; margin-bottom: 2em" class="transform hover:scale-105 duration-100">
                             <template #title>
+                                <Link :href="route('usuario.bajas')">
                                 Bajas
+                                </Link>
                             </template>
                             <template #content>
                                 <!-- aqui la grafica de bajas -->
@@ -88,11 +96,14 @@ export default {
                                 </div>
                             </template>
                         </Card>
-                    </Link>
-                    <Link :href="route('usuario.matricula')">
+                    
+
+                    
                         <Card style="width: 20rem; margin-bottom: 2em" class="transform hover:scale-105 duration-100">
                             <template #title>
+                                <Link :href="route('usuario.matricula')">
                                 Matricula
+                                </Link>
                             </template>
                             <template #content>
                                 <!-- aqui va la grafica de matricula -->
@@ -101,7 +112,7 @@ export default {
                                 </div>
                             </template>
                         </Card>
-                    </Link>
+                    
                     
                     </div>
                 </div>
