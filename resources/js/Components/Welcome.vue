@@ -102,7 +102,7 @@ export default {
                         <Card style="width: 20rem; margin-bottom: 2em" class="transform hover:scale-105 duration-100">
                             <template #title>
                                 <Link :href="route('usuario.matricula')">
-                                Matricula
+                                Matrícula
                                 </Link>
                             </template>
                             <template #content>
