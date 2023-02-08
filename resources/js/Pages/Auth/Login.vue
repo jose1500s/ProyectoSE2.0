@@ -44,7 +44,7 @@ const submit = () => {
           >
             <img
               alt="Pattern"
-              src="images/ingreso.jpg" 
+              src="images/fondoupq.jfif" 
               class="absolute inset-0 h-full w-full object-cover"
             />
           </aside>
@@ -73,7 +73,7 @@ const submit = () => {
                 
                 <div class="col-span-6">
                   <div>
-                    <InputLabel for="email" value="Email" />
+                    <InputLabel for="email" value="Correo electrónico" />
                     <TextInput
                         id="email"
                         v-model="form.email"
@@ -88,7 +88,7 @@ const submit = () => {
                 </div>
       
                 <div class="col-span-6">
-                  <InputLabel for="password" value="Password" />
+                  <InputLabel for="password" value="Contraseña" />
                     <TextInput
                         id="password"
                         v-model="form.password"

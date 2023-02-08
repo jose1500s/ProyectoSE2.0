@@ -117,8 +117,8 @@ export default defineComponent({
     const confirmPosition = (position) => {
       confirm.require({
         group: "positionDialog",
-        message: "Desea cerrar sesion?",
-        header: "Sesion",
+        message: "¿Desea cerrar sesión?",
+        header: "Sesión",
         icon: "pi pi-info-circle",
         position: position,
         accept: () => {
@@ -127,12 +127,14 @@ export default defineComponent({
         },
         reject: () => {
           toast.add({
-            severity: "error",
+            severity: "info",
             summary: "Cancelado",
-            detail: "Cancelo el cierre de sesion",
+            detail: "Se canceló el cierre de sesión",
             life: 3000,
           });
         },
+        acceptLabel: "Aceptar",
+        rejectLabel: "Cancelar",
       });
     };
 
