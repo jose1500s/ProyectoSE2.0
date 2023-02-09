@@ -89,7 +89,7 @@ const closeModal = () => {
 
             <div class="flex items-center mt-5">
                 <PrimaryButton @click="confirmLogout">
-                    Cerrar sesión de otras sesiones del navegador
+                    Cerrar sesión en todos los dispositivos
                 </PrimaryButton>
 
                 <ActionMessage :on="form.recentlySuccessful" class="ml-3">
