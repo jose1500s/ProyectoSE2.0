@@ -15,20 +15,22 @@ export default {
             labels: ['Mujeres', 'Hombres'],
             datasets: [
                 {
+                    
+                
                     data: [2230, 2960],
-                    backgroundColor: ["#42A5F5", "#66BB6A"],
-                    hoverBackgroundColor: ["#64B5F6", "#81C784"]
+                    backgroundColor: ["pink", "blue"],
+                    hoverBackgroundColor: ["pink", "blue"]
                 }
             ]
         });
 
         const matriculaData = ref({
-            labels: ['Mujeres', 'Hombres'],
+            labels: ['Negocios', 'PYMES' , 'Sistemas' , 'Automotriz', 'Mecatronica', 'Manufactura', 'Telematica'],
             datasets: [
                 {
-                    data: [2230, 3960],
-                    backgroundColor: ["#42A5F5", "#66BB6A"],
-                    hoverBackgroundColor: ["#64B5F6", "#81C784"]
+                    data: [647, 336, 409, 91, 471, 470, 143],
+                    backgroundColor: ["black", "blue", "yellow", "red", "pink", "gray", "green"],
+                    hoverBackgroundColor: ["black", "blue", "yellow", "red", "pink", "gray", "green"]
                 }
             ]
         });
@@ -88,7 +90,7 @@ export default {
                             <template #content>
                                 <!-- aqui va la grafica de matricula -->
                                 <div class="" id="contenedorGrafica">
-                                    <Chart type="pie" :data="ingresosData" :options="lightOptions" />
+                                    <Chart type="polarArea" :data="ingresosData" :options="lightOptions" />
                                 </div>
                             </template>
                         </Card>
@@ -104,7 +106,7 @@ export default {
                             <template #content>
                                 <!-- aqui la grafica de bajas -->
                                 <div class="" id="contenedorGrafica">
-                                    <Chart type="pie" :data="bajasData" :options="lightOptions" />
+                                    <Chart type="polarArea" :data="bajasData" :options="lightOptions" />
                                 </div>
                             </template>
                         </Card>
@@ -120,7 +122,7 @@ export default {
                             <template #content>
                                 <!-- aqui va la grafica de matricula -->
                                 <div class="" id="contenedorGrafica">
-                                    <Chart type="pie" :data="matriculaData" :options="lightOptions" />
+                                    <Chart type="polarArea" :data="matriculaData" :options="lightOptions" />
                                 </div>
                             </template>
                         </Card>
