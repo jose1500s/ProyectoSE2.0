@@ -90,7 +90,7 @@ export default {
                             <template #content>
                                 <!-- aqui va la grafica de matricula -->
                                 <div class="" id="contenedorGrafica">
-                                    <Chart type="polarArea" :data="ingresosData" :options="lightOptions" />
+                                    <Chart type="doughnut" :data="ingresosData" :options="lightOptions" />
                                 </div>
                             </template>
                         </Card>
@@ -106,7 +106,7 @@ export default {
                             <template #content>
                                 <!-- aqui la grafica de bajas -->
                                 <div class="" id="contenedorGrafica">
-                                    <Chart type="polarArea" :data="bajasData" :options="lightOptions" />
+                                    <Chart type="doughnut" :data="bajasData" :options="lightOptions" />
                                 </div>
                             </template>
                         </Card>
@@ -122,7 +122,7 @@ export default {
                             <template #content>
                                 <!-- aqui va la grafica de matricula -->
                                 <div class="" id="contenedorGrafica">
-                                    <Chart type="polarArea" :data="matriculaData" :options="lightOptions" />
+                                    <Chart type="doughnut" :data="matriculaData" :options="lightOptions" />
                                 </div>
                             </template>
                         </Card>
