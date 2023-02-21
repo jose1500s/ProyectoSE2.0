@@ -25,7 +25,7 @@ export default {
         });
 
         const matriculaData = ref({
-            labels: ['Negocios', 'PYMES' , 'Sistemas' , 'Automotriz', 'Mecatronica', 'Manufactura', 'Telematica'],
+            labels: ['Negocios', 'Administración' , 'Sistemas' , 'Automotriz', 'Mecatronica', 'Manufactura', 'Telematica'],
             datasets: [
                 {
                     data: [647, 336, 409, 91, 471, 470, 143],
