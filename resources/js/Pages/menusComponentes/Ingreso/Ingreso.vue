@@ -13,6 +13,9 @@ import { FilterMatchMode, FilterService } from 'primevue/api';
 import MultiSelect from 'primevue/multiselect';
 import Chart from 'primevue/chart';
 import Dialog from 'primevue/dialog';
+import Toast from 'primevue/toast';
+import ConfirmDialog from 'primevue/confirmdialog';
+
 
 export default {
   components: {
@@ -26,6 +29,8 @@ export default {
     Chart,
     Dialog,
     GraficaIngreso,
+    Toast,
+    ConfirmDialog,
   },
   props: {
     ingresos: Array,
@@ -84,6 +89,19 @@ export default {
       link.href = imagen;
       link.click();
     },
+    confirm1() {
+            this.$confirm.require({
+                message: 'Are you sure you want to proceed?',
+                header: 'Confirmation',
+                icon: 'pi pi-exclamation-triangle',
+                accept: () => {
+                    this.$toast.add({severity:'info', summary:'Confirmed', detail:'You have accepted', life: 3000});
+                },
+                reject: () => {
+                    this.$toast.add({severity:'error', summary:'Rejected', detail:'You have rejected', life: 3000});
+                }
+            });
+        },
   },
   data() {
     return {
@@ -111,7 +129,24 @@ export default {
       <div class="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8 p-[20px]">
         <div class="text-center mb-5">
           <div class="flex gap-5 justify-center flex-wrap">
+            <div>
+        <Toast />
+        <ConfirmDialog></ConfirmDialog>
+        <ConfirmDialog group="templating">
+                <template #message="slotProps">
+                    <div class="flex p-4">
+                        <i :class="slotProps.message.icon" style="font-size: 1.5rem"></i>
+                        <p class="pl-2">{{slotProps.message.message}}</p>
+                    </div>
+                </template>
+        </ConfirmDialog>
+        <ConfirmDialog group="positionDialog"></ConfirmDialog>
 
+        <div class="card">
+            <Button @click="confirm1()" icon="pi pi-check" label="Confirm" class="mr-2"></Button>
+
+        </div>
+    </div>
             <!-- model para abrir grafica -->
             <Button label="Grafica" icon="pi pi-chart-bar" @click="openResponsive" />
             <Dialog header="Grafica" v-model:visible="displayResponsive"

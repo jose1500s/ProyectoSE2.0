@@ -15,11 +15,9 @@ export default {
             labels: ['Mujeres', 'Hombres'],
             datasets: [
                 {
-                    
-                
                     data: [2230, 2960],
-                    backgroundColor: ["pink", "blue"],
-                    hoverBackgroundColor: ["pink", "blue"]
+                    backgroundColor: ["#913175", "#3F979B"],
+                    hoverBackgroundColor: ["#CD5888", "#205E61"]
                 }
             ]
         });
@@ -29,8 +27,8 @@ export default {
             datasets: [
                 {
                     data: [647, 336, 409, 91, 471, 470, 143],
-                    backgroundColor: ["black", "blue", "yellow", "red", "pink", "gray", "green"],
-                    hoverBackgroundColor: ["black", "blue", "yellow", "red", "pink", "gray", "green"]
+                    backgroundColor: ["black", "#1C315E", "yellow", "red", "pink", "gray", "#227C70"],
+                    hoverBackgroundColor: ["black", "#227C70", "yellow", "red", "pink", "gray", "#88A47C"]
                 }
             ]
         });
