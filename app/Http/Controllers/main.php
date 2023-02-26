@@ -51,7 +51,7 @@ class main extends Controller
       return Inertia::render('menusComponentes/CambioDeCarrera');
    }
 
-   public function equivalencia(){
-      return Inertia::render('menusComponentes/Equivalencia');
+   public function seguroFacultativo(){
+      return Inertia::render('menusComponentes/SeguroFacultativo');
    }
 }

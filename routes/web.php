@@ -61,7 +61,7 @@ Route::middleware([
     // Ruta para abrir el menu de cambio de carrera
     Route::get('/cambio-de-carrera', [main::class, 'cambioDeCarrera'])->name('usuario.cambio_de_carrera');
 
-    // Ruta para abrir el menu de equivalencia
-    Route::get('/equivalencia', [main::class, 'equivalencia'])->name('usuario.equivalencia');
+    // Ruta para abrir el menu de seguro facultativo
+    Route::get('/seguro-facultativo', [main::class, 'seguroFacultativo'])->name('usuario.segurofacultativo');
 
 });

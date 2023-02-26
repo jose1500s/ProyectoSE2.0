@@ -16,33 +16,49 @@ export default {
             datasets: [
                 {
                     data: [2230, 2960],
-                    backgroundColor: ["#913175", "#3F979B"],
-                    hoverBackgroundColor: ["#CD5888", "#205E61"]
+                    backgroundColor: ["pink", "blue"],
+                    hoverBackgroundColor: ["pink", "blue"],
+                    porcentajes: []
                 }
             ]
         });
+
+        const totalIngresos = ingresosData.value.datasets[0].data.reduce((acc, val) => acc + val);
+        ingresosData.value.datasets[0].porcentajes = ingresosData.value.datasets[0].data.map(val => Math.round((val / totalIngresos) * 100));
+        const ingresos = ingresosData.value.datasets[0].porcentajes;
 
         const matriculaData = ref({
-            labels: ['Negocios', 'PYMES' , 'Sistemas' , 'Automotriz', 'Mecatronica', 'Manufactura', 'Telematica'],
+            labels: ['Negocios', 'Administración' , 'Sistemas' , 'Automotriz', 'Mecatronica', 'Manufactura', 'Telematica'],
             datasets: [
                 {
-                    data: [647, 336, 409, 91, 471, 470, 143],
-                    backgroundColor: ["black", "#1C315E", "yellow", "red", "pink", "gray", "#227C70"],
-                    hoverBackgroundColor: ["black", "#227C70", "yellow", "red", "pink", "gray", "#88A47C"]
+                    data: [647, 336, 409, 91, 471, 510, 143],
+                    backgroundColor: ["black", "blue", "yellow", "red", "pink", "gray", "green"],
+                    hoverBackgroundColor: ["black", "blue", "yellow", "red", "pink", "gray", "green"],
+                    porcentajes: []
                 }
             ]
         });
 
+        const totalMatricula = matriculaData.value.datasets[0].data.reduce((acc, val) => acc + val);
+        matriculaData.value.datasets[0].porcentajes = matriculaData.value.datasets[0].data.map(val => Math.round((val / totalMatricula) * 100));
+        const matricula = matriculaData.value.datasets[0].porcentajes;
+        
+
         const bajasData = ref({
-            labels: ['Temporal', 'Voluntaria', 'Académica', 'Administrativa'],
             datasets: [
                 {
                     data: [34, 124, 12, 5],
                     backgroundColor: ["#42A5F5", "#66BB6A", "#FFA726", "#EF5350"],
-                    hoverBackgroundColor: ["#64B5F6", "#81C784", "#FFB74D", "#E57373"]
+                    hoverBackgroundColor: ["#64B5F6", "#81C784", "#FFB74D", "#E57373"],
+                    porcentajes: []
                 }
-            ]
+            ],
+            labels: ['Temporal', 'Voluntaria', 'Académica', 'Administrativa']
         });
+
+        const totalBajas = bajasData.value.datasets[0].data.reduce((acc, val) => acc + val);
+        bajasData.value.datasets[0].porcentajes = bajasData.value.datasets[0].data.map(val => Math.round((val / totalBajas) * 100));
+        const bajas = bajasData.value.datasets[0].porcentajes;
 
         const lightOptions = ref({
             plugins: {
@@ -55,7 +71,7 @@ export default {
             responsive: true,
         });
 
-        return { ingresosData, matriculaData, bajasData, lightOptions }
+        return { ingresosData, matriculaData, bajasData, lightOptions, ingresos, matricula,bajas }
     }
 }
 </script>
@@ -89,6 +105,8 @@ export default {
                                 <!-- aqui va la grafica de matricula -->
                                 <div class="" id="contenedorGrafica">
                                     <Chart type="doughnut" :data="ingresosData" :options="lightOptions" />
+                                    <p>Hombres: {{ ingresos[0] }}%
+                                    Mujeres: {{ ingresos[1] }}%</p>
                                 </div>
                             </template>
                         </Card>
@@ -105,6 +123,10 @@ export default {
                                 <!-- aqui la grafica de bajas -->
                                 <div class="" id="contenedorGrafica">
                                     <Chart type="doughnut" :data="bajasData" :options="lightOptions" />
+                                    <p>Voluntaria: {{ bajas[1] }}%
+                                    Temporal: {{ bajas[0] }}%
+                                    Académica: {{ bajas[2] }}%
+                                    Administrativa: {{ bajas[3] }}%</p>
                                 </div>
                             </template>
                         </Card>
@@ -121,6 +143,13 @@ export default {
                                 <!-- aqui va la grafica de matricula -->
                                 <div class="" id="contenedorGrafica">
                                     <Chart type="doughnut" :data="matriculaData" :options="lightOptions" />
+                                    <p>Negocios: {{ matricula[0] }}%
+                                    Manufactura: {{ matricula[5] }}%
+                                    Mecatrónica: {{ matricula[4] }}%
+                                    Sistemas: {{ matricula[2] }}%
+                                    Administración: {{ matricula[1] }}%
+                                    Telemática: {{ matricula[6] }}%
+                                    Automotriz: {{ matricula[5] }}%</p>
                                 </div>
                             </template>
                         </Card>
