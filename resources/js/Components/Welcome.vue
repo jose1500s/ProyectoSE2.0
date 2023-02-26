@@ -70,18 +70,6 @@ export default {
                     }
                 }
             },
-            generateLabels: (chart) => {
-                const data = chart.data.datasets[0];
-                return data.labels.map((label,i) => {
-                    const value = data.porcentajes[i];
-                    return {
-                        text: `${label}: ${value}%`,
-                        fillStyle: data.backgroundColor[i],
-                        hidden: isNaN(value) || chart.getDatasetMeta(0).data[i].hidden,
-                        index: i
-                    }
-                }
-        )},
             responsive: true,
         });
 
