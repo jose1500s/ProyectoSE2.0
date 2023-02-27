@@ -15,8 +15,6 @@ export default {
             labels: ['Mujeres', 'Hombres'],
             datasets: [
                 {
-                    
-                
                     data: [2230, 2960],
                     backgroundColor: ["pink", "blue"],
                     hoverBackgroundColor: ["pink", "blue"],
