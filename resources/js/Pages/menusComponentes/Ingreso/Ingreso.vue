@@ -2,8 +2,6 @@
 // componentes
 import AppLayout from "@/Layouts/AppLayout.vue";
 import GraficaIngreso from "@/Pages/menusComponentes/Ingreso/GraficaIngreso.vue";
-// import TabMenu from "@/Pages/menusComponentes/Ingreso/TabMenu.vue";
-
 
 // PrimeVue
 import DataTable from 'primevue/datatable';
