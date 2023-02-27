@@ -13,8 +13,15 @@ class main extends Controller
       // traer de la tabla tb_ingreso todos los registros
       $ingresos = tb_ingreso::all();
       // retornar con Inertia a menusComponentes/Ingreso y pasarle los registros
-      return Inertia::render('menusComponentes/Ingreso', ['ingresos' => $ingresos]);
+      return Inertia::render('menusComponentes/Ingreso/Ingreso', ['ingresos' => $ingresos]);
    }
+
+   // public function inicio()
+   // {
+   //    $ingresos = tb_ingreso::all();
+   //    //retornar el dashboard con inertia
+   //    return Inertia::render('Welcome', ['ingresos' => $ingresos]);
+   // }
 
    public function bajas() {
       return Inertia::render('menusComponentes/Bajas');
@@ -44,7 +51,7 @@ class main extends Controller
       return Inertia::render('menusComponentes/CambioDeCarrera');
    }
 
-   public function equivalencia(){
-      return Inertia::render('menusComponentes/Equivalencia');
+   public function seguroFacultativo(){
+      return Inertia::render('menusComponentes/SeguroFacultativo');
    }
 }

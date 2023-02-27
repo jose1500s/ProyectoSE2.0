@@ -33,7 +33,7 @@ const submit = () => {
           >
             <img
               alt="Pattern"
-              src="https://mx.arauco.com/medias/Arauco-Negro1.jpg-515Wx515H?context=bWFzdGVyfGltYWdlc3wxMDA0MDl8aW1hZ2UvanBlZ3xoZDAvaGUxLzkwNTE4MTkwNDg5OTAvQXJhdWNvX05lZ3JvMS5qcGdfNTE1V3g1MTVIfDI1OWZlZTU1NGZmZjJjNmQ1OTkyMjZiYjk1MzRiNzVjYTQ0YzI1NWZhZjI3NTJmNDMyZDVjOGU5M2M4MjdhNDE"
+              src="images/fondoupq.jfif"
               class="absolute inset-0 h-full w-full object-cover"
             />
 
@@ -47,11 +47,12 @@ const submit = () => {
           <h2 class="mt-6 text-2xl font-bold text-white sm:text-3xl md:text-4xl">
             Servicios Estudiantiles 🐦
           </h2>
-
-          <p class="mt-4 leading-relaxed text-white/90">
+          <div class="max-w-[60%]">
+          <p class="mt-4 leading-relaxed text-white/90 font-bold">
             Lorem, ipsum dolor sit amet consectetur adipisicing elit. Eligendi nam
             dolorum aliquam, quibusdam aperiam voluptatum.
           </p>
+        </div>
         </div>
       </aside>
 
@@ -63,7 +64,7 @@ const submit = () => {
           
         <form @submit.prevent="submit">
             <div>
-                <InputLabel for="name" value="Name" />
+                <InputLabel for="name" value="Nombre completo" />
                 <TextInput
                     id="name"
                     v-model="form.name"
@@ -77,7 +78,7 @@ const submit = () => {
             </div>
 
             <div class="col-span-6">
-              <InputLabel for="email" value="Email" />
+              <InputLabel for="email" value="Correo electrónico" />
                 <TextInput
                     id="email"
                     v-model="form.email"
@@ -90,7 +91,7 @@ const submit = () => {
             </div>
 
             <div class="col-span-6 sm:col-span-3">
-              <InputLabel for="password" value="Password" />
+              <InputLabel for="password" value="Contraseña" />
                 <TextInput
                     id="password"
                     v-model="form.password"
@@ -104,7 +105,7 @@ const submit = () => {
             </div>
 
             <div class="col-span-6 sm:col-span-3">
-              <InputLabel for="password_confirmation" value="Confirm Password" />
+              <InputLabel for="password_confirmation" value="Confirmar contraseña" />
                 <TextInput
                     id="password_confirmation"
                     v-model="form.password_confirmation"
@@ -116,7 +117,7 @@ const submit = () => {
                 />
                 <InputError class="mt-2" :message="form.errors.password_confirmation" />
             </div>
-
+            <div><br></div>
             <div class="col-span-6 sm:flex sm:items-center sm:gap-4">
               <button
                 class="inline-block shrink-0 rounded-md border border-blue-600 bg-blue-600 px-12 py-3 text-sm font-medium text-white transition hover:bg-transparent hover:text-blue-600 focus:outline-none focus:ring active:text-blue-500"
@@ -125,8 +126,8 @@ const submit = () => {
               </button>
 
               <p class="mt-4 text-sm text-gray-500 sm:mt-0">
-                Already have an account?
-                <a href="/login" class="text-gray-700 underline">Log in</a>.
+                ¿Ya tienes una cuenta? 
+                <a href="/login" class="text-gray-700 underline">Ingresar</a>.
               </p>
             </div>
           </form>

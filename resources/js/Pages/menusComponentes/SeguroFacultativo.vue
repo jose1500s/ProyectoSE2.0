@@ -23,7 +23,10 @@ export default {
 
 
 <template>
-  <AppLayout title="Bajas"> 
+  <AppLayout title="Seguro facultativo">
+    <template #header>
+      <h2 class="font-semibold text-xl text-gray-800 leading-tight">Seguro facultativo</h2>
+    </template>
 
   </AppLayout>
 </template>
