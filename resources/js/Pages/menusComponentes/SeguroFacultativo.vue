@@ -23,9 +23,9 @@ export default {
 
 
 <template>
-  <AppLayout title="Equivalencia">
+  <AppLayout title="Seguro facultativo">
     <template #header>
-      <h2 class="font-semibold text-xl text-gray-800 leading-tight">Equivalencia</h2>
+      <h2 class="font-semibold text-xl text-gray-800 leading-tight">Seguro facultativo</h2>
     </template>
 
   </AppLayout>

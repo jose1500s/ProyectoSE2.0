@@ -21,7 +21,8 @@
     "dependencies": {
         "chart.js": "^4.2.0",
         "primeicons": "^6.0.1",
-        "primevue": "^3.23.0",
-        "vue-chartjs": "^5.2.0"
+        "primevue": "^3.22.3",
+        "vue-chartjs": "^5.2.0",
+        "vue-router": "^4.1.6"
     }
 }

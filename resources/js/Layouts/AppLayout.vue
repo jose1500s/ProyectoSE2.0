@@ -182,7 +182,7 @@ export default defineComponent({
       <Button icon="pi pi-arrow-right" @click="visibleLeft = true" class="mr-2" />
       <Sidebar v-model:visible="visibleLeft" :baseZIndex="10000">
         <Link href="/dashboard" class="px-8 text-left focus:outline-none">
-        <img src="https://visionindustrial.com.mx/wp-content/uploads/2016/08/UPQ-logo.jpg" alt=""
+        <img src="https://visionindustrial.com.mx/wp-content/uploads/2016/08/UPQ-logo.jpg" alt="LogoUPQ"
           class="h-20 mx-auto" />
         </Link>
         <div class="menus">
@@ -235,13 +235,13 @@ export default defineComponent({
                       hover:bg-gray-200
                       focus:shadow-outline
                       hover:cursor-pointer
-                    " white="" :href="route('usuario.bajas')">
+                    " white="" :href="route('usuario.matricula')">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                 stroke="currentColor" class="w-6 h-6">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 4.5l15 15m0 0V8.25m0 11.25H8.25" />
               </svg>
 
-              <span class="ml-4"> Bajas</span>
+              <span class="ml-4"> Matrícula</span>
               </Link>
             </li>
 
@@ -263,7 +263,7 @@ export default defineComponent({
                       hover:bg-gray-200
                       focus:shadow-outline
                       hover:cursor-pointer
-                    " white="" :href="route('usuario.matricula')">
+                    " white="" :href="route('usuario.bajas')">
               <!-- :href="route('posts.index')" :active="route().current('post.index')" -->
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                 stroke="currentColor" class="w-6 h-6">
@@ -271,7 +271,7 @@ export default defineComponent({
                   d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5z" />
               </svg>
 
-              <span class="ml-4"> Matrícula</span>
+              <span class="ml-4"> Bajas</span>
               </Link>
             </li>
 
@@ -449,7 +449,7 @@ export default defineComponent({
                   d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
               </svg>
 
-              <span class="ml-4"> Equivalencia</span>
+              <span class="ml-4"> Seguro facultativo</span>
               </Link>
             </li>
 
@@ -531,7 +531,7 @@ export default defineComponent({
           ">
           <div class="flex flex-col items-center flex-shrink-0 px-4">
             <Link href="/dashboard" class="px-8 text-left focus:outline-none">
-            <img src="https://visionindustrial.com.mx/wp-content/uploads/2016/08/UPQ-logo.jpg" alt="" />
+            <img src="https://visionindustrial.com.mx/wp-content/uploads/2016/08/UPQ-logo.jpg" alt="LogoUPQ" />
             </Link>
             <button class="hidden rounded-lg focus:outline-none focus:shadow-outline">
               <svg fill="currentColor" viewBox="0 0 20 20" class="w-6 h-6">
@@ -595,13 +595,13 @@ export default defineComponent({
                       hover:bg-gray-200
                       focus:shadow-outline
                       hover:cursor-pointer
-                    " white="" :href="route('usuario.bajas')">
+                    " white="" :href="route('usuario.matricula')">
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                     stroke="currentColor" class="w-6 h-6">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 4.5l15 15m0 0V8.25m0 11.25H8.25" />
                   </svg>
 
-                  <span class="ml-4"> Bajas</span>
+                  <span class="ml-4"> Matrícula</span>
                   </Link>
                 </li>
 
@@ -623,7 +623,7 @@ export default defineComponent({
                       hover:bg-gray-200
                       focus:shadow-outline
                       hover:cursor-pointer
-                    " white="" :href="route('usuario.matricula')">
+                    " white="" :href="route('usuario.bajas')">
                   <!-- :href="route('posts.index')" :active="route().current('post.index')" -->
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                     stroke="currentColor" class="w-6 h-6">
@@ -631,7 +631,7 @@ export default defineComponent({
                       d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5z" />
                   </svg>
 
-                  <span class="ml-4"> Matrícula</span>
+                  <span class="ml-4"> Bajas</span>
                   </Link>
                 </li>
 
@@ -801,7 +801,7 @@ export default defineComponent({
                       hover:bg-gray-200
                       focus:shadow-outline
                       hover:cursor-pointer
-                    " white="" :href="route('usuario.equivalencia')">
+                    " white="" :href="route('usuario.segurofacultativo')">
                   <!-- :href="route('posts.index')" :active="route().current('post.index')" -->
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                     stroke="currentColor" class="w-5 h-5">
@@ -809,7 +809,7 @@ export default defineComponent({
                       d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
                   </svg>
 
-                  <span class="ml-4"> Equivalencia</span>
+                  <span class="ml-4"> Seguro facultativo</span>
                   </Link>
                 </li>
               </ul>
