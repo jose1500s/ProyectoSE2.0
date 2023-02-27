@@ -21,7 +21,7 @@ export default {
 <template>
     <AppLayout title="Ingreso">
         <TabView ref="tabview1" class="p-3">
-            <TabPanel header="Ingreso">
+            <TabPanel header="Admision">
                 <Ingreso :ingresos="ingresos" />
             </TabPanel>
             <TabPanel header="Doctorado">

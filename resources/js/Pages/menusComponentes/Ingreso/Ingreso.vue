@@ -227,11 +227,8 @@ export default {
         <Column field="carrera" header="Carrera" :sortable="true"></Column>
         <Column field="aspirantes" header="Aspirantes" :sortable="true"></Column>
         <Column field="examinados" header="Examinados" :sortable="true"></Column>
-        <Column field="admitidos" header="Admitidos" :sortable="true"></Column>
-        <Column field="rechazados" header="Rechazados" :sortable="true"></Column>
-        <Column field="inscritos" header="Inscritos" :sortable="true"></Column>
-        <Column field="Proceso" header="Proceso" :sortable="true"></Column>
-        <Column field="fecha" header="Fecha" :sortable="true"></Column>
+        <Column field="no_admitidos" header="No Admitidos" :sortable="true"></Column>
+        <Column field="periodo" header="Periodo" :sortable="true"></Column>
 
         <!-- mensaje de no hay datos -->
         <template #empty>
