@@ -1,6 +1,6 @@
 import Ripple from 'primevue/ripple';
 import Tooltip from 'primevue/tooltip';
-import { ObjectUtils, DomHandler, UniqueComponentId } from 'primevue/utils';
+import { UniqueComponentId, ObjectUtils, DomHandler } from 'primevue/utils';
 import { resolveComponent, resolveDirective, openBlock, createElementBlock, createElementVNode, Fragment, renderList, normalizeClass, createBlock, withCtx, withDirectives, resolveDynamicComponent, normalizeStyle, createVNode } from 'vue';
 
 var script$1 = {
@@ -43,10 +43,19 @@ var script$1 = {
     },
     data() {
         return {
+            id: this.menuId,
             currentIndex: -3,
             focused: false,
             focusedOptionIndex: -1
         };
+    },
+    watch: {
+        menuId(newValue) {
+            this.id = newValue || UniqueComponentId();
+        }
+    },
+    mounted() {
+        this.id = this.id || UniqueComponentId();
     },
     methods: {
         getItemId(index) {
@@ -200,9 +209,6 @@ var script$1 = {
         }
     },
     computed: {
-        id() {
-            return this.menuId || UniqueComponentId();
-        },
         focusedOptionId() {
             return this.focusedOptionIndex !== -1 ? this.focusedOptionIndex : null;
         }
@@ -228,7 +234,7 @@ function render$1(_ctx, _cache, $props, $setup, $data, $options) {
   return (openBlock(), createElementBlock("div", _hoisted_1, [
     createElementVNode("ul", {
       ref: "list",
-      id: $options.id,
+      id: $data.id,
       class: "p-dock-list",
       role: "menu",
       "aria-orientation": $props.position === 'bottom' || $props.position === 'top' ? 'horizontal' : 'vertical',
