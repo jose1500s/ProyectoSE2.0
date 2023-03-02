@@ -64,4 +64,8 @@ Route::middleware([
     // Ruta para abrir el menu de seguro facultativo
     Route::get('/seguro-facultativo', [main::class, 'seguroFacultativo'])->name('usuario.segurofacultativo');
 
+    // ---------- +++++++++++++++++++++ ------------
+    
+    // rutas del indicador INGRESO/ADMISION
+    Route::post('/registro-Admision', [main::class, 'registrarAdmision'])->name('admision.registro');
 });

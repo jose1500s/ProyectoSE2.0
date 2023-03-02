@@ -47,4 +47,24 @@ class main extends Controller
    public function seguroFacultativo(){
       return Inertia::render('menusComponentes/SeguroFacultativo');
    }
+
+
+   // ruta para guardar una nueva admision del indicador ingreso en la admision
+   function registrarAdmision(Request $request) {
+      $carrera = $request->input('carreras');
+      $aspirantes = $request->input('aspirantes');
+      $examinados = $request->input('examinados');
+      $no_admitidos = $request->input('noAdmitidos');
+      $periodo = $request->input('periodos');
+
+      // crear un nuevo registro en la tabla tb_admision
+      $admision = new tb_admision();
+      $admision->carrera = $carrera;
+      $admision->aspirantes = $aspirantes;
+      $admision->examinados = $examinados;
+      $admision->no_admitidos = $no_admitidos;
+      $admision->periodo = $periodo;
+      $admision->save();
+   
+  }
 }
