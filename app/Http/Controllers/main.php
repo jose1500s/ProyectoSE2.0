@@ -6,14 +6,22 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\tb_admision;
+use App\Models\tb_maestria;
+use App\Models\tb_equivalencia;
+use App\Models\tb_nuevo_ingreso;
+use App\Models\tb_re_ingreso;
 class main extends Controller
 {
    public function ingreso()
    {
-      // traer de la tabla tb_ingreso todos los registros
+      // traer de la tabla tb_admision todos los registros
       $ingresos = tb_admision::all();
+      $maestrias = tb_maestria::all();
+      $equivalencias = tb_equivalencia::all();
+      $ningresos = tb_nuevo_ingreso::all();
+      $reingresos = tb_re_ingreso::all();
       // retornar con Inertia a menusComponentes/TabMenu y pasarle los registros
-      return Inertia::render('menusComponentes/Ingreso/TabMenu', ['ingresos' => $ingresos]);
+      return Inertia::render('menusComponentes/Ingreso/TabMenu', ['maestrias' => $maestrias,'ingresos' => $ingresos, 'equivalencias' => $equivalencias, 'ningresos' => $ningresos, 'reingresos' => $reingresos]);
    }
 
    public function bajas() {
