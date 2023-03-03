@@ -7,10 +7,15 @@ import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
+import Carousel from 'primevue/carousel';
+import Galleria from 'primevue/galleria';
+import Gallery from '@/Components/Galeria.vue';
+import { defineProps } from 'vue';
 
 defineProps({
     canResetPassword: Boolean,
     status: String,
+
 });
 
 const form = useForm({
@@ -42,11 +47,8 @@ const submit = () => {
           <aside
             class="relative block h-16 lg:order-last lg:col-span-5 lg:h-full xl:col-span-6"
           >
-            <img
-              alt="Pattern"
-              src="images/fondoupq.jfif" 
-              class="absolute inset-0 h-full w-full object-cover"
-            />
+          <Gallery :images="images" />
+            
           </aside>
       
           <main

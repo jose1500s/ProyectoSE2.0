@@ -7,6 +7,9 @@ import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
+import Carousel from 'primevue/carousel';
+import Galleria from 'primevue/galleria';
+import Gallery from '@/Components/Galeria.vue';
 
 const form = useForm({
     name: '',
@@ -31,29 +34,8 @@ const submit = () => {
       <aside
             class="relative block h-16 lg:order-last lg:col-span-5 lg:h-full xl:col-span-6"
           >
-            <img
-              alt="Pattern"
-              src="images/fondoupq.jfif"
-              class="absolute inset-0 h-full w-full object-cover"
-            />
+          <Gallery :images="images" />
 
-        <div class="hidden lg:relative lg:block lg:p-12">
-          <a class="block text-blue-200" href="/">
-            <img src="images/UPQLOGOREDONDO.png" alt="" width="60" height="60">
-                <span class="sr-only">Home</span>
-                
-              </a>
-
-          <h2 class="mt-6 text-2xl font-bold text-white sm:text-3xl md:text-4xl">
-            Servicios Estudiantiles 🐦
-          </h2>
-          <div class="max-w-[60%]">
-          <p class="mt-4 leading-relaxed text-white/90 font-bold">
-            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Eligendi nam
-            dolorum aliquam, quibusdam aperiam voluptatum.
-          </p>
-        </div>
-        </div>
       </aside>
 
       <main
