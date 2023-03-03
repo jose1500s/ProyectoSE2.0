@@ -42,7 +42,6 @@ interface PrimeVueLocaleAriaOptions {
     nextPageLabel?: string;
     prevPageLabel?: string;
     rowsPerPageLabel?: string;
-    previousPageLabel?: string;
     jumpToPageDropdownLabel?: string;
     jumpToPageInputLabel?: string;
     selectRow?: string;
@@ -71,7 +70,7 @@ interface PrimeVueLocaleOptions {
     startsWith?: string;
     contains?: string;
     notContains?: string;
-    endWith?: string;
+    endsWith?: string;
     equals?: string;
     notEquals?: string;
     noFilter?: string;
