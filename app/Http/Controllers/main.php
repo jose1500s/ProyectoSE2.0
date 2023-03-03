@@ -65,6 +65,9 @@ class main extends Controller
       $admision->no_admitidos = $no_admitidos;
       $admision->periodo = $periodo;
       $admision->save();
+
+      // retornar a la vista ingreso
+      return redirect()->route('usuario.ingreso');
    
   }
 }

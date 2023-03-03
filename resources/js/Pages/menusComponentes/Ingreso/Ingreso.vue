@@ -157,28 +157,20 @@ export default {
           noAdmitidos: this.noAdmitidos,
           periodos: this.periodos,
         };
-        axios
-          .post("/registro-Admision", data)
-          .then((res) => {
-            if (res.data.success) { // si la respuesta es exitosa, cerrar el formulario y mostrar un mensaje de exito
-              this.productDialog = false;
-              this.$toast.add({
-                severity: "success",
-                summary: "Exito",
-                detail: res.data.message,
-                life: 3000,
-              });
-              
-            }
-          })
-          .catch((err) => {
+
+        this.$inertia.post('/registro-Admision', data, {
+          preserveState: true,
+          preserveScroll: true,
+          onSuccess: () => {
+            this.productDialog = false;
             this.$toast.add({
-              severity: "error",
-              summary: "Error",
-              detail: err.response.data.message,
+              severity: "success",
+              summary: "Exito",
+              detail: "Registro exitoso",
               life: 3000,
             });
-          });
+          },
+        });
       }
 
     }
@@ -271,7 +263,8 @@ export default {
                         </div>
                       </template>
                     </ConfirmDialog>
-                    <ConfirmDialog group="positionDialog"></ConfirmDialog>  -->
+              <ConfirmDialog group="positionDialog"></ConfirmDialog> 
+             -->
           </div>
           <!-- model para abrir grafica -->
           <Button label="Grafica" icon="pi pi-chart-bar" @click="openResponsive" />
@@ -280,6 +273,7 @@ export default {
             <!-- contenido del dialog/model desde aqui... -->
             <div class="w-full" id="contenedorGrafica">
               <GraficaIngreso :ingresos="ingresos" />
+              
             </div>
             <template #footer>
               <Button label="Cerrar" icon="pi pi-check" @click="closeResponsive" autofocus />
@@ -309,7 +303,7 @@ export default {
         <Column field="examinados" header="Examinados" :sortable="true"></Column>
         <Column field="no_admitidos" header="No Admitidos" :sortable="true"></Column>
         <Column field="periodo" header="Periodo" :sortable="true"></Column>
-
+        
         <!-- mensaje de no hay datos -->
         <template #empty>
           <div class="flex justify-center align-middle text-xl">

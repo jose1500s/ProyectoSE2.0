@@ -67,5 +67,5 @@ Route::middleware([
     // ---------- +++++++++++++++++++++ ------------
     
     // rutas del indicador INGRESO/ADMISION
-    Route::post('/registro-Admision', [main::class, 'registrarAdmision'])->name('admision.registro');
+    Route::post('/registro-Admision', [main::class, 'registrarAdmision']);
 });
