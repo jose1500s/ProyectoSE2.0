@@ -224,4 +224,5 @@ export default {
     background-color: #5b1d99;
 }
 
+
 </style>
