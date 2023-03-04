@@ -1,6 +1,10 @@
 <script>
 import AppLayout from "@/Layouts/AppLayout.vue";
 import Ingreso from "@/Pages/menusComponentes/Ingreso/Ingreso.vue";
+import Equivalencia from "@/Pages/menusComponentes/Ingreso/Equivalencia.vue";
+import Maestrias from "@/Pages/menusComponentes/Ingreso/Maestrias.vue";
+import NIngreso from "@/Pages/menusComponentes/Ingreso/NuevoIngreso.vue";
+import Reingreso from "@/Pages/menusComponentes/Ingreso/Reingreso.vue";
 
 import TabView from 'primevue/tabview';
 import TabPanel from 'primevue/tabpanel';
@@ -11,9 +15,17 @@ export default {
         TabPanel,
         AppLayout,
         Ingreso,
+        Equivalencia,
+        Maestrias,
+        NIngreso,
+        Reingreso,
     },
     props: {
         ingresos: Array,
+        maestrias: Array,
+        equivalencias: Array,
+        ningresos: Array,
+        reingresos: Array,
     },
 }
 </script>
@@ -24,11 +36,17 @@ export default {
             <TabPanel header="Admision">
                 <Ingreso :ingresos="ingresos" />
             </TabPanel>
-            <TabPanel header="Doctorado">
-                <p>Doctorado</p>
+            <TabPanel header="Nuevo Ingreso">
+                <NIngreso :ningresos="ningresos" />
             </TabPanel>
-            <TabPanel header="Maestria">
-                <p>Maestria</p>
+            <TabPanel header="Reingreso">
+                <Reingreso :reingresos="reingresos" />
+            </TabPanel>
+            <TabPanel header="Equivalencia">
+                <Equivalencia :equivalencias="equivalencias" />
+            </TabPanel>
+            <TabPanel header="Maestrias">
+                <Maestrias :maestrias="maestrias" />
             </TabPanel>
         </TabView>
     </AppLayout>
