@@ -101,4 +101,11 @@ class main extends Controller
    // retornar a la vista ingreso
    return redirect()->route('usuario.ingreso');
   }
+
+  function eliminarAdmision(Request $request) {
+   $id = $request->input('id');
+   $admision = tb_admision::findOrFail($id);
+   $admision->delete(); 
+   return redirect()->route('usuario.ingreso');
+  }
 }

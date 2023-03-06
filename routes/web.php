@@ -71,4 +71,7 @@ Route::middleware([
 
     // ruta del indicador INGRESO/ADMISION, para EDITAR una admision que recibe el id de la admision
     Route::post('/editar-Admision/{id}', [main::class, 'editarAdmision']);
+
+    // ruta del indicador INGRESO/ADMISION, para ELIMINAR una admision que recibe el id de la admision
+    Route::post('/eliminar-Admision/{id}', [main::class, 'eliminarAdmision']);
 });
