@@ -122,9 +122,7 @@ export default {
       this.submitted = false;
       this.productDialog = true;
     },
-    confirmDeleteSelected() {
-      this.deleteProductsDialog = true;
-    },
+
     hideDialog() {
       this.productDialog = false;
       this.submitted = false;
@@ -134,7 +132,7 @@ export default {
 
       // validar los campos del formulario, que no esten vacios y si estan mandar un mensaje y no enviar el formulario, los campos son: carrerasModel, aspirantes, examinados, noAdmitidos y selectedPeriodo
       if (
-        this.carreras == null ||
+        this.carreras == null || 
         this.aspirantes == 0 ||
         this.examinados == 0 ||
         this.noAdmitidos == 0 ||
@@ -149,9 +147,8 @@ export default {
         });
         return false;
       } else {
-        // usar la ruta admision.registro del web.php enviar los datos del formulario por post y mostrar un mensaje de exito
         const data = {
-          carreras: this.carreras, 
+          carreras: this.carreras,
           aspirantes: this.aspirantes,
           examinados: this.examinados,
           noAdmitidos: this.noAdmitidos,
@@ -173,7 +170,59 @@ export default {
         });
       }
 
-    }
+    },
+    editarAdmision() {
+      // editarl usando el dialog de editar producto
+      this.submitted = true; // esto es para que se muestre el mensaje de error en el formulario
+
+      // validar los campos del formulario, que no esten vacios y si estan mandar un mensaje y no enviar el formulario, los campos son: carrerasModel, aspirantes, examinados, noAdmitidos y selectedPeriodo
+      if (
+        this.product.id == 0 ||
+        this.product.carrera == null ||
+        this.product.aspirantes == 0 ||
+        this.product.examinados == 0 ||
+        this.product.no_admitidos == 0 ||
+        this.product.periodo == null
+      ) {
+        // si alguno de los campos esta vacio, no enviar el formulario y mostrar un mensaje de error
+        this.$toast.add({
+          severity: "error",
+          summary: "Error",
+          detail: "Todos los campos son obligatorios",
+          life: 3000,
+        });
+        return false;
+      } else {
+        const data = {
+          id: this.product.id, 
+          carrera: this.product.carrera,
+          aspirantes: this.product.aspirantes,
+          examinados: this.product.examinados,
+          no_admitidos: this.product.no_admitidos,
+          periodo: this.product.periodo,
+        };
+
+        this.$inertia.post(`/editar-Admision/${this.product.id}`, data, {
+          preserveState: true,
+          preserveScroll: true,
+          onSuccess: () => {
+            this.editDialog = false;
+            this.$toast.add({
+              severity: "success",
+              summary: "Exito",
+              detail: "Actualizado exitosamente",
+              life: 3000,
+            });
+          },
+        });
+      }
+      
+    },
+    editProduct(product) {
+      this.product = { ...product }; // esto es para que se muestre los datos del producto en el formulario
+      this.editDialog = true;
+    },
+
 
   },
   data() {
@@ -185,7 +234,6 @@ export default {
       },
       noDataMessage: "No se encontraron datos",
       displayResponsive: false,
-      productDialog: false,
       carrerasLista: [
         { name: "Manufactura", code: "Manufactura" },
         { name: "Mecatronica", code: "Mecatronica" },
@@ -201,6 +249,8 @@ export default {
       aspirantes: 0,
       examinados: 0,
       noAdmitidos: 0,
+      productDialog: false,
+      editDialog: false,
     };
   },
 };
@@ -210,19 +260,17 @@ export default {
   <!-- new button -->
   <Toolbar class="mb-4">
     <template #start>
-      <Button label="Nuevo Registro" icon="pi pi-plus" class="p-button-success mr-2" @click="openNew" />
-      <!-- <Button label="Delete" icon="pi pi-trash" class="p-button-danger" @click="confirmDeleteSelected"
-                    :disabled="!selectedProducts || !selectedProducts.length" /> -->
+      <Button label="Nuevo Registro" icon="pi pi-plus" class="p-button-success mr-2" @click="openNew" /> 
     </template>
   </Toolbar>
 
-  <Dialog v-model:visible="productDialog" :style="{ width: '450px' }" header="Nuevo Registro" :modal="true"
-    class="p-fluid">
+  <Dialog v-model:visible="productDialog" :breakpoints="{ '960px': '75vw', '640px': '85vw' }" :style="{ width: '25vw' }"
+    header="Nuevo Registro" :modal="true" class="p-fluid">
     <div class="field">
 
       <form @submit.prevent="registrarAdmision">
         <!-- select con opciones -->
-        <Dropdown v-model="carreras" :options="carrerasLista" optionLabel="name" optionValue="code"
+        <Dropdown v-model="carreras" :options="carrerasLista" optionLabel="name" optionValue="code" :filter="true"
           placeholder="Carrera..." />
 
         <div class="field col-12 md:col-3">
@@ -244,10 +292,22 @@ export default {
           <Dropdown v-model="periodos" :options="periodosLista" optionLabel="name" optionValue="code"
             placeholder="Periodo" />
         </div>
-        <Button label="Save" icon="pi pi-check" class="p-button-text" type="submit" />
+
+        <Button type="submit" id="btnRegisrar"
+          class="flex items-center justify-center space-x-2 rounded-md border-2 border-blue-500 px-4 py-2 font-medium text-blue-600 transition hover:bg-blue-500 hover:text-white">
+          <span> Registrar </span>
+          <span>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="h-6 w-6">
+              <path fill-rule="evenodd"
+                d="M16.72 7.72a.75.75 0 011.06 0l3.75 3.75a.75.75 0 010 1.06l-3.75 3.75a.75.75 0 11-1.06-1.06l2.47-2.47H3a.75.75 0 010-1.5h16.19l-2.47-2.47a.75.75 0 010-1.06z"
+                clip-rule="evenodd" />
+            </svg>
+          </span>
+        </Button>
       </form>
     </div>
   </Dialog>
+
 
   <section class="bg-white" id="tablaIngreso">
     <div class="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8 p-[20px]">
@@ -255,25 +315,15 @@ export default {
         <div class="flex gap-5 justify-center flex-wrap">
           <div>
             <Toast />
-            <!-- <ConfirmDialog group="templating"> 
-                      <template #message="slotProps">
-                        <div class="flex p-4">
-                          <i :class="slotProps.message.icon" style="font-size: 1.5rem"></i>
-                          <p class="pl-2">{{ slotProps.message.message }}</p>
-                        </div>
-                      </template>
-                    </ConfirmDialog>
-              <ConfirmDialog group="positionDialog"></ConfirmDialog> 
-             -->
           </div>
           <!-- model para abrir grafica -->
           <Button label="Grafica" icon="pi pi-chart-bar" @click="openResponsive" />
-          <Dialog header="Grafica" v-model:visible="displayResponsive" :breakpoints="{ '960px': '75vw', '640px': '90vw' }"
+          <Dialog header="Grafica" v-model:visible="displayResponsive" :breakpoints="{ '960px': '75vw', '75vw': '90vw' }"
             :style="{ width: '70vw' }">
             <!-- contenido del dialog/model desde aqui... -->
             <div class="w-full" id="contenedorGrafica">
               <GraficaIngreso :ingresos="ingresos" />
-              
+
             </div>
             <template #footer>
               <Button label="Cerrar" icon="pi pi-check" @click="closeResponsive" autofocus />
@@ -298,12 +348,23 @@ export default {
 
       <DataTable :value="ingresos" :paginator="true" class="p-datatable-customers" :rows="7" ref="dt"
         v-model:filters="filters" :emptyMessage="noDataMessage" stripedRows sortMode="multiple" removableSort>
+
+        <Column field="id" header="ID" :sortable="true" hidden></Column>
+        <Column selectionMode="multiple" style="width: 3rem" :exportable="false"></Column>
         <Column field="carrera" header="Carrera" :sortable="true"></Column>
         <Column field="aspirantes" header="Aspirantes" :sortable="true"></Column>
         <Column field="examinados" header="Examinados" :sortable="true"></Column>
         <Column field="no_admitidos" header="No Admitidos" :sortable="true"></Column>
         <Column field="periodo" header="Periodo" :sortable="true"></Column>
-        
+        <Column :exportable="false" style="min-width:8rem">
+          <template #body="slotProps">
+            <Button icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2"
+              @click="editProduct(slotProps.data)" />
+            <Button icon="pi pi-trash" class="p-button-rounded p-button-warning"
+              @click="confirmDeleteProduct(slotProps.data)" />
+          </template>
+        </Column>
+
         <!-- mensaje de no hay datos -->
         <template #empty>
           <div class="flex justify-center align-middle text-xl">
@@ -311,6 +372,47 @@ export default {
           </div>
         </template>
       </DataTable>
+
+      <!-- Dialog para editar el producto toma los valores del producto seleccionado -->
+      <Dialog header="Editar Ingreso" v-model:visible="editDialog" :breakpoints="{ '960px': '75vw', '75vw': '85vw' }"
+        :style="{ width: '25vw' }" :modal="true" :closable="true" :dismissableMask="true">
+
+
+        <div class="p-fluid p-formgrid p-grid">
+          <form @submit.prevent="editarAdmision">
+
+            <InputText id="id" v-model.trim="product.id"   />
+
+            <div class="p-field p-col-12 p-md-6">
+              <label for="carrera">Carrera</label>
+              <InputText id="name" v-model.trim="product.carrera"  />
+            </div>
+            <div class="p-field p-col-12 p-md-6">
+              <label for="aspirantes">Aspirantes</label>
+              <InputText id="name" v-model.trim="product.aspirantes"  />
+            </div>
+            <div class="p-field p-col-12 p-md-6">
+              <label for="examinados">Examinados</label>
+              <InputText inputId="minmax" v-model.trim="product.examinados" mode="decimal" :min="0" :max="10000"
+                :showButtons="true"  />
+
+            </div>
+            <div class="p-field p-col-12 p-md-6">
+              <label for="no_admitidos">No Admitidos</label>
+              <InputText inputId="minmax" v-model.trim="product.no_admitidos" mode="decimal" :min="0" :max="10000"
+                :showButtons="true"  />
+
+            </div>
+            <div class="p-field p-col-12 p-md-6">
+              <label for="periodo">Periodo</label>
+              <InputText id="name" v-model.trim="product.periodo" required="true" />
+            </div>
+            <Button type="submit" label="Guardar" icon="pi pi-check" />
+          </form>
+        </div>
+
+      </Dialog>
+
     </div>
   </section>
 </template>
@@ -330,4 +432,8 @@ div#contenedorGrafica canvas {
   width: 100% !important;
   height: auto !important;
 }
-</style>
+
+#btnRegisrar {
+  margin-top: 1.5rem;
+  font-size: 1.1rem;
+}</style>

@@ -78,4 +78,27 @@ class main extends Controller
       return redirect()->route('usuario.ingreso');
    
   }
+
+  // ruta para editar una admision
+  function editarAdmision(Request $request) {
+   // obtener los datos dle form y luego actualizar el registro
+   $id = $request->input('id');
+   $carrera = $request->input('carrera');
+   $aspirantes = $request->input('aspirantes');
+   $examinados = $request->input('examinados');
+   $no_admitidos = $request->input('no_admitidos');
+   $periodo = $request->input('periodo');
+
+   // actualizar el registro
+   $admision = tb_admision::find($id);
+   $admision->carrera = $carrera;
+   $admision->aspirantes = $aspirantes;
+   $admision->examinados = $examinados;
+   $admision->no_admitidos = $no_admitidos;
+   $admision->periodo = $periodo;
+   $admision->save();
+
+   // retornar a la vista ingreso
+   return redirect()->route('usuario.ingreso');
+  }
 }

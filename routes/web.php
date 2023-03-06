@@ -66,6 +66,9 @@ Route::middleware([
 
     // ---------- +++++++++++++++++++++ ------------
     
-    // rutas del indicador INGRESO/ADMISION
+    // ruta del indicador INGRESO/ADMISION, para REGISTRAR una admision
     Route::post('/registro-Admision', [main::class, 'registrarAdmision']);
+
+    // ruta del indicador INGRESO/ADMISION, para EDITAR una admision que recibe el id de la admision
+    Route::post('/editar-Admision/{id}', [main::class, 'editarAdmision']);
 });

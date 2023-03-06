@@ -82,7 +82,7 @@ export default {
 
 <template>
     <section class="bg-white">
-        <div class="mx-auto max-w-screen-xl px-4 sm:px-6 md:py-16 lg:px-8">
+        <div class="mx-auto max-w-screen-xl px-4 sm:px-6  lg:px-8">
             <div class="w-full text-center">
                 <!-- {{ $page.props.user.name}} -->
                 <div class="flex flex-col justify-between gap-6" id="upSide">
@@ -184,6 +184,13 @@ export default {
 </template>
 
 <style scoped>
+.p-tag {
+    margin: 0.5em 0.3em 0.5em 0.3em;
+    padding: 0.5em;
+    border-radius: 3px;
+    font-size: 0.85em;
+    font-weight: 600;
+}
 .etiquetahombre	{
    background-color: #0f6ec5	;
 }
@@ -223,6 +230,8 @@ export default {
 .etiquetaautomotriz{
     background-color: #5b1d99;
 }
+
+
 
 
 </style>
