@@ -74,4 +74,9 @@ Route::middleware([
 
     // ruta del indicador INGRESO/ADMISION, para ELIMINAR una admision que recibe el id de la admision
     Route::post('/eliminar-Admision/{id}', [main::class, 'eliminarAdmision']);
+
+    // ruta del indicador INGRESO/ADMISION, para ELIMINAR VARIAS admisiones que recibe como array los ids de las admisiones
+    Route::post('/eliminar-Admisiones', [main::class, 'eliminarAdmisiones']);
+
+
 });

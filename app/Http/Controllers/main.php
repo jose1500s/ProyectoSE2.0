@@ -108,4 +108,11 @@ class main extends Controller
    $admision->delete(); 
    return redirect()->route('usuario.ingreso');
   }
+
+  function eliminarAdmisiones(Request $request) {
+   $id = $request->id;
+   $admision = tb_admision::whereIn('id', $id);
+   $admision->delete();
+   return redirect()->route('usuario.ingreso');
+  }
 }
