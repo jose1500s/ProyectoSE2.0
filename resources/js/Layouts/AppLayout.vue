@@ -182,7 +182,7 @@ export default defineComponent({
       <Button icon="pi pi-arrow-right" @click="visibleLeft = true" class="mr-2" />
       <Sidebar v-model:visible="visibleLeft" :baseZIndex="10000">
         <Link href="/dashboard" class="px-8 text-left focus:outline-none">
-        <img src="https://visionindustrial.com.mx/wp-content/uploads/2016/08/UPQ-logo.jpg" alt="LogoUPQ"
+        <img src="images/UPQ-logo.jpg" alt="LogoUPQ"
           class="h-20 mx-auto" />
         </Link>
         <div class="menus">
