@@ -64,4 +64,19 @@ Route::middleware([
     // Ruta para abrir el menu de seguro facultativo
     Route::get('/seguro-facultativo', [main::class, 'seguroFacultativo'])->name('usuario.segurofacultativo');
 
+    // ---------- +++++++++++++++++++++ ------------
+    
+    // ruta del indicador INGRESO/ADMISION, para REGISTRAR una admision
+    Route::post('/registro-Admision', [main::class, 'registrarAdmision']);
+
+    // ruta del indicador INGRESO/ADMISION, para EDITAR una admision que recibe el id de la admision
+    Route::post('/editar-Admision/{id}', [main::class, 'editarAdmision']);
+
+    // ruta del indicador INGRESO/ADMISION, para ELIMINAR una admision que recibe el id de la admision
+    Route::post('/eliminar-Admision/{id}', [main::class, 'eliminarAdmision']);
+
+    // ruta del indicador INGRESO/ADMISION, para ELIMINAR VARIAS admisiones que recibe como array los ids de las admisiones
+    Route::post('/eliminar-Admisiones', [main::class, 'eliminarAdmisiones']);
+
+
 });
