@@ -13,20 +13,20 @@ export default defineComponent({
     setup() {
         const images = ref([
             {
-                itemImageSrc: 'images/ingreso3.jpg',
-                thumbnailImageSrc: 'images/ingreso3.jpg',
+                itemImageSrc: 'images/foto12.jpg',
+                thumbnailImageSrc: 'images/foto12.jpg',
             },
             {
                 itemImageSrc: 'images/fondoupq5.jpg',
                 thumbnailImageSrc: 'images/fondoupq5.jpg',
             },
             {
-                itemImageSrc: 'images/UPQ4.jpg',
-                thumbnailImageSrc: 'images/UPQ4.jpg',
+                itemImageSrc: 'images/foto22.jpg',
+                thumbnailImageSrc: 'images/foto22.jpg',
             },
             {
-                itemImageSrc: 'images/unnamed5.jpg',
-                thumbnailImageSrc: 'images/unnamed5.jpg',
+                itemImageSrc: 'images/foto32.jpg',
+                thumbnailImageSrc: 'images/foto32.jpg',
             },
         ]);
         return {
