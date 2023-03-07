@@ -2,6 +2,9 @@
     <Portal :appendTo="appendTo" :disabled="!popup">
         <transition name="p-connected-overlay" @enter="onEnter" @leave="onLeave" @after-leave="onAfterLeave">
             <div v-if="popup ? overlayVisible : true" :ref="containerRef" :id="id" :class="containerClass" v-bind="$attrs" @click="onOverlayClick">
+                <div v-if="$slots.start" class="p-menu-start">
+                    <slot name="start"></slot>
+                </div>
                 <ul
                     :ref="listRef"
                     :id="id + '_list'"
@@ -29,6 +32,9 @@
                         <PVMenuitem v-else :key="label(item) + i.toString()" :id="id + '_' + i" :item="item" :template="$slots.item" :exact="exact" :focusedOptionId="focusedOptionId" @item-click="itemClick" />
                     </template>
                 </ul>
+                <div v-if="$slots.end" class="p-menu-end">
+                    <slot name="end"></slot>
+                </div>
             </div>
         </transition>
     </Portal>
@@ -84,11 +90,17 @@ export default {
     },
     data() {
         return {
+            id: this.$attrs.id,
             overlayVisible: false,
             focused: false,
             focusedOptionIndex: -1,
             selectedOptionIndex: -1
         };
+    },
+    watch: {
+        '$attrs.id': function (newValue) {
+            this.id = newValue || UniqueComponentId();
+        }
     },
     target: null,
     outsideClickListener: null,
@@ -97,6 +109,8 @@ export default {
     container: null,
     list: null,
     mounted() {
+        this.id = this.id || UniqueComponentId();
+
         if (!this.popup) {
             this.bindResizeListener();
             this.bindOutsideClickListener();
@@ -388,9 +402,6 @@ export default {
                     'p-ripple-disabled': this.$primevue.config.ripple === false
                 }
             ];
-        },
-        id() {
-            return this.$attrs.id || UniqueComponentId();
         },
         focusedOptionId() {
             return this.focusedOptionIndex !== -1 ? this.focusedOptionIndex : null;

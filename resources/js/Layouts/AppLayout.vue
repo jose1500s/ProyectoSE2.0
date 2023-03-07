@@ -182,7 +182,7 @@ export default defineComponent({
       <Button icon="pi pi-arrow-right" @click="visibleLeft = true" class="mr-2" />
       <Sidebar v-model:visible="visibleLeft" :baseZIndex="10000">
         <Link href="/dashboard" class="px-8 text-left focus:outline-none">
-        <img src="https://visionindustrial.com.mx/wp-content/uploads/2016/08/UPQ-logo.jpg" alt=""
+        <img src="https://visionindustrial.com.mx/wp-content/uploads/2016/08/UPQ-logo.jpg" alt="LogoUPQ"
           class="h-20 mx-auto" />
         </Link>
         <div class="menus">
@@ -441,7 +441,7 @@ export default defineComponent({
                       hover:bg-gray-200
                       focus:shadow-outline
                       hover:cursor-pointer
-                    " white="" :href="route('usuario.equivalencia')">
+                    " white="" :href="route('usuario.segurofacultativo')">
               <!-- :href="route('posts.index')" :active="route().current('post.index')" -->
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                 stroke="currentColor" class="w-5 h-5">
@@ -531,7 +531,7 @@ export default defineComponent({
           ">
           <div class="flex flex-col items-center flex-shrink-0 px-4">
             <Link href="/dashboard" class="px-8 text-left focus:outline-none">
-            <img src="https://visionindustrial.com.mx/wp-content/uploads/2016/08/UPQ-logo.jpg" alt="" />
+            <img src="https://visionindustrial.com.mx/wp-content/uploads/2016/08/UPQ-logo.jpg" alt="LogoUPQ" />
             </Link>
             <button class="hidden rounded-lg focus:outline-none focus:shadow-outline">
               <svg fill="currentColor" viewBox="0 0 20 20" class="w-6 h-6">
