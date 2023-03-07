@@ -441,7 +441,7 @@ export default defineComponent({
                       hover:bg-gray-200
                       focus:shadow-outline
                       hover:cursor-pointer
-                    " white="" :href="route('usuario.equivalencia')">
+                    " white="" :href="route('usuario.segurofacultativo')">
               <!-- :href="route('posts.index')" :active="route().current('post.index')" -->
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                 stroke="currentColor" class="w-5 h-5">
