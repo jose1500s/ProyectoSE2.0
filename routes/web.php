@@ -64,7 +64,7 @@ Route::middleware([
     // Ruta para abrir el menu de seguro facultativo
     Route::get('/seguro-facultativo', [main::class, 'seguroFacultativo'])->name('usuario.segurofacultativo');
 
-    // ---------- +++++++++++++++++++++ ------------
+    // ---------- TAB ADMISIONES ------------
     
     // ruta del indicador INGRESO/ADMISION, para REGISTRAR una admision
     Route::post('/registro-Admision', [main::class, 'registrarAdmision']);
@@ -77,6 +77,34 @@ Route::middleware([
 
     // ruta del indicador INGRESO/ADMISION, para ELIMINAR VARIAS admisiones que recibe como array los ids de las admisiones
     Route::post('/eliminar-Admisiones', [main::class, 'eliminarAdmisiones']);
+
+    // ---------- FIN TAB ADMISIONES ------------
+
+    // ---------- TAB NUEVO INGRESO -------------
+    Route::post('/registro-NIngreso', [main::class, 'registrarNIngreso']);
+
+    Route::post('/eliminar-NIngresos', [main::class, 'eliminarNIngresos']);
+
+    Route::post('/eliminar-NIngreso', [main::class, 'eliminarNIngreso']);
+
+    Route::post('/editar-NIngreso/{id}', [main::class, 'editarNIngreso']);
+   
+    // ---------- FIN TAB RE INGRESOS -------------
+    Route::post('/registrar-RIngresos', [main::class, 'registrarRIngreso']);
+
+    Route::post('/editar-RIngresos/{id}', [main::class, 'editarRIngresos']);
+
+    Route::post('/eliminar-RIngreso/{id}', [main::class, 'eliminarRIngreso']);
+
+    Route::post('/eliminar-RIngresos/{id}', [main::class, 'eliminarRIngresos']);
+
+    // ---------- FIN TAB RE INGRESOS -------------
+
+    // ---------- TAB EQUIVALENCIAS -------------
+    
+    // ruta del indicador INGRESO/EQUIVALENCIA, para REGISTRAR una equivalencia
+    Route::post('/registro-Equivalencia', [main::class, 'registrarEquivalencia']);
+
 
 
 });

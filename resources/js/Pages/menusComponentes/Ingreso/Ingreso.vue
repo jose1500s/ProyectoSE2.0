@@ -263,7 +263,7 @@ export default {
       filters: {
         carrera: { value: null, matchMode: FilterMatchMode.IN },
         Proceso: { value: null, matchMode: FilterMatchMode.IN },
-        periodo: { value: null, matchMode: FilterMatchMode.IN }, //fecha: es como se llama el campo en la base de datos
+        periodo: { value: null, matchMode: FilterMatchMode.IN }, 
       },
       noDataMessage: "No se encontraron datos",
       displayResponsive: false,
@@ -287,6 +287,7 @@ export default {
       deleteProductDialog: false,
       selectedProducts: null,
       deleteProductsDialog: false,
+
     };
   },
 };
@@ -295,7 +296,7 @@ export default {
 <template>
   <Toolbar class="mb-4">
     <template #start>
-      <Button label="Nuevo Registro" icon="pi pi-plus" class="p-button-success !mr-4" @click="openNew" />
+      <Button label="Nuevo Registro" icon="pi pi-plus" class="p-button-success !mr-2" @click="openNew" />
       <Button label="Eliminar" icon="pi pi-trash" class="p-button-danger" @click="confirmDeleteSelected"
         :disabled="!selectedProducts || !selectedProducts.length" />
     </template>
@@ -410,11 +411,11 @@ export default {
       </DataTable>
 
       <!-- Dialog para editar el producto toma los valores del producto seleccionado -->
-      <Dialog header="Editar Ingreso" v-model:visible="editDialog" :breakpoints="{ '960px': '75vw', '75vw': '85vw' }"
+      <Dialog header="Editar Admision" v-model:visible="editDialog" :breakpoints="{ '960px': '75vw', '75vw': '85vw' }"
         :style="{ width: '25vw' }" :modal="true" :closable="true" :dismissableMask="false">
         <div class="p-fluid p-formgrid p-grid">
           <form @submit.prevent="editarAdmision">
-            <InputText id="id" v-model.trim="product.id" />
+            <InputText id="id" v-model.trim="product.id" hidden /> 
 
             <div class="p-field p-col-12 p-md-6">
               <label for="carrera">Carrera</label>
@@ -438,7 +439,7 @@ export default {
               <label for="periodo">Periodo</label>
               <InputText id="name" v-model.trim="product.periodo" required="true" />
             </div>
-            <Button type="submit" label="Guardar" icon="pi pi-check" />
+            <Button type="submit" label="Guardar" icon="pi pi-check" class="!mt-3" />
           </form>
         </div>
       </Dialog>
