@@ -105,6 +105,19 @@ Route::middleware([
     // ruta del indicador INGRESO/EQUIVALENCIA, para REGISTRAR una equivalencia
     Route::post('/registro-Equivalencia', [main::class, 'registrarEquivalencia']);
 
+    Route::post('/editar-Equivalencia/{id}', [main::class, 'editarEquivalencia']);
 
+    Route::post('/eliminar-Equivalencia/{id}', [main::class, 'eliminarEquivalencia']);
 
+    Route::post('/eliminar-Equivalencias/{id}', [main::class, 'eliminarEquivalencias']);
+
+    // ---------- FIN TAB Equivalencia -------------
+    // ---------- TAB Maestrias -------------
+    Route::post('/registro-Maestria', [main::class, 'registrarMaestria']);
+
+    Route::post('/editar-Maestria/{id}', [main::class, 'editarMaestria']);
+
+    Route::post('/eliminar-Maestria/{id}', [main::class, 'eliminarMaestria']);
+
+    Route::post('/eliminar-Maestrias/{id}', [main::class, 'eliminarMaestrias']);
 });
