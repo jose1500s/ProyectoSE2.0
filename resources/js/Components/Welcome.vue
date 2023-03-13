@@ -36,8 +36,8 @@ export default {
             datasets: [
                 {
                     data: [647, 336, 409, 91, 471, 510, 143],
-                    backgroundColor: ["#000000", "#d60212", "#05d3f8", "#5b1d99", "#9f102c", "#18A4E0", "#aef055"],
-                    hoverBackgroundColor: ["#000000", "#d60212", "#05d3f8", "#5b1d99", "#9f102c", "#18A4E0", "#aef055"],
+                    backgroundColor: ["#000000", "#d60212", "#05d3f8", "#5b1d99", "#9f102c", "#19058f", "#aef055"],
+                    hoverBackgroundColor: ["#000000", "#d60212", "#05d3f8", "#5b1d99", "#9f102c", "#19058f", "#aef055"],
                     porcentajes: []
                 }
             ]
@@ -213,7 +213,7 @@ export default {
     background-color: #000000;
 }
 .etiquetamanufactura{
-    background-color: #18A4E0;
+    background-color: #19058f;
 }
 .etiquetamecatronica{
     background-color: #9f102c;
