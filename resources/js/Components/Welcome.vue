@@ -88,7 +88,7 @@ export default {
                 <div class="flex flex-col justify-between gap-6" id="upSide">
                     <div class="titulo">
                         <div class="text-3xl font-bold" id="nombreDashboard">
-                            <h2>Bienvenido {{ $page.props.user.name }}</h2>
+                            <h2>Bienvenido Mr {{ $page.props.user.name }}</h2>
                         </div>
                         <div class="text-lg mt-4" id="parrafoDashboard">
                             Aqui podras ver un resumen de todos los indicadores actuales.

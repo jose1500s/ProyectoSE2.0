@@ -240,11 +240,12 @@ export default {
       const data = {
         id: this.selectedProducts.map((item) => item.id), 
       };
-      this.$inertia.post("/eliminar-Maestrias", data, {
+      this.$inertia.post(`/eliminar-Maestrias/${this.selectedProducts.map((item) => item.id)}`, data, {
         preserveState: true,
         preserveScroll: true,
         onSuccess: () => {
           this.deleteProductsDialog = false;
+          this.selectedProducts = [];
           this.$toast.add({
             severity: "success",
             summary: "Exito",
@@ -295,7 +296,7 @@ export default {
 <template>
   <Toolbar class="mb-4">
     <template #start>
-      <Button label="Nuevo Registro" icon="pi pi-plus" class="p-button-success !mr-4" @click="openNew" />
+      <Button label="Nuevo Registro" icon="pi pi-plus" class="p-button-success !mr-2" @click="openNew" />
       <Button label="Eliminar" icon="pi pi-trash" class="p-button-danger" @click="confirmDeleteSelected"
         :disabled="!selectedProducts || !selectedProducts.length" />
     </template>

@@ -43,7 +43,7 @@ export default {
   },
   methods: {
     filtrarCarreras() {
-      const carreras = ['Negocios', 'Administración', 'Sistemas', 'Automotriz', 'Mecatrónica', 'Manufactura', 'Telemática'];
+      const carreras = ['Negocios', 'Administracion', 'Sistemas', 'Automotriz', 'Mecatronica', 'Manufactura', 'Telematica'];
       return carreras;
     },
     filtrarProcesos() {
