@@ -10,6 +10,7 @@ use App\Models\tb_maestria;
 use App\Models\tb_equivalencia;
 use App\Models\tb_nuevo_ingreso;
 use App\Models\tb_re_ingreso;
+use App\Models\tb_indicador_equivalencia;
 class main extends Controller
 {
    public function ingreso()
@@ -52,8 +53,10 @@ class main extends Controller
       return Inertia::render('menusComponentes/CambioDeCarrera');
    }
 
-   public function seguroFacultativo(){
-      return Inertia::render('menusComponentes/SeguroFacultativo');
+   public function equivalencia(){
+      // traer de la tabla tb_admision todos los registros
+      $equiva = tb_indicador_equivalencia::all();
+      return Inertia::render('menusComponentes/Equivalencia/TabMenuEqui', ['equiva' => $equiva]);
    }
 
 
@@ -372,4 +375,63 @@ function eliminarEquivalencias(Request $request) {
       return redirect()->route('usuario.ingreso');
    }
 
+   //  --------------------- TAB NUEVO EQUIVALENCIA2 -----------------------
+   // ruta para guardar una nueva equivalencia del indicador ingreso en la equivalencia
+  function registrarEquivalencia2(Request $request) {
+   $carrera = $request->input('carreras');
+   $aspirantes = $request->input('aspirantes');
+   $examinados = $request->input('examinados');
+   $no_admitidos = $request->input('noAdmitidos');
+   $periodo = $request->input('periodos');
+
+   // crear un nuevo registro en la tabla tb_equivalencia
+   $admision = new tb_indicador_equivalencia();
+   $admision->carrera = $carrera;
+   $admision->aspirantes = $aspirantes;
+   $admision->examinados = $examinados;
+   $admision->no_admitidos = $no_admitidos;
+   $admision->periodo = $periodo;
+   $admision->save();
+
+   // retornar a la vista ingreso
+   return redirect()->route('usuario.equivalencia');
+
+} 
+
+// ruta para editar una equivalencia
+function editarEquivalencia2(Request $request) {
+   // obtener los datos dle form y luego actualizar el registro
+   $id = $request->input('id');
+   $carrera = $request->input('carrera');
+   $aspirantes = $request->input('aspirantes');
+   $examinados = $request->input('examinados');
+   $no_admitidos = $request->input('no_admitidos');
+   $periodo = $request->input('periodo');
+
+   // actualizar el registro
+   $admision = tb_indicador_equivalencia::find($id);
+   $admision->carrera = $carrera;
+   $admision->aspirantes = $aspirantes;
+   $admision->examinados = $examinados;
+   $admision->no_admitidos = $no_admitidos;
+   $admision->periodo = $periodo;
+   $admision->save();
+
+   // retornar a la vista ingreso
+   return redirect()->route('usuario.equivalencia');
+  }
+
+  function eliminarEquivalencia2(Request $request) {
+   $id = $request->input('id');
+   $equiva = tb_indicador_equivalencia::findOrFail($id);
+   $equiva->delete(); 
+   return redirect()->route('usuario.equivalencia');
+}
+
+function eliminarEquivalencias2(Request $request) {
+   $id = $request->id;
+   $equiva = tb_indicador_equivalencia::whereIn('id', $id);
+   $equiva->delete();
+   return redirect()->route('usuario.equivalencia');
+}
 }
