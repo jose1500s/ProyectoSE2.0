@@ -47,7 +47,7 @@ const submit = () => {
           <aside
             class="relative block h-16 lg:order-last lg:col-span-5 lg:h-full xl:col-span-6"
           >
-          <Gallery :images="images" />
+          <Gallery  />
             
           </aside>
       

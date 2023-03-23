@@ -91,7 +91,8 @@ export default {
                             <h2>Bienvenido {{ $page.props.user.name }}</h2>
                         </div>
                         <div class="text-lg mt-4" id="parrafoDashboard">
-                            Aqui podras ver un resumen de todos los indicadores actuales.
+                            Aqui podras ver un resumen de todos los indicadores actuales. <br>
+                            Si deseas ver mas detalles de alguno de ellos, solo da click en el titulo de la tarjeta.
                         </div>
                     </div>
                     <div class="tarjetas flex justify-center gap-10 flex-wrap">
