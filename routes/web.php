@@ -62,7 +62,7 @@ Route::middleware([
     Route::get('/cambio-de-carrera', [main::class, 'cambioDeCarrera'])->name('usuario.cambio_de_carrera');
 
     // Ruta para abrir el menu de seguro facultativo
-    Route::get('/seguro-facultativo', [main::class, 'seguroFacultativo'])->name('usuario.segurofacultativo');
+    Route::get('/equivalencia', [main::class, 'equivalencia'])->name('usuario.equivalencia');
 
     // ---------- TAB ADMISIONES ------------
     
@@ -120,4 +120,13 @@ Route::middleware([
     Route::post('/eliminar-Maestria/{id}', [main::class, 'eliminarMaestria']);
 
     Route::post('/eliminar-Maestrias/{id}', [main::class, 'eliminarMaestrias']);
+
+    // ruta del indicador EQUIVALENCIA, para REGISTRAR una equivalencia
+    Route::post('/registro-Equivalencia2', [main::class, 'registrarEquivalencia2']);
+
+    Route::post('/editar-Equivalencia2/{id}', [main::class, 'editarEquivalencia2']);
+
+    Route::post('/eliminar-Equivalencia2/{id}', [main::class, 'eliminarEquivalencia2']);
+
+    Route::post('/eliminar-Equivalencias2/{id}', [main::class, 'eliminarEquivalencias2']);
 });
