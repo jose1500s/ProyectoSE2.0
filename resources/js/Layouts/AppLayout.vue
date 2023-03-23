@@ -803,7 +803,7 @@ export default defineComponent({
                           <!-- btn cerrar sesion con confirmacion -->
                           <Button @click="confirmPosition('bottomleft')" icon="pi pi-sign-out"
                             class="p-button-rounded p-button-secondary" />
-
+                          
                           <Button @click="showProfile()" icon="pi pi-cog" class="p-button-rounded p-button-secondary" />
                         </div>
                       </div>

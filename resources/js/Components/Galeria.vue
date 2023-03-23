@@ -1,12 +1,10 @@
 <script>
 
-import button from 'primevue/button';
 import galleria from 'primevue/galleria';
 import { defineComponent, ref } from 'vue';
 
 export default defineComponent({
     components: {
-        button,
         galleria,
     },
 
@@ -22,7 +20,7 @@ export default defineComponent({
             },
             {
                 itemImageSrc: 'images/foto22.jpg',
-                thumbnailImageSrc: 'images/foto22.jpg',
+                thumbnailImageSrc: 'images/foto22.jpg', 
             },
             {
                 itemImageSrc: 'images/foto32.jpg',
@@ -43,10 +41,7 @@ export default defineComponent({
         };
     },
 
-    mounted() {
-        this.galleriaClass.getImages().then(data => this.images = data);
-        this.bindDocumentListeners();
-    },
+   
     methods: {
         onThumbnailButtonClick() {
             this.showThumbnails = !this.showThumbnails;
@@ -105,9 +100,9 @@ export default defineComponent({
         }
     },
     computed: {
-        galleriaClass() {
-            return ['custom-galleria', {'fullscreen': this.fullScreen}];
-        },
+        // galleriaClass() {
+        //     return ['custom-galleria', {'fullscreen': this.fullScreen}]; 
+        // },
         fullScreenIcon() {
             return `pi ${this.fullScreen ? 'pi-window-minimize' : 'pi-window-maximize'}`;
         }

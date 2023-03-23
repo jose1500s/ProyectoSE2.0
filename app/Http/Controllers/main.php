@@ -297,5 +297,79 @@ function editarEquivalencia(Request $request) {
    return redirect()->route('usuario.ingreso');
   }
 
+  function eliminarEquivalencia(Request $request) {
+   $id = $request->input('id');
+   $equivalencia = tb_equivalencia::findOrFail($id);
+   $equivalencia->delete(); 
+   return redirect()->route('usuario.ingreso');
+}
+
+function eliminarEquivalencias(Request $request) {
+   $id = $request->id;
+   $equivalencia = tb_equivalencia::whereIn('id', $id);
+   $equivalencia->delete();
+   return redirect()->route('usuario.ingreso');
+}
+
+//  --------------------- TAB NUEVO MAESTRIAS -----------------------
+   // ruta para guardar una nueva MAESTRIA del indicador ingreso en la maestria
+
+   function registrarMaestria(Request $request) {
+      $carrera = $request->input('carreras');
+      $aspirantes = $request->input('aspirantes');
+      $examinados = $request->input('examinados');
+      $no_admitidos = $request->input('noAdmitidos');
+      $periodo = $request->input('periodos');
+
+      // crear un nuevo registro en la tabla tb_equivalencia
+      $admision = new tb_maestria();
+      $admision->carrera = $carrera;
+      $admision->aspirantes = $aspirantes;
+      $admision->examinados = $examinados;
+      $admision->no_admitidos = $no_admitidos;
+      $admision->periodo = $periodo;
+      $admision->save();
+
+      // retornar a la vista ingreso
+      return redirect()->route('usuario.ingreso');
+
+   }
+
+   // ruta para editar una maestria
+   function editarMaestria(Request $request) {
+      // obtener los datos dle form y luego actualizar el registro
+      $id = $request->input('id');
+      $carrera = $request->input('carrera');
+      $aspirantes = $request->input('aspirantes');
+      $examinados = $request->input('examinados');
+      $no_admitidos = $request->input('no_admitidos');
+      $periodo = $request->input('periodo');
+
+      // actualizar el registro
+      $admision = tb_maestria::find($id);
+      $admision->carrera = $carrera;
+      $admision->aspirantes = $aspirantes;
+      $admision->examinados = $examinados;
+      $admision->no_admitidos = $no_admitidos;
+      $admision->periodo = $periodo;
+      $admision->save();
+
+      // retornar a la vista ingreso
+      return redirect()->route('usuario.ingreso');
+   }
+
+   function eliminarMaestria(Request $request) {
+      $id = $request->input('id');
+      $maestria = tb_maestria::findOrFail($id);
+      $maestria->delete(); 
+      return redirect()->route('usuario.ingreso');
+   }
+
+   function eliminarMaestrias(Request $request) {
+      $id = $request->id;
+      $maestria = tb_maestria::whereIn('id', $id);
+      $maestria->delete();
+      return redirect()->route('usuario.ingreso');
+   }
 
 }

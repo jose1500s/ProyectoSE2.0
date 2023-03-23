@@ -36,8 +36,8 @@ export default {
             datasets: [
                 {
                     data: [647, 336, 409, 91, 471, 510, 143],
-                    backgroundColor: ["#000000", "#d60212", "#05d3f8", "#5b1d99", "#9f102c", "#18A4E0", "#aef055"],
-                    hoverBackgroundColor: ["#000000", "#d60212", "#05d3f8", "#5b1d99", "#9f102c", "#18A4E0", "#aef055"],
+                    backgroundColor: ["#000000", "#d60212", "#05d3f8", "#5b1d99", "#9f102c", "#19058f", "#aef055"],
+                    hoverBackgroundColor: ["#000000", "#d60212", "#05d3f8", "#5b1d99", "#9f102c", "#19058f", "#aef055"],
                     porcentajes: []
                 }
             ]
@@ -91,7 +91,8 @@ export default {
                             <h2>Bienvenido {{ $page.props.user.name }}</h2>
                         </div>
                         <div class="text-lg mt-4" id="parrafoDashboard">
-                            Aqui podras ver un resumen de todos los indicadores actuales.
+                            Aqui podras ver un resumen de todos los indicadores actuales. <br>
+                            Si deseas ver mas detalles de alguno de ellos, solo da click en el titulo de la tarjeta.
                         </div>
                     </div>
                     <div class="tarjetas flex justify-center gap-10 flex-wrap">
@@ -213,7 +214,7 @@ export default {
     background-color: #000000;
 }
 .etiquetamanufactura{
-    background-color: #18A4E0;
+    background-color: #19058f;
 }
 .etiquetamecatronica{
     background-color: #9f102c;

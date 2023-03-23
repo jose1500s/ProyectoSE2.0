@@ -164,7 +164,7 @@ export default {
         });
       }
     },
-    editarAdmision() {
+    editarEquivalencia() {
       // editarl usando el dialog de editar producto
       this.submitted = true; // esto es para que se muestre el mensaje de error en el formulario
       // validar los campos del formulario, que no esten vacios y si estan mandar un mensaje y no enviar el formulario, los campos son: carrerasModel, aspirantes, examinados, noAdmitidos y selectedPeriodo
@@ -193,7 +193,7 @@ export default {
           no_admitidos: this.product.no_admitidos,
           periodo: this.product.periodo,
         };
-        this.$inertia.post(`/editar-Admision/${this.product.id}`, data, {
+        this.$inertia.post(`/editar-Equivalencia/${this.product.id}`, data, {
           preserveState: true,
           preserveScroll: true,
           onSuccess: () => {
@@ -220,7 +220,7 @@ export default {
       const data2 = {
         id: this.product.id,
       };
-      this.$inertia.post(`/eliminar-Admision/${this.product.id}`, data2, {
+      this.$inertia.post(`/eliminar-Equivalencia/${this.product.id}`, data2, {
         preserveState: true,
         preserveScroll: true,
         onSuccess: () => {
@@ -240,11 +240,12 @@ export default {
       const data = {
         id: this.selectedProducts.map((item) => item.id), 
       };
-      this.$inertia.post("/eliminar-Admisiones", data, {
+      this.$inertia.post(`/eliminar-Equivalencias/${this.product.id}`, data, {
         preserveState: true,
         preserveScroll: true,
         onSuccess: () => {
           this.deleteProductsDialog = false;
+          this.selectedProducts = [];
           this.$toast.add({
             severity: "success",
             summary: "Exito",
@@ -295,7 +296,7 @@ export default {
 <template>
   <Toolbar class="mb-4">
     <template #start>
-      <Button label="Nuevo Registro" icon="pi pi-plus" class="p-button-success !mr-4" @click="openNew" />
+      <Button label="Nuevo Registro" icon="pi pi-plus" class="p-button-success !mr-2" @click="openNew" />
       <Button label="Eliminar" icon="pi pi-trash" class="p-button-danger" @click="confirmDeleteSelected"
         :disabled="!selectedProducts || !selectedProducts.length" />
     </template>
@@ -410,11 +411,11 @@ export default {
       </DataTable>
 
       <!-- Dialog para editar el producto toma los valores del producto seleccionado -->
-      <Dialog header="Editar Ingreso" v-model:visible="editDialog" :breakpoints="{ '960px': '75vw', '75vw': '85vw' }"
+      <Dialog header="Editar Equivalencia" v-model:visible="editDialog" :breakpoints="{ '960px': '75vw', '75vw': '85vw' }"
         :style="{ width: '25vw' }" :modal="true" :closable="true" :dismissableMask="false">
         <div class="p-fluid p-formgrid p-grid">
-          <form @submit.prevent="editarAdmision">
-            <InputText id="id" v-model.trim="product.id" />
+          <form @submit.prevent="editarEquivalencia">
+            <InputText id="id" v-model.trim="product.id" hidden/>
 
             <div class="p-field p-col-12 p-md-6">
               <label for="carrera">Carrera</label>
@@ -438,7 +439,7 @@ export default {
               <label for="periodo">Periodo</label>
               <InputText id="name" v-model.trim="product.periodo" required="true" />
             </div>
-            <Button type="submit" label="Guardar" icon="pi pi-check" />
+            <Button type="submit" label="Guardar" icon="pi pi-check" class="!mt-3" />
           </form>
         </div>
       </Dialog>
