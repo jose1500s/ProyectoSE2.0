@@ -10,7 +10,7 @@ use App\Models\tb_maestria;
 use App\Models\tb_equivalencia;
 use App\Models\tb_nuevo_ingreso;
 use App\Models\tb_re_ingreso;
-use App\Models\equivalencias2;
+use App\Models\tb_indicador_equivalencia;
 class main extends Controller
 {
    public function ingreso()
@@ -54,8 +54,9 @@ class main extends Controller
    }
 
    public function equivalencia(){
-      $equivalencias2 = equivalencias2::all();
-      return Inertia::render('menusComponentes/Equivalencia/TabMenuEqui', ['equivalencias' => $equivalencias]);
+      // traer de la tabla tb_admision todos los registros
+      $equiva = tb_indicador_equivalencia::all();
+      return Inertia::render('menusComponentes/Equivalencia/TabMenuEqui', ['equiva' => $equiva]);
    }
 
 
@@ -384,7 +385,7 @@ function eliminarEquivalencias(Request $request) {
    $periodo = $request->input('periodos');
 
    // crear un nuevo registro en la tabla tb_equivalencia
-   $admision = new equivalencias2();
+   $admision = new tb_indicador_equivalencia();
    $admision->carrera = $carrera;
    $admision->aspirantes = $aspirantes;
    $admision->examinados = $examinados;
@@ -408,7 +409,7 @@ function editarEquivalencia2(Request $request) {
    $periodo = $request->input('periodo');
 
    // actualizar el registro
-   $admision = equivalencias2::find($id);
+   $admision = tb_indicador_equivalencia::find($id);
    $admision->carrera = $carrera;
    $admision->aspirantes = $aspirantes;
    $admision->examinados = $examinados;
@@ -422,15 +423,15 @@ function editarEquivalencia2(Request $request) {
 
   function eliminarEquivalencia2(Request $request) {
    $id = $request->input('id');
-   $equivalencia2 = equivalencias2::findOrFail($id);
-   $equivalencia2->delete(); 
+   $equiva = tb_indicador_equivalencia::findOrFail($id);
+   $equiva->delete(); 
    return redirect()->route('usuario.equivalencia');
 }
 
 function eliminarEquivalencias2(Request $request) {
    $id = $request->id;
-   $equivalencia2 = equivalencias2::whereIn('id', $id);
-   $equivalencia2->delete();
+   $equiva = tb_indicador_equivalencia::whereIn('id', $id);
+   $equiva->delete();
    return redirect()->route('usuario.equivalencia');
 }
 }

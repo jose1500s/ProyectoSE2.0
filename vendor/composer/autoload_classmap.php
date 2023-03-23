@@ -31,6 +31,7 @@ return array(
     'App\\Models\\User' => $baseDir . '/app/Models/User.php',
     'App\\Models\\tb_admision' => $baseDir . '/app/Models/tb_admision.php',
     'App\\Models\\tb_equivalencia' => $baseDir . '/app/Models/tb_equivalencia.php',
+    'App\\Models\\tb_equivalencias' => $baseDir . '/app/Models/tb_equivalencias.php',
     'App\\Models\\tb_ingreso' => $baseDir . '/app/Models/tb_ingreso.php',
     'App\\Models\\tb_maestria' => $baseDir . '/app/Models/tb_maestria.php',
     'App\\Models\\tb_nuevo_ingreso' => $baseDir . '/app/Models/tb_nuevo_ingreso.php',

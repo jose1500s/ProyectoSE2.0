@@ -12,7 +12,7 @@ export default {
         Equivalencia,
     },
     props: {
-        equivalencias2: Array,
+        equiva: Array,
     },
 }
 </script>
@@ -21,7 +21,7 @@ export default {
     <AppLayout title="Equivalencia">
         <TabView ref="tabview1" class="p-3">
             <TabPanel header="Equivalencia">
-                <Equivalencia :equivalencias2="equivalencias2" />
+                <Equivalencia :equiva="equiva" />
             </TabPanel>
         </TabView>
     </AppLayout>

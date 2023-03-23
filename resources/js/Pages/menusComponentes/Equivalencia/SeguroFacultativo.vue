@@ -36,7 +36,7 @@ export default {
     InputNumber,
   },
   props: {
-    equivalencias: Array,
+    equiva: Array,
   },
   setup() {
     //use
@@ -357,7 +357,7 @@ export default {
             :style="{ width: '70vw' }">
             <!-- contenido del dialog/model desde aqui... -->
             <div class="w-full" id="contenedorGrafica">
-              <GraficaEquivalencia :equivalencias="equivalencias" />
+              <GraficaEquivalencia :equiva="equiva" />
             </div>
             <template #footer>
               <Button label="Cerrar" icon="pi pi-check" @click="closeResponsive" autofocus />
@@ -381,7 +381,7 @@ export default {
         </div>
       </div>
 
-      <DataTable :value="equivalencias" :paginator="true" class="p-datatable-customers" :rows="7" ref="dt"
+      <DataTable :value="equiva" :paginator="true" class="p-datatable-customers" :rows="7" ref="dt"
         v-model:filters="filters" v-model:selection="selectedProducts" :emptyMessage="noDataMessage" stripedRows
         sortMode="multiple" removableSort>
         <Column selectionMode="multiple" style="width: 3rem" :exportable="false"></Column>

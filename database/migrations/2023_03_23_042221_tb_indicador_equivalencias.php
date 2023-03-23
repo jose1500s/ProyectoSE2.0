@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('equivalencias2', function (Blueprint $table) {
+        Schema::create('tb_indicador_equivalencias', function (Blueprint $table) {
             $table->id();
             $table->string('carrera', 50);
             $table->integer('aspirantes');
@@ -31,6 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tb_equivalencias');
+        Schema::dropIfExists('tb_indicador_equivalencias');
     }
 };
