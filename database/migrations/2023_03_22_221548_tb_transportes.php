@@ -13,13 +13,14 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('tb_transporte', function (Blueprint $table) {
+        //
+        Schema::create('tb_transportes', function (Blueprint $table) {
             $table->id();
             $table->integer('no_solicitudes');
             $table->integer('no_seleccionados');
             $table->string('carrera', 50);
-            //tabla de excel
-            $table->string('cuatrimestre', 10);
+            $table->string('ruta',50);
+            $table->string('cuatrimestre', 50);
             $table->string('turno', 20);
             $table->integer('lugares_disponibles');
             $table->integer('pagados');
