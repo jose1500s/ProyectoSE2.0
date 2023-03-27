@@ -10,6 +10,8 @@ use App\Models\tb_maestria;
 use App\Models\tb_equivalencia;
 use App\Models\tb_nuevo_ingreso;
 use App\Models\tb_re_ingreso;
+use App\Models\tb_transporte_lugares;
+use App\Models\tb_transporte_solicitudes_seleccionados;
 class main extends Controller
 {
    public function ingreso()
@@ -45,7 +47,9 @@ class main extends Controller
    }
 
    public function transporte(){
-      return Inertia::render('menusComponentes/Transporte');
+      $solicitudes = tb_transporte_solicitudes_seleccionados::all();
+      $rutas = tb_transporte_lugares::all();
+      return Inertia::render('menusComponentes/Transporte/TabMenu',['solicitudes'=> $solicitudes,'rutas'=>$rutas]);
    }
 
    public function cambioDeCarrera(){
