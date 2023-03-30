@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Auth;
 // importar el componente Register.vue de la carpeta Auth dentro de pages
 use resources\js\pages\Auth\Login;
 use App\Http\Controllers\main;
+use App\Http\Controllers\graficasController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -112,6 +114,7 @@ Route::middleware([
     Route::post('/eliminar-Equivalencias/{id}', [main::class, 'eliminarEquivalencias']);
 
     // ---------- FIN TAB Equivalencia -------------
+
     // ---------- TAB Maestrias -------------
     Route::post('/registro-Maestria', [main::class, 'registrarMaestria']);
 
@@ -129,4 +132,9 @@ Route::middleware([
     Route::post('/eliminar-Equivalencia2/{id}', [main::class, 'eliminarEquivalencia2']);
 
     Route::post('/eliminar-Equivalencias2/{id}', [main::class, 'eliminarEquivalencias2']);
+
+    // ---------- FIN TAB Maestrias -------------
+
+    // ---------- rutas para GRAFICAS -------------
+    Route::post('/obtener-filtro-carreras', [main::class, 'filtrarDatosCarreras']);
 });
