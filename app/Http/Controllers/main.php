@@ -11,6 +11,7 @@ use App\Models\tb_equivalencia;
 use App\Models\tb_nuevo_ingreso;
 use App\Models\tb_re_ingreso;
 use App\Models\tb_indicador_equivalencia;
+use App\Models\tb_indicador_titulados;
 class main extends Controller
 {
    public function ingreso()
@@ -38,7 +39,11 @@ class main extends Controller
    }
 
    public function titulados(){
-      return Inertia::render('menusComponentes/Titulados');
+      // traer de la tabla tb_indicador_titulados todos los registros
+      $titulados = tb_indicador_titulados::all();
+
+      // retornar con Inertia a menusComponentes/TabMenu y pasarle los registros
+      return Inertia::render('menusComponentes/Titulo/TabMenuTitu', ['titulados' => $titulados]);
    }
 
    public function becas(){
