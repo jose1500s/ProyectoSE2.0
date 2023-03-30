@@ -118,7 +118,7 @@ export default {
         return {
             filters: {
                 carrera: {  value: null,matchMode: FilterMatchMode.IN},
-                rutas: {  value: null,matchMode: FilterMatchMode.IN},
+                ruta: {  value: null,matchMode: FilterMatchMode.IN},
                 turno: {  value: null,matchMode: FilterMatchMode.IN},
                 cuatrimestre: {  value: null,matchMode: FilterMatchMode.IN},
             },
@@ -130,6 +130,14 @@ export default {
                 { name: "Pymes", code: "Pymes" },
                 { name: "Sistemas", code: "Sistemas" },
                 { name: "Telematica", code: "Telematica" },
+            ],
+            rutasLista: [
+                { name: "Loma-Av. De La Luz", code: "Loma-Av. De La Luz" },
+                { name: "Biblioteca Gómez Morin", code: "Biblioteca Gómez Morin" },
+                { name: "Libramiento Sur Poniente", code: "Libramiento Sur Poniente" },
+                { name: "Constituyentes", code: "Constituyentes" },
+                { name: "Pie De La Cuesta", code: "Pie De La Cuesta" },
+                { name: "Bernardo Quintana", code: "Bernardo Quintana" },
             ],
             turnosLista: [
                 { name: "Matutino", code: "Matutino" },
@@ -145,14 +153,6 @@ export default {
                 { name: "SEP-DIC 2019", code: "SEP-DIC 2019" },
                 { name: "SEP-DIC 2020", code: "SEP-DIC 2020" },
                 { name: "SEP-DIC 2021", code: "SEP-DIC 2021" },
-            ],
-            rutasLista: [
-                { name: "Loma-Av. De La Luz",code: "Loma-Av. De La Luz" },
-                { name: "Biblioteca Gómez Morin",code: "Biblioteca Gómez Morin" },
-                { name: "Libramiento Sur Poniente",code: "Libramiento Sur Poniente" },
-                { name: "Constituyentes",code: "Constituyentes" },
-                { name: "Pie De La Cuesta",code: "Pie De La Cuesta" },
-                { name: "Bernardo Quintana",code: "Bernardo Quintana" },
             ],
             noDataMessage: "No se encontraron datos",
             displayResponsive: false,
@@ -204,7 +204,7 @@ export default {
                 />
 
                 <MultiSelect
-                    v-model="filters.rutas.value"
+                    v-model="filters.ruta.value"
                     :options="filtrarRuta()"
                     placeholder="Ruta"
                     display="chip"
