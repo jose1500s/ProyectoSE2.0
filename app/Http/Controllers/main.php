@@ -376,4 +376,66 @@ function eliminarEquivalencias(Request $request) {
       return redirect()->route('usuario.ingreso');
    }
 
+   //---------------TRANSPORTE----------------//
+
+   function registrarTranspSolicitudes(Request $request) {
+      $carrera = $request->input('carrera');
+      $ruta = $request->input('ruta');
+      $solicitudes = $request->input('solicitudes');
+      $seleccionados = $request->input('seleccionados');
+      $cuatrimestre = $request->input('cuatrimestre');
+      $turno = $request->input('turno');
+      
+   
+      // crear un nuevo registro en la tabla tb_transporte_solicit...
+      $transpSolicit = new tb_transporte_solicitudes_seleccionados();
+      $transpSolicit->solicitudes = $solicitudes;
+      $transpSolicit->seleccionados = $seleccionados;
+      $transpSolicit->carrera = $carrera;
+      $transpSolicit->ruta = $ruta;
+      $transpSolicit->cuatrimestre = $cuatrimestre;
+      $transpSolicit->turno = $turno;
+      $transpSolicit->save();
+
+   
+   
+      // retornar a la vista ingres-o
+      return redirect()->route('usuario.transporte');
+     }
+     function eliminarTranspSolicitudes(Request $request) {
+      $id = $request->id;
+      $nuevo_ingreso = tb_transporte_solicitudes_seleccionados::whereIn('id', $id);
+      $nuevo_ingreso->delete();
+      return redirect()->route('usuario.transporte');
+     }
+
+     function registrarTranspRutas(Request $request) {
+      $ruta = $request->input('ruta');
+      $lugares = $request->input('lugares_disp');
+      $pagados = $request->input('pagados');
+      $cuatrimestre = $request->input('cuatrimestre');
+      $turno = $request->input('turno');
+      
+   
+      // crear un nuevo registro en la tabla tb_transporte_solicit...
+      $transpRutas = new tb_transporte_lugares();
+      $transpRutas->ruta = $ruta;
+      $transpRutas->cuatrimestre = $cuatrimestre;
+      $transpRutas->turno = $turno;
+      $transpRutas->lugares_disp = $lugares;
+      $transpRutas->pagados = $pagados;
+      $transpRutas->save();
+
+   
+   
+      // retornar a la vista ingres-o
+      return redirect()->route('usuario.transporte');
+     }
+     function eliminarTranspRutas(Request $request) {
+      $id = $request->id;
+      $nuevo_ingreso = tb_transporte_lugares::whereIn('id', $id);
+      $nuevo_ingreso->delete();
+      return redirect()->route('usuario.transporte');
+     }
+
 }

@@ -105,14 +105,99 @@ export default {
         limpiarFiltros() {
             // limpia/eliminar los filtros realizados en la  tabla y volver a mostrar todos los datos
             this.filters.carrera.value = null;
-            this.filters.rutas.value = null;
+            this.filters.ruta.value = null;
             this.filters.cuatrimestre.value = null;
             this.filters.turno.value = null;
             this.$refs.dt.filter(this.filters, "carrera");
             this.$refs.dt.filter(this.filters, "ruta");
             this.$refs.dt.filter(this.filters, "cuatrimestre");
             this.$refs.dt.filter(this.filters, "turno");
-            },
+        },
+        registrarSolicitudes() {
+      this.submitted = true;
+      if (
+        this.SOcarrera == null ||
+        this.SOruta == null ||
+        this.SOsolicitudes == 0 ||
+        this.SOseleccionados == 0 ||
+        this.SOcuatri == null ||
+        this.SOturno == null
+      ) {
+        // si alguno de los campos esta vacio, no enviar el formulario y mostrar un mensaje de error
+        this.$toast.add({
+          severity: "error",
+          summary: "Error",
+          detail: "Todos los campos son obligatorios",
+          life: 3000,
+        });
+        return false;
+      } else {
+        const data = {
+          carrera: this.SOcarrera,
+          ruta: this.SOruta,
+          solicitudes: this.SOsolicitudes,
+          seleccionados: this.SOseleccionados,
+          cuatrimestre: this.SOcuatri,
+          turno: this.SOturno
+        };
+        this.$inertia.post("/registro-solicitudes", data, {
+          preserveState: true,
+          preserveScroll: true,
+          onSuccess: () => {
+            this.productDialog = false;
+            this.$toast.add({
+              severity: "success",
+              summary: "Exito",
+              detail: "Registro exitoso",
+              life: 3000,
+            });
+          },
+        });
+      }
+    },
+    eliminarSolicitud() {
+      const data = {
+        id: this.product.id,
+      };
+      this.$inertia.post("/eliminar-solicitudes", data, {
+        preserveState: true,
+        preserveScroll: true,
+        onSuccess: () => {
+          this.deleteProductDialog = false;
+          this.$toast.add({
+            severity: "success",
+            summary: "Exito",
+            detail: "Eliminado exitosamente",
+            life: 3000,
+          });
+        },
+      });
+    },
+    deleteSelectedProducts() {
+      // tomar el id de todos los productos seleccionados
+      const data = {
+        id: this.selectedProducts.map((item) => item.id),
+      };
+      this.$inertia.post("/eliminar-solicitudes", data, {
+        preserveState: true,
+        preserveScroll: true,
+
+        onSuccess: () => {
+          this.deleteProductsDialog = false;
+          // reiniciar el arreglo de productos seleccionados para que se vuelva a desactivar el boton de eliminar
+          this.selectedProducts = [];
+          this.$toast.add({
+            severity: "success",
+            summary: "Exito",
+            detail: "Eliminado exitosamente",
+            life: 3000,
+          });
+        },
+      });
+    },
+    confirmDeleteSelected() {
+      this.deleteProductsDialog = true;
+    },
     },
     data(){
         return {
@@ -161,6 +246,12 @@ export default {
             deleteProductDialog: false,
             selectedProducts: null,
             deleteProductsDialog: false,
+            SOcarrera: null,
+            SOruta: null,
+            SOsolicitudes: 0,
+            SOseleccionados: 0,
+            SOcuatri: null,
+            SOturno: null,
         }
     }
 };
@@ -172,7 +263,7 @@ export default {
                 label="Nuevo Registro"
                 icon="pi pi-plus"
                 class="p-button-success !mr-2"
-                @clic="openNew"
+                @click="openNew"
             />
             <Button
                 label="Eliminar"
@@ -257,7 +348,141 @@ export default {
         <Column field="seleccionados" header="Seleccionados" :sortable="true"></Column>
         <Column field="cuatrimestre" header="Cuatrimestre" :sortable="true"></Column>
         <Column field="turno" header="Turno" :sortable="true"></Column>
-        </DataTable>
+        <template #empty>
+          <div class="flex justify-center align-middle text-xl">
+            <h2>No se encontraron datos</h2>
+          </div>
+        </template>    
+    </DataTable>
+
+        <Dialog
+        v-model:visible="productDialog"
+        :breakpoints="{ '960px': '75vw', '640px': '85vw' }"
+        :style="{ width: '35vw' }"
+        header="Nuevo Registro"
+        :modal="true"
+        class="p-fluid"
+      >
+        <div class="field">
+          <form @submit.prevent="registrarSolicitudes">
+            <!-- select con opciones -->
+            <Dropdown
+              v-model="SOcarrera"
+              :options="carrerasLista"
+              optionLabel="name"
+              optionValue="code"
+              :filter="true"
+              placeholder="Carrera"
+              class="!mt-3"
+            />
+
+            <div class="field col-12 md:col-3">
+              <Dropdown
+                v-model="SOruta"
+                :options="rutasLista"
+                optionLabel="name"
+                optionValue="code"
+                placeholder="Ruta"
+                class="!mt-3"
+              />
+            </div>
+
+            <div class="field col-12 md:col-3">
+              <label for="minmax">Solicitudes</label>
+              <InputNumber
+                inputId="minmax"
+                v-model="SOsolicitudes"
+                mode="decimal"
+                :min="0"
+                :max="10000"
+                :showButtons="true"
+              />
+            </div>
+
+            <div class="field col-12 md:col-3">
+              <label for="minmax">Seleccionados</label>
+              <InputNumber
+                inputId="minmax"
+                v-model="SOseleccionados"
+                mode="decimal"
+                :min="0"
+                :max="10000"
+                :showButtons="true"
+              />
+            </div>
+
+            <div class="field col-12 md:col-3">
+              <Dropdown
+                v-model="SOcuatri"
+                :options="cuatrisLista"
+                optionLabel="name"
+                optionValue="code"
+                placeholder="Periodo"
+                class="!mt-3"
+              />
+            </div>
+
+            <div class="field col-12 md:col-3">
+              <Dropdown
+                v-model="SOturno"
+                :options="turnosLista"
+                optionLabel="name"
+                optionValue="code"
+                placeholder="Turno"
+                class="!mt-3"
+              />
+            </div>
+
+            <Button
+              type="submit"
+              id="btnRegisrar"
+              class="flex items-center justify-center space-x-2 rounded-md border-2 border-blue-500 px-4 py-2 font-medium text-blue-600 transition hover:bg-blue-500 hover:text-white"
+            >
+              <span> Registrar </span>
+              <span>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  class="h-6 w-6"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M16.72 7.72a.75.75 0 011.06 0l3.75 3.75a.75.75 0 010 1.06l-3.75 3.75a.75.75 0 11-1.06-1.06l2.47-2.47H3a.75.75 0 010-1.5h16.19l-2.47-2.47a.75.75 0 010-1.06z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+              </span>
+            </Button>
+          </form>
+        </div>
+      </Dialog>
+
+      <Dialog
+        v-model:visible="deleteProductsDialog"
+        :style="{ width: '550px' }"
+        header="Confirm"
+        :modal="true"
+      >
+        <div class="confirmation-content flex items-center justify-center">
+          <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem" />
+          <span> ¿Confirma eliminar los registros seleccionados? </span>
+        </div>
+        <template #footer>
+          <Button
+            label="No"
+            icon="pi pi-times"
+            class="p-button-text"
+            @click="deleteProductsDialog = false"
+          />
+          <Button
+            label="Si"
+            icon="pi pi-check"
+            class="p-button-text"
+            @click="deleteSelectedProducts"
+          />
+        </template>
+      </Dialog>
     </div>
     </section>
 </template>
