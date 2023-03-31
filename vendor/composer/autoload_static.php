@@ -590,6 +590,8 @@ class ComposerStaticInite696e33916a30e4c051086b264065ffc
         'App\\Models\\User' => __DIR__ . '/../..' . '/app/Models/User.php',
         'App\\Models\\tb_admision' => __DIR__ . '/../..' . '/app/Models/tb_admision.php',
         'App\\Models\\tb_equivalencia' => __DIR__ . '/../..' . '/app/Models/tb_equivalencia.php',
+        'App\\Models\\tb_indicador_equivalencia' => __DIR__ . '/../..' . '/app/Models/tb_indicador_equivalencia.php',
+        'App\\Models\\tb_indicador_titulados' => __DIR__ . '/../..' . '/app/Models/tb_indicador_titulados.php',
         'App\\Models\\tb_ingreso' => __DIR__ . '/../..' . '/app/Models/tb_ingreso.php',
         'App\\Models\\tb_maestria' => __DIR__ . '/../..' . '/app/Models/tb_maestria.php',
         'App\\Models\\tb_nuevo_ingreso' => __DIR__ . '/../..' . '/app/Models/tb_nuevo_ingreso.php',
