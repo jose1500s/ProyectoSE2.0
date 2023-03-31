@@ -124,6 +124,7 @@ Route::middleware([
 
     Route::post('/eliminar-Maestrias/{id}', [main::class, 'eliminarMaestrias']);
 
+
     // ruta del indicador EQUIVALENCIA, para REGISTRAR una equivalencia
     Route::post('/registro-Equivalencia2', [main::class, 'registrarEquivalencia2']);
 
@@ -133,8 +134,14 @@ Route::middleware([
 
     Route::post('/eliminar-Equivalencias2/{id}', [main::class, 'eliminarEquivalencias2']);
 
-    // ---------- FIN TAB Maestrias -------------
 
-    // ---------- rutas para GRAFICAS -------------
-    Route::post('/obtener-filtro-carreras', [main::class, 'filtrarDatosCarreras']);
+       // --------------------------- TRANSPORTE -----------------------
+
+    Route::post('/registro-solicitudes', [main::class, 'registrarTranspSolicitudes']);
+
+    Route::post('/eliminar-solicitudes', [main::class, 'eliminarTranspSolicitudes']);
+    
+    Route::post('/registro-rutas', [main::class, 'registrarTranspRutas']);
+
+    Route::post('/eliminar-rutas', [main::class, 'eliminarTranspRutas']);
 });
