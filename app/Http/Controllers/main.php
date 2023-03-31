@@ -12,6 +12,9 @@ use App\Models\tb_nuevo_ingreso;
 use App\Models\tb_re_ingreso;
 use App\Models\tb_indicador_equivalencia;
 use App\Models\tb_indicador_titulados;
+use App\Models\tb_transporte_lugares;
+use App\Models\tb_transporte_solicitudes_seleccionados;
+
 class main extends Controller
 {
    public function ingreso()
@@ -51,7 +54,9 @@ class main extends Controller
    }
 
    public function transporte(){
-      return Inertia::render('menusComponentes/Transporte');
+      $solicitudes = tb_transporte_solicitudes_seleccionados::all();
+      $rutas = tb_transporte_lugares::all();
+      return Inertia::render('menusComponentes/Transporte/TabMenu',['solicitudes'=> $solicitudes,'rutas'=>$rutas]);
    }
 
    public function cambioDeCarrera(){
@@ -380,6 +385,7 @@ function eliminarEquivalencias(Request $request) {
       return redirect()->route('usuario.ingreso');
    }
 
+
    //  --------------------- TAB NUEVO EQUIVALENCIA2 -----------------------
    // ruta para guardar una nueva equivalencia del indicador ingreso en la equivalencia
   function registrarEquivalencia2(Request $request) {
@@ -433,10 +439,74 @@ function editarEquivalencia2(Request $request) {
    return redirect()->route('usuario.equivalencia');
 }
 
+//---------------TRANSPORTE----------------//
+
+   function registrarTranspSolicitudes(Request $request) {
+      $carrera = $request->input('carrera');
+      $ruta = $request->input('ruta');
+      $solicitudes = $request->input('solicitudes');
+      $seleccionados = $request->input('seleccionados');
+      $cuatrimestre = $request->input('cuatrimestre');
+      $turno = $request->input('turno');
+      
+   
+      // crear un nuevo registro en la tabla tb_transporte_solicit...
+      $transpSolicit = new tb_transporte_solicitudes_seleccionados();
+      $transpSolicit->solicitudes = $solicitudes;
+      $transpSolicit->seleccionados = $seleccionados;
+      $transpSolicit->carrera = $carrera;
+      $transpSolicit->ruta = $ruta;
+      $transpSolicit->cuatrimestre = $cuatrimestre;
+      $transpSolicit->turno = $turno;
+      $transpSolicit->save();
+
+   
+   
+      // retornar a la vista ingres-o
+      return redirect()->route('usuario.transporte');
+     }
+     function eliminarTranspSolicitudes(Request $request) {
+      $id = $request->id;
+      $nuevo_ingreso = tb_transporte_solicitudes_seleccionados::whereIn('id', $id);
+      $nuevo_ingreso->delete();
+      return redirect()->route('usuario.transporte');
+     }
+
+     function registrarTranspRutas(Request $request) {
+      $ruta = $request->input('ruta');
+      $lugares = $request->input('lugares_disp');
+      $pagados = $request->input('pagados');
+      $cuatrimestre = $request->input('cuatrimestre');
+      $turno = $request->input('turno');
+      
+   
+      // crear un nuevo registro en la tabla tb_transporte_solicit...
+      $transpRutas = new tb_transporte_lugares();
+      $transpRutas->ruta = $ruta;
+      $transpRutas->cuatrimestre = $cuatrimestre;
+      $transpRutas->turno = $turno;
+      $transpRutas->lugares_disp = $lugares;
+      $transpRutas->pagados = $pagados;
+      $transpRutas->save();
+
+   
+   
+      // retornar a la vista ingres-o
+      return redirect()->route('usuario.transporte');
+     }
+     function eliminarTranspRutas(Request $request) {
+      $id = $request->id;
+      $nuevo_ingreso = tb_transporte_lugares::whereIn('id', $id);
+      $nuevo_ingreso->delete();
+      return redirect()->route('usuario.transporte');
+     }
+
+
 function eliminarEquivalencias2(Request $request) {
    $id = $request->id;
    $equiva = tb_indicador_equivalencia::whereIn('id', $id);
    $equiva->delete();
    return redirect()->route('usuario.equivalencia');
 }
+
 }
