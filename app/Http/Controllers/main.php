@@ -28,6 +28,8 @@ class main extends Controller
 
    function filtrarDatosCarreras(Request $request) { 
       $request->carrera;
+   
+
       
       // seleccionar de la tabla tb_admisions los registros que coincidan con la carrera 
       $datosCarrerasFiltro = tb_admision::where('carrera', $request->carrera)->get();

@@ -260,6 +260,7 @@ export default {
     filtroCarreras() {
         let data = {
             carrera: this.filters.carrera.value,
+
         };
         axios.post('/obtener-filtro-carreras', data)
             .then(response => {
@@ -423,7 +424,7 @@ export default {
         :style="{ width: '70vw' }">
         <!-- contenido del dialog/model desde aqui... -->
         <div class="w-full" id="contenedorGrafica">
-          <GraficaIngreso :carrerasFiltradas="datosFiltrados" />
+          <GraficaIngreso :carrerasFiltradas="datosFiltrados" :datosProcesoFiltro="datosFiltrados" />
         </div>
         <template #footer>
           <Button label="Cerrar" icon="pi pi-check" @click="closeResponsive" autofocus />

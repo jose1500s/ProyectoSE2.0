@@ -9,10 +9,15 @@ export default {
             type: Array,
             required: true,
         },
+        datosProcesoFiltro: {
+            type: Array,
+            required: true,
+        },
     }, 
     mounted: function () {
         // verificar si estan llegando el array carrerasFiltradas como props
         console.log(this.carrerasFiltradas);
+        console.log(this.datosProcesoFiltro);
 
     },
     methods: {
