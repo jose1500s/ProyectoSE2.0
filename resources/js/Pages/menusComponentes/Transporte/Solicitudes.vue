@@ -102,6 +102,54 @@ export default {
         confirmDeleteSelected() {
             this.deleteProductsDialog = true;
         },
+        editarSolicitud() {
+      this.submitted = true; 
+      if (
+        this.product.id == null ||
+        this.product.solicitudes == 0 ||
+        this.product.seleccionados == 0 ||
+        this.product.carrera == null ||
+        this.product.ruta == null ||
+        this.product.cuatrimestre == null ||
+        this.product.turno == null
+      ) {
+        // si alguno de los campos esta vacio, no enviar el formulario y mostrar un mensaje de error
+        this.$toast.add({
+          severity: "error",
+          summary: "Error",
+          detail: "Todos los campos son obligatorios",
+          life: 3000,
+        });
+        return false;
+      } else {
+       const data = {
+          id: this.product.id,
+          solicitudes: this.product.solicitudes,
+          seleccionados: this.product.seleccionados,
+          carrera: this.product.carrera,
+          ruta: this.product.ruta,
+          cuatrimestre: this.product.cuatrimestre,
+          turno: this.product.turno,
+        };
+        this.$inertia.post(`/editar-solicitudes/${this.product.id}`, data, {
+          preserveState: true,
+          preserveScroll: true,
+          onSuccess: () => {
+            this.editDialog = false;
+            this.$toast.add({
+              severity: "success",
+              summary: "Exito",
+              detail: "Editado exitosamente",
+              life: 3000,
+            });
+          },
+        });
+      }
+    },
+    editProduct(product) {
+      this.product = { ...product }; // esto es para que se muestre los datos del producto en el formulario
+      this.editDialog = true;
+    },
         limpiarFiltros() {
             // limpia/eliminar los filtros realizados en la  tabla y volver a mostrar todos los datos
             this.filters.carrera.value = null;
@@ -155,11 +203,15 @@ export default {
         });
       }
     },
+    confirmDeleteProduct(product) {
+      this.product = product;
+      this.deleteProductDialog = true;
+    },
     eliminarSolicitud() {
       const data = {
         id: this.product.id,
       };
-      this.$inertia.post("/eliminar-solicitudes", data, {
+      this.$inertia.post("/eliminar-solicitud", data, {
         preserveState: true,
         preserveScroll: true,
         onSuccess: () => {
@@ -348,6 +400,14 @@ export default {
         <Column field="seleccionados" header="Seleccionados" :sortable="true"></Column>
         <Column field="cuatrimestre" header="Cuatrimestre" :sortable="true"></Column>
         <Column field="turno" header="Turno" :sortable="true"></Column>
+        <Column :exportable="false" style="min-width: 8rem" class="p-6">
+          <template #body="slotProps">
+            <Button icon="pi pi-pencil" class="p-button-rounded p-button-success !mr-2"
+              @click="editProduct(slotProps.data)" />
+            <Button icon="pi pi-trash" class="p-button-rounded p-button-warning"
+              @click="confirmDeleteProduct(slotProps.data)" />
+          </template>
+        </Column>
         <template #empty>
           <div class="flex justify-center align-middle text-xl">
             <h2>No se encontraron datos</h2>
@@ -481,6 +541,60 @@ export default {
             class="p-button-text"
             @click="deleteSelectedProducts"
           />
+        </template>
+      </Dialog>
+
+      <Dialog header="Editar Solicitud" v-model:visible="editDialog" :breakpoints="{ '960px': '75vw', '75vw': '85vw' }" :style="{ width: '25vw' }" :modal="true" :closable="true" :dismissableMask="false">
+        <div class="p-fluid p-formgrid p-grid">
+          <form @submit.prevent="editarSolicitud">
+
+            <InputText id="id" v-model="product.id" hidden />
+        
+            <div class="p-field p-col-12 p-md-12">
+              <label for="carrera">Carrera</label>
+              <InputText id="carrera" v-model="product.carrera" />
+            </div>
+
+            
+            <div class="p-field p-col-12 p-md-12">
+              <label for="ruta">Ruta</label>
+              <InputText id="ruta" v-model="product.ruta"  />
+            </div>
+
+            
+            <div class="p-field p-col-12 p-md-12">
+              <label for="total_ingresos">Solicitudes</label>
+              <inputNumber id="total_ingresos" v-model="product.solicitudes"  />
+            </div>
+
+            <div class="p-field p-col-12 p-md-12">
+              <label for="total_ingresos">Seleccionados</label>
+              <InputNumber id="total_ingresos" v-model="product.seleccionados"  />
+            </div>
+
+            <div class="p-field p-col-12 p-md-12">
+              <label for="total_ingresos">Cuatrimestre</label>
+              <InputText id="total_ingresos" v-model="product.cuatrimestre"  />
+            </div>
+
+            <div class="p-field p-col-12 p-md-12">
+              <label for="total_ingresos">Turno</label>
+              <InputText id="total_ingresos" v-model="product.turno"  />
+            </div>
+            
+            <Button type="submit" label="Guardar" icon="pi pi-check" class="!mt-3" />
+          </form>
+        </div>
+      </Dialog>
+
+      <Dialog v-model:visible="deleteProductDialog" :style="{ width: '450px' }" header="Confirmar" :modal="true">
+        <div class="confirmation-content flex justify-center items-center">
+          <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem" />
+          <span v-if="product">¿Confirma eliminar el registro <b>{{ product.cuatrimestre }}</b>?</span>
+        </div>
+        <template #footer>
+          <Button label="No" icon="pi pi-times" class="p-button-text" @click="deleteProductDialog = false" />
+          <Button label="Si" icon="pi pi-check" class="p-button-text" @click="eliminarSolicitud" />
         </template>
       </Dialog>
     </div>
