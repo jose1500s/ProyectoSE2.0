@@ -36,6 +36,7 @@ export default {
     InputNumber,
   },
   props: {
+    permisos: Array,
     ingresos: Array,
   },
   setup() {
@@ -294,11 +295,13 @@ export default {
 </script>
 
 <template>
-  <Toolbar class="mb-4">
+  <Toolbar v-if="permisos.includes('editar_ingreso')" class="mb-4">
     <template #start>
       <Button label="Nuevo Registro" icon="pi pi-plus" class="p-button-success !mr-2" @click="openNew" />
       <Button label="Eliminar" icon="pi pi-trash" class="p-button-danger" @click="confirmDeleteSelected"
         :disabled="!selectedProducts || !selectedProducts.length" />
+        <!-- <Button v-if="usuario.roles.includes('rol_admin')" label="Nuevo Registro" icon="pi pi-plus" class="p-button-success !mr-2" @click="openNew" />
+      <Button v-if="usuario.roles.includes('rol_admin')" label="Eliminar" icon="pi pi-trash" class="p-button-danger" @click="confirmDeleteSelected" -->
     </template>
   </Toolbar>
 
@@ -395,9 +398,9 @@ export default {
         <Column field="periodo" header="Periodo" :sortable="true"></Column>
         <Column :exportable="false" style="min-width: 8rem" class="p-6">
           <template #body="slotProps">
-            <Button icon="pi pi-pencil" class="p-button-rounded p-button-success !mr-2"
+            <Button v-if="permisos.includes('editar_ingreso')" icon="pi pi-pencil" class="p-button-rounded p-button-success !mr-2"
               @click="editProduct(slotProps.data)" />
-            <Button icon="pi pi-trash" class="p-button-rounded p-button-warning"
+            <Button v-if="permisos.includes('editar_ingreso')" icon="pi pi-trash" class="p-button-rounded p-button-warning"
               @click="confirmDeleteProduct(slotProps.data)" />
           </template>
         </Column>

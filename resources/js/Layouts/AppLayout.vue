@@ -43,6 +43,7 @@ export default defineComponent({
   props: {
     users: Array,
     title: String,
+    permisos: Array,
   },
   // metodo para cerrar sesion
   methods: {
@@ -188,7 +189,7 @@ export default defineComponent({
         <div class="menus">
           <ul>
 
-            <li>
+            <li v-if="permisos.includes('consultar_ingreso') || permisos.includes('editar_ingreso')">
               <Link class="
                       inline-flex
                       items-center
@@ -214,7 +215,7 @@ export default defineComponent({
               </Link>
             </li>
 
-            <li>
+            <li v-if="permisos.includes('consultar_matricula') || permisos.includes('editar_matricula')">
               <Link class="
                       inline-flex
                       items-center
@@ -238,7 +239,7 @@ export default defineComponent({
               </Link>
             </li>
 
-            <li>
+            <li v-if="permisos.includes('consultar_bajas') || permisos.includes('editar_bajas')">
               <Link class="
                       inline-flex
                       items-center
@@ -265,7 +266,7 @@ export default defineComponent({
               </Link>
             </li>
 
-            <li>
+            <li v-if="permisos.includes('consultar_egresados') || permisos.includes('editar_egresados')">
               <Link class="
                       inline-flex
                       items-center
@@ -294,7 +295,8 @@ export default defineComponent({
               <span class="ml-4"> Egresados</span>
               </Link>
             </li>
-            <li>
+
+            <li v-if="permisos.includes('consultar_titulados') || permisos.includes('editar_titulados')">
               <Link class="
                       inline-flex
                       items-center
@@ -320,7 +322,7 @@ export default defineComponent({
               </Link>
             </li>
 
-            <li>
+            <li v-if="permisos.includes('consultar_becas') || permisos.includes('editar_becas')">
               <Link class="
                       inline-flex
                       items-center
@@ -347,7 +349,7 @@ export default defineComponent({
               </Link>
             </li>
 
-            <li>
+            <li v-if="permisos.includes('consultar_transporte') || permisos.includes('editar_transporte')">
               <Link class="
                       inline-flex
                       items-center
@@ -372,7 +374,7 @@ export default defineComponent({
               </Link>
             </li>
 
-            <li>
+            <li v-if="permisos.includes('consultar_cambio_carrera') || permisos.includes('editar_cambio_carrera')">
               <Link class="
                       inline-flex
                       items-center

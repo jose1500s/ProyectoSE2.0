@@ -21,6 +21,8 @@ export default {
         Reingreso,
     },
     props: {
+        usuario: Object,
+        permisos: Array,
         ingresos: Array,
         maestrias: Array,
         equivalencias: Array,
@@ -31,22 +33,22 @@ export default {
 </script>
 
 <template>
-    <AppLayout title="Ingreso">
+    <AppLayout title="Ingreso" :permisos="permisos">
         <TabView ref="tabview1" class="p-3">
             <TabPanel header="Admision">
-                <Ingreso :ingresos="ingresos" />
+                <Ingreso :ingresos="ingresos" :permisos="permisos"/>
             </TabPanel>
             <TabPanel header="Nuevo Ingreso">
-                <NIngreso :ningresos="ningresos" />
+                <NIngreso :ningresos="ningresos"  :permisos="permisos"/>
             </TabPanel>
             <TabPanel header="Reingreso">
-                <Reingreso :reingresos="reingresos" />
+                <Reingreso :reingresos="reingresos"  :permisos="permisos"/>
             </TabPanel>
             <TabPanel header="Equivalencia">
-                <Equivalencia :equivalencias="equivalencias" />
+                <Equivalencia :equivalencias="equivalencias"  :permisos="permisos"/>
             </TabPanel>
             <TabPanel header="Maestrias">
-                <Maestrias :maestrias="maestrias" />
+                <Maestrias :maestrias="maestrias"  :permisos="permisos"/>
             </TabPanel>
         </TabView>
     </AppLayout>

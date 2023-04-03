@@ -38,6 +38,7 @@ export default {
     InputNumber,
   },
   props: {
+    permisos: Array,
     ningresos: Array,
   },
   setup() {},
@@ -341,7 +342,7 @@ export default {
 
 <template>
   <!-- new button -->
-  <Toolbar class="mb-4">
+  <Toolbar v-if="permisos.includes('editar_ingreso')" class="mb-4">
     <template #start>
       <Button
         label="Nuevo Registro"
@@ -466,9 +467,9 @@ export default {
         <Column field="periodo" header="Periodo" :sortable="true"></Column>
         <Column :exportable="false" style="min-width: 8rem" class="p-6">
           <template #body="slotProps">
-            <Button icon="pi pi-pencil" class="p-button-rounded p-button-success !mr-2"
+            <Button v-if="permisos.includes('editar_ingreso')" icon="pi pi-pencil" class="p-button-rounded p-button-success !mr-2"
               @click="editProduct(slotProps.data)" />
-            <Button icon="pi pi-trash" class="p-button-rounded p-button-warning"
+            <Button v-if="permisos.includes('editar_ingreso')" icon="pi pi-trash" class="p-button-rounded p-button-warning"
               @click="confirmDeleteProduct(slotProps.data)" />
           </template>
         </Column>

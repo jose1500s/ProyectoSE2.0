@@ -10,10 +10,24 @@ use App\Models\tb_maestria;
 use App\Models\tb_equivalencia;
 use App\Models\tb_nuevo_ingreso;
 use App\Models\tb_re_ingreso;
+use Illuminate\Support\Facades\Auth;
+use App\Models\User;
 class main extends Controller
 {
    public function ingreso()
    {
+      // Recuperar el usuario de la sesión actual
+      $usuario = Auth::user();
+      // $roles = $usuario->roles->pluck('name')->toArray();
+      $roles = $usuario->roles;
+
+      $permisos = [];
+      foreach($roles as $rol){
+         foreach($rol->permissions as $permiso){
+            array_push($permisos, $permiso->name);
+         }
+      }
+      
       // traer de la tabla tb_admision todos los registros
       $ingresos = tb_admision::all();
       $maestrias = tb_maestria::all();
@@ -21,7 +35,7 @@ class main extends Controller
       $ningresos = tb_nuevo_ingreso::all();
       $reingresos = tb_re_ingreso::all();
       // retornar con Inertia a menusComponentes/TabMenu y pasarle los registros
-      return Inertia::render('menusComponentes/Ingreso/TabMenu', ['maestrias' => $maestrias,'ingresos' => $ingresos, 'equivalencias' => $equivalencias, 'ningresos' => $ningresos, 'reingresos' => $reingresos]);
+      return Inertia::render('menusComponentes/Ingreso/TabMenu', ['usuario ' => $usuario, 'permisos' => $permisos,'maestrias' => $maestrias,'ingresos' => $ingresos, 'equivalencias' => $equivalencias, 'ningresos' => $ningresos, 'reingresos' => $reingresos]);
    }
 
    public function bajas() {
