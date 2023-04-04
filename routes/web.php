@@ -137,8 +137,16 @@ Route::middleware([
     Route::post('/registro-solicitudes', [main::class, 'registrarTranspSolicitudes']);
 
     Route::post('/eliminar-solicitudes', [main::class, 'eliminarTranspSolicitudes']);
+
+    Route::post('eliminar-solicitud', [main::class, 'eliminarTranspSolicitud']);
+    
+    Route::post('/editar-solicitudes/{id}', [main::class, 'editarTranspSolicitudes']);
     
     Route::post('/registro-rutas', [main::class, 'registrarTranspRutas']);
 
     Route::post('/eliminar-rutas', [main::class, 'eliminarTranspRutas']);
+    
+    Route::post('/editar-rutas/{id}', [main::class, 'editarTranspRutas']);
+
+    Route::post('eliminar-ruta', [main::class, 'eliminarTranspRuta']);
 });
