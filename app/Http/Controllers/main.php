@@ -29,19 +29,6 @@ class main extends Controller
       return Inertia::render('menusComponentes/Ingreso/TabMenu', ['maestrias' => $maestrias,'ingresos' => $ingresos, 'equivalencias' => $equivalencias, 'ningresos' => $ningresos, 'reingresos' => $reingresos]);
    }
 
-   function filtrarDatosCarreras(Request $request) { 
-      $request->carrera;
-   
-
-      
-      // seleccionar de la tabla tb_admisions los registros que coincidan con la carrera 
-      $datosCarrerasFiltro = tb_admision::where('carrera', $request->carrera)->get();
-
-      // retornar CON JSON
-      return response()->json($datosCarrerasFiltro);
-
-
-   }
 
    public function bajas() {
       return Inertia::render('menusComponentes/Bajas');

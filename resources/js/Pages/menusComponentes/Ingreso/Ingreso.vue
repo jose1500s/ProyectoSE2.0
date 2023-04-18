@@ -258,30 +258,33 @@ export default {
       this.deleteProductsDialog = true;
     },
     filtroCarreras() {
-        let data = {
-            carrera: this.filters.carrera.value,
+      let data = {
+        carrera: this.filters.carrera.value,
 
-        };
-        axios.post('/obtener-filtro-carreras', data)
-            .then(response => {
-              this.datosFiltrados = response.data;
-            })
-            .catch(error => {
-                console.log(error);
-            });
+      };
+      axios.post('/obtener-filtro-carreras-admision', data)
+        .then(response => {
+          this.datosFiltrados = response.data.datosCarrerasFiltro;
+          this.admisionesTodosLosRegistros = response.data.admisiones;
+          // Aquí puedes realizar otras operaciones con los datos recibidos
+        })
+        .catch(error => {
+          console.log(error);
+        });
+
     },
   },
   mounted() {
-   
+
   },
   data() {
     return {
       filters: {
         carrera: { value: null, matchMode: FilterMatchMode.IN },
-        Proceso: { value: null, matchMode: FilterMatchMode.IN },
         periodo: { value: null, matchMode: FilterMatchMode.IN },
       },
       datosFiltrados: [],
+      admisionesTodosLosRegistros: [],
       noDataMessage: "No se encontraron datos",
       displayResponsive: false,
       carrerasLista: [
@@ -293,7 +296,12 @@ export default {
         { name: "Sistemas", code: "Sistemas" },
         { name: "Telematica", code: "Telematica" },
       ],
-      periodosLista: [{ name: "SEP-DIC", code: "SEP-DIC" }],
+      periodosLista: [
+        { name: "SEP-DIC", code: "SEP-DIC" },
+        { name: "ENE-MAR", code: "ENE-MAR" },
+        { name: "ABR-JUN", code: "ABR-JUN" },
+        { name: "JUL-SEP", code: "JUL-SEP" },
+      ],
       carreras: null,
       periodos: null,
       aspirantes: 0,
@@ -379,15 +387,12 @@ export default {
             placeholder="Carrera" display="chip" @change="filtroCarreras($event)" />
 
 
-          <MultiSelect v-model="filters.Proceso.value" :options="filtrarProcesos()" placeholder="Proceso"
-            display="chip" />
-
-          <MultiSelect v-model="filters.periodo.value" :options="filtrarFecha()" placeholder="Fecha" display="chip" />
+          <MultiSelect v-model="filters.periodo.value" :options="periodosLista" optionLabel="name" optionValue="code"  placeholder="Periodo" display="chip" />
 
           <Button icon="pi pi-times" label="Limpiar" @click="limpiarFiltros()" />
         </div>
       </div>
-     
+
 
       <DataTable :value="ingresos" :paginator="true" class="p-datatable-customers" :rows="7" ref="dt"
         v-model:filters="filters" v-model:selection="selectedProducts" :emptyMessage="noDataMessage" stripedRows
@@ -418,13 +423,13 @@ export default {
         </template>
       </DataTable>
 
-    
-      
-      <Dialog header="Grafica" v-model:visible="displayResponsive" :breakpoints="{ '960px': '75vw', '75vw': '90vw' }"
+
+
+      <Dialog header="Gráfica dinámica" v-model:visible="displayResponsive" :breakpoints="{ '960px': '75vw', '75vw': '90vw' }"
         :style="{ width: '70vw' }">
         <!-- contenido del dialog/model desde aqui... -->
         <div class="w-full" id="contenedorGrafica">
-          <GraficaIngreso :carrerasFiltradas="datosFiltrados" :datosProcesoFiltro="datosFiltrados" />
+          <GraficaIngreso :carrerasFiltradas="datosFiltrados"/>
         </div>
         <template #footer>
           <Button label="Cerrar" icon="pi pi-check" @click="closeResponsive" autofocus />
