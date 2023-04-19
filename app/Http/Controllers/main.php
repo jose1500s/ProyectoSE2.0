@@ -14,6 +14,7 @@ use App\Models\tb_indicador_equivalencia;
 use App\Models\tb_indicador_titulados;
 use App\Models\tb_transporte_lugares;
 use App\Models\tb_transporte_solicitudes_seleccionados;
+use App\Models\tb_egresados;
 
 class main extends Controller
 {
@@ -39,7 +40,8 @@ class main extends Controller
    }
 
    public function egresados(){
-      return Inertia::render('menusComponentes/Egresados');
+      $egresados = tb_egresados::all();
+      return Inertia::render('menusComponentes/Egresados',['egresados'=>$egresados]);
    }
 
    public function titulados(){
@@ -92,6 +94,12 @@ class main extends Controller
       return redirect()->route('usuario.ingreso');
    
   }
+
+   
+
+
+
+
 
    //  --------------------- TAB ADMISION -----------------------
 
@@ -440,6 +448,8 @@ function editarEquivalencia2(Request $request) {
    return redirect()->route('usuario.equivalencia');
 }
 
+
+
 //---------------TRANSPORTE----------------//
 
    function registrarTranspSolicitudes(Request $request) {
@@ -473,6 +483,20 @@ function editarEquivalencia2(Request $request) {
       return redirect()->route('usuario.transporte');
      }
 
+     function eliminarTranspSolicitud(Request $request) {
+      $id = $request->input('id');
+      $nuevo_ingreso = tb_transporte_solicitudes_seleccionados::findOrFail($id);
+      $nuevo_ingreso->delete(); 
+      return redirect()->route('usuario.transporte');
+     }
+
+     function eliminarTranspRuta(Request $request) {
+      $id = $request->input('id');
+      $nuevo_ingreso = tb_transporte_lugares::findOrFail($id);
+      $nuevo_ingreso->delete(); 
+      return redirect()->route('usuario.transporte');
+     }
+
      function registrarTranspRutas(Request $request) {
       $ruta = $request->input('ruta');
       $lugares = $request->input('lugares_disp');
@@ -502,12 +526,120 @@ function editarEquivalencia2(Request $request) {
       return redirect()->route('usuario.transporte');
      }
 
+     function editarTranspSolicitudes(Request $request) {
+      // recibir los datos del form
+      $id = $request->input('id');
+      $carrera = $request->input('carrera');
+      $ruta = $request->input('ruta');
+      $solicitudes = $request->input('solicitudes');
+      $seleccionados = $request->input('seleccionados');
+      $cuatrimestre = $request->input('cuatrimestre');
+      $turno = $request->input('turno');
 
-function eliminarEquivalencias2(Request $request) {
-   $id = $request->id;
-   $equiva = tb_indicador_equivalencia::whereIn('id', $id);
-   $equiva->delete();
-   return redirect()->route('usuario.equivalencia');
-}
+      // actualizar el registro
+      $transpSolicit = tb_transporte_solicitudes_seleccionados::find($id);
+      $transpSolicit->solicitudes = $solicitudes;
+      $transpSolicit->seleccionados = $seleccionados;
+      $transpSolicit->carrera = $carrera;
+      $transpSolicit->ruta = $ruta;
+      $transpSolicit->cuatrimestre = $cuatrimestre;
+      $transpSolicit->turno = $turno;
+      $transpSolicit->save();
+
+      // retornar a la vista ingreso
+      return redirect()->route('usuario.transporte');
+  }
+  function editarTranspRutas(Request $request) {
+   // recibir los datos del form
+   $id = $request->input('id');
+   $ruta = $request->input('ruta');
+   $lugares = $request->input('lugares_disp');
+   $pagados = $request->input('pagados');
+   $cuatrimestre = $request->input('cuatrimestre');
+   $turno = $request->input('turno');
+
+   // actualizar el registro
+   
+   $transpRutas = tb_transporte_lugares::find($id);
+      $transpRutas->ruta = $ruta;
+      $transpRutas->cuatrimestre = $cuatrimestre;
+      $transpRutas->turno = $turno;
+      $transpRutas->lugares_disp = $lugares;
+      $transpRutas->pagados = $pagados;
+      $transpRutas->save();
+
+   // retornar a la vista ingreso
+   return redirect()->route('usuario.transporte');
+
+//-------------------------FIN TRANSPORTE-----------------------------
+
+   }
+   function eliminarEquivalencias2(Request $request) {
+      $id = $request->id;
+      $equiva = tb_indicador_equivalencia::whereIn('id', $id);
+      $equiva->delete();
+      return redirect()->route('usuario.equivalencia');
+   }
+
+
+// ------------------------------ INICIO EGRESADOS ----------------------------
+
+      // ruta para guardar un nuevo egreso del indicador egresados
+      function registrarEgresados(Request $request) {
+         $carrera = $request->input('carrera');
+         $generacion = $request->input('generacion');
+         $egresados = $request->input('negresados');
+         $año_egreso = $request->input('año_egreso');
+         $cuatrimestre = $request->input('cuatrimestre');
+         // crear un nuevo registro en la tabla egresados
+         $egresado = new tb_egresados();
+         $egresado->carrera = $carrera;
+         $egresado->generacion = $generacion;
+         $egresado->egresados = $egresados;
+         $egresado->año_egreso = $año_egreso;
+         $egresado->cuatrimestre= $cuatrimestre;
+         $egresado->save();
+
+         // retornar a la vista ingreso
+         return redirect()->route('usuario.egresados');
+      }
+
+      function eliminarEgresados(Request $request) {
+         $id = $request->id;
+         $egresado = tb_egresados::whereIn('id', $id);
+         $egresado->delete();
+         return redirect()->route('usuario.egresados');
+      }
+
+      function eliminarEgreso(Request $request) {
+         $id = $request->input('id');
+      $egresado = tb_egresados::findOrFail($id);
+      $egresado->delete(); 
+      return redirect()->route('usuario.egresados');
+      }
+
+      function editarEgreso(Request $request){
+      $id = $request->input('id');
+      $carrera = $request->input('carrera');
+      $generacion = $request->input('generacion');
+      $egresados = $request->input('egresados');
+      $año_egreso = $request->input('año_egreso');
+      $cuatrimestre = $request->input('cuatrimestre');
+
+      // actualizar el registro
+      $egresado = tb_egresados::find($id);
+      $egresado->carrera = $carrera;
+      $egresado->generacion = $generacion;
+      $egresado->egresados = $egresados;
+      $egresado->año_egreso = $año_egreso;
+      $egresado->cuatrimestre = $cuatrimestre;
+      $egresado->save();
+
+      // retornar a la vista ingreso
+      return redirect()->route('usuario.egresados');
+      }
+
+// ------------------------------ FIN EGRESADOS ----------------------------
+
 
 }

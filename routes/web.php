@@ -140,10 +140,33 @@ Route::middleware([
     Route::post('/registro-solicitudes', [main::class, 'registrarTranspSolicitudes']);
 
     Route::post('/eliminar-solicitudes', [main::class, 'eliminarTranspSolicitudes']);
+
+    Route::post('eliminar-solicitud', [main::class, 'eliminarTranspSolicitud']);
+    
+    Route::post('/editar-solicitudes/{id}', [main::class, 'editarTranspSolicitudes']);
     
     Route::post('/registro-rutas', [main::class, 'registrarTranspRutas']);
 
     Route::post('/eliminar-rutas', [main::class, 'eliminarTranspRutas']);
+    
+    Route::post('/editar-rutas/{id}', [main::class, 'editarTranspRutas']);
+
+    Route::post('eliminar-ruta', [main::class, 'eliminarTranspRuta']);
+
+    // --------------------------- FIN TRANSPORTE -----------------------
+
+    // --------------------------- BECAS -----------------------
+
+    // --------------------------- EGRESADOS -----------------------
+
+    Route::post('/registro-Egreso', [main::class, 'registrarEgresados']);
+
+    route::post('/eliminar-Egresos', [main::class, 'eliminarEgresados']);
+
+    route::post('/eliminar-Egreso/{id}', [main::class, 'eliminarEgreso']);
+
+    route::post('/editar-Egreso/{id}', [main::class, 'editarEgreso']);  
+    
 
 
     // ---------- rutas para GRAFICAS -------------
