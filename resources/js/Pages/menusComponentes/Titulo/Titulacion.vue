@@ -395,9 +395,9 @@ export default {
         <Column selectionMode="multiple" style="width: 3rem" :exportable="false"></Column>
 
         <Column field="id" header="ID" :sortable="true" hidden></Column>
-        <Column field="carrera" header="Carrera" :sortable="true"></Column>
-        <Column field="generacion" header="Generacion" :sortable="true"></Column>
-        <Column field="total" header="Total" :sortable="true"></Column>
+        <Column field="Carrera" header="Carrera" :sortable="true"></Column>
+        <Column field="Generacion" header="Generacion" :sortable="true"></Column>
+        <Column field="Total" header="Total" :sortable="true"></Column>
         <Column field="cedula" header="Cedula" :sortable="true"></Column>
         <Column field="titulo_electronico" header="Titulo electronico" :sortable="true"></Column>
         <Column :exportable="false" style="min-width: 8rem" class="p-6">
