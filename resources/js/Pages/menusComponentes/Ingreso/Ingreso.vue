@@ -254,6 +254,9 @@ export default {
         },
       });
     },
+    checarSeleccionados() {
+      console.log('seleccionados', this.selectedProducts)
+    },
     confirmDeleteSelected() {
       this.deleteProductsDialog = true;
     },
@@ -322,6 +325,9 @@ export default {
     <template #start>
       <Button label="Nuevo Registro" icon="pi pi-plus" class="p-button-success !mr-2" @click="openNew" />
       <Button label="Eliminar" icon="pi pi-trash" class="p-button-danger" @click="confirmDeleteSelected"
+        :disabled="!selectedProducts || !selectedProducts.length" />
+        <!-- boton para checar los productos seleccionados -->
+      <Button label="Checar" icon="pi pi-check" class="p-button-warning" @click="checarSeleccionados"
         :disabled="!selectedProducts || !selectedProducts.length" />
     </template>
   </Toolbar>
