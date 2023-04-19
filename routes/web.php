@@ -149,4 +149,19 @@ Route::middleware([
     Route::post('/editar-rutas/{id}', [main::class, 'editarTranspRutas']);
 
     Route::post('eliminar-ruta', [main::class, 'eliminarTranspRuta']);
+
+    // --------------------------- FIN TRANSPORTE -----------------------
+
+    // --------------------------- BECAS -----------------------
+
+    // --------------------------- EGRESADOS -----------------------
+
+    Route::post('/registro-Egreso', [main::class, 'registrarEgresados']);
+
+    route::post('/eliminar-Egresos', [main::class, 'eliminarEgresados']);
+
+    route::post('/eliminar-Egreso/{id}', [main::class, 'eliminarEgreso']);
+
+    route::post('/editar-Egreso/{id}', [main::class, 'editarEgreso']);  
+    
 });
