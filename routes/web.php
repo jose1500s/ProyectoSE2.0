@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Auth;
 // importar el componente Register.vue de la carpeta Auth dentro de pages
 use resources\js\pages\Auth\Login;
 use App\Http\Controllers\main;
+use App\Http\Controllers\Ingreso\admisionGraficasController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -20,7 +22,7 @@ use App\Http\Controllers\main;
 */
 
 Route::get('/', function () {
-    return Inertia::render('Auth/Login', [ // si quiero renderizar un componente que no esta en la carpeta pages, debo poner la ruta completa ejemplo: 'resources\js\pages\Auth\Login'
+    return Inertia::render('Auth/Login', [
         'canResetPassword' => Route::has('password.request'),
         'canRegister' => Route::has('register'),
         'laravelVersion' => Application::VERSION,
@@ -132,6 +134,7 @@ Route::middleware([
     Route::post('/eliminar-Equivalencias/{id}', [main::class, 'eliminarEquivalencias']);
 
     // ---------- FIN TAB Equivalencia -------------
+
     // ---------- TAB Maestrias -------------
     Route::post('/registro-Maestria', [main::class, 'registrarMaestria']);
 
@@ -184,4 +187,8 @@ Route::middleware([
 
     route::post('/editar-Egreso/{id}', [main::class, 'editarEgreso']);  
     
+
+
+    // ---------- rutas para GRAFICAS -------------
+    Route::post('/obtener-filtro-carreras-admision', [admisionGraficasController::class, 'filtrarDatosCarreras']);
 });

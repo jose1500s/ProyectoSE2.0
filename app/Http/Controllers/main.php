@@ -30,6 +30,7 @@ class main extends Controller
       return Inertia::render('menusComponentes/Ingreso/TabMenu', ['maestrias' => $maestrias,'ingresos' => $ingresos, 'equivalencias' => $equivalencias, 'ningresos' => $ningresos, 'reingresos' => $reingresos]);
    }
 
+
    public function bajas() {
       return Inertia::render('menusComponentes/Bajas');
    }
