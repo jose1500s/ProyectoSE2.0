@@ -44,25 +44,13 @@ export default {
   },
   methods: {
     filtrarCarreras() {
-      const carreras = ['Negocios', 'Administracion', 'Sistemas', 'Automotriz', 'Mecatronica', 'Manufactura', 'Telematica'];
-      return carreras;
+      const carrera = ['Negocios', 'Administracion', 'Sistemas', 'Automotriz', 'Mecatronica', 'Manufactura', 'Telematica'];
+      return carrera;
     },
-    filtrarProcesos() {
-      // filtar del arreglo ingresos.carrera, todos los que se repiten
-      // y retornar un arreglo con los nombres de las carreras sin repetir
-      // const procesos = this.ingresos.map((item) => item.Proceso);
-      // const procesosFiltradas = [...new Set(procesos)];
-      // estaticos:
-      const procesos = ['1er Proceso', '2do Proceso', '3er Proceso']
-      return procesos;
-    },
-    filtrarFecha() {
-      // filtar del arreglo ingresos.carrera, todos los que se repiten
-      // y retornar un arreglo con los nombres de las carreras sin repetir
-      // const fechas = this.ingresos.map((item) => item.fecha);
-      // const fechasFiltradas = [...new Set(fechas)];
-      const fechas = ['SEP-DIC']
-      return fechas;
+    //filtrar las generaciones
+    filtrarGeneraciones() {
+      const generacion = ['10', '11', '12', '13','14','15','16','17','18','19'];
+      return generacion;
     },
     exportCSV() {
       this.$refs.dt.exportCSV();
@@ -70,11 +58,9 @@ export default {
     limpiarFiltros() {
       // limpia/eliminar los filtros realizados en la  tabla y volver a mostrar todos los datos
       this.filters.carrera.value = null;
-      this.filters.Proceso.value = null;
-      this.filters.fecha.value = null;
-      this.$refs.dt.filter(this.filters, "carrera");
-      this.$refs.dt.filter(this.filters, "Proceso");
-      this.$refs.dt.filter(this.filters, "fecha");
+      this.filters.generacion.value = null;
+      this.$refs.dt.filter(this.filters, "Carrera");
+      this.$refs.dt.filter(this.filters, "Generacion");
     },
     openResponsive() {
       this.displayResponsive = true;
@@ -124,17 +110,18 @@ export default {
       this.productDialog = false;
       this.submitted = false;
     },
-    registrarAdmision() {
-      this.submitted = true; // esto es para que se muestre el mensaje de error en el formulario
-      // validar los campos del formulario, que no esten vacios y si estan mandar un mensaje y no enviar el formulario, los campos son: carrerasModel, aspirantes, examinados, noAdmitidos y selectedPeriodo
+    registrarTitulacion() {
+      this.submitted = true; 
       if (
-        this.carreras == null ||
-        this.aspirantes == 0 ||
-        this.examinados == 0 ||
-        this.noAdmitidos == 0 ||
-        this.periodos == null
+         this.carrera == null ||
+         this.generacion == null ||
+         this.total == 0 ||
+         this.titulo_electronico == 0 ||
+         this.cedula == 0 ||
+         this.fecha_titulacion == null
       ) {
         // si alguno de los campos esta vacio, no enviar el formulario y mostrar un mensaje de error
+
         this.$toast.add({
           severity: "error",
           summary: "Error",
@@ -144,13 +131,14 @@ export default {
         return false;
       } else {
         const data = {
-          carreras: this.carreras,
-          aspirantes: this.aspirantes,
-          examinados: this.examinados,
-          noAdmitidos: this.noAdmitidos,
-          periodos: this.periodos,
+          carrera: this.carrera,
+          generacion: this.generacion,
+          total: this.total,
+          titulo_electronico: this.titulo_electronico,
+          cedula: this.cedula,
+          fecha_titulacion: this.fecha_titulacion,
         };
-        this.$inertia.post("/registro-Admision", data, {
+        this.$inertia.post("/registro-Titulado", data, {
           preserveState: true,
           preserveScroll: true,
           onSuccess: () => {
@@ -165,17 +153,18 @@ export default {
         });
       }
     },
-    editarAdmision() {
+    editarTitulacion() {
       // editarl usando el dialog de editar producto
       this.submitted = true; // esto es para que se muestre el mensaje de error en el formulario
       // validar los campos del formulario, que no esten vacios y si estan mandar un mensaje y no enviar el formulario, los campos son: carrerasModel, aspirantes, examinados, noAdmitidos y selectedPeriodo
       if (
         this.product.id == 0 ||
         this.product.carrera == null ||
-        this.product.aspirantes == 0 ||
-        this.product.examinados == 0 ||
-        this.product.no_admitidos == 0 ||
-        this.product.periodo == null
+        this.product.generacion == null ||
+        this.product.total == 0 ||
+        this.product.titulo_electronico == 0 ||
+        this.product.cedula == 0 ||
+        this.product.fecha_titulacion == null
       ) {
         // si alguno de los campos esta vacio, no enviar el formulario y mostrar un mensaje de error
         this.$toast.add({
@@ -189,12 +178,13 @@ export default {
         const data = {
           id: this.product.id,
           carrera: this.product.carrera,
-          aspirantes: this.product.aspirantes,
-          examinados: this.product.examinados,
-          no_admitidos: this.product.no_admitidos,
-          periodo: this.product.periodo,
+          generacion: this.product.generacion,
+          total: this.product.total,
+          titulo_electronico: this.product.titulo_electronico,
+          cedula: this.product.cedula,
+          fecha_titulacion: this.product.fecha_titulacion,
         };
-        this.$inertia.post(`/editar-Admision/${this.product.id}`, data, {
+        this.$inertia.post(`/editar-Titulado/${this.product.id}`, data, {
           preserveState: true,
           preserveScroll: true,
           onSuccess: () => {
@@ -221,7 +211,7 @@ export default {
       const data2 = {
         id: this.product.id,
       };
-      this.$inertia.post(`/eliminar-Admision/${this.product.id}`, data2, {
+      this.$inertia.post(`/eliminar-Titulado/${this.product.id}`, data2, {
         preserveState: true,
         preserveScroll: true,
         onSuccess: () => {
@@ -241,7 +231,7 @@ export default {
       const data = {
         id: this.selectedProducts.map((item) => item.id), 
       };
-      this.$inertia.post("/eliminar-Admisiones", data, {
+      this.$inertia.post("/eliminar-Titulados", data, {
         preserveState: true,
         preserveScroll: true,
         onSuccess: () => {
@@ -263,8 +253,8 @@ export default {
     return {
       filters: {
         carrera: { value: null, matchMode: FilterMatchMode.IN },
-        Proceso: { value: null, matchMode: FilterMatchMode.IN },
-        periodo: { value: null, matchMode: FilterMatchMode.IN }, 
+        // Proceso: { value: null, matchMode: FilterMatchMode.IN },
+        // periodo: { value: null, matchMode: FilterMatchMode.IN }, 
       },
       noDataMessage: "No se encontraron datos",
       displayResponsive: false,
@@ -277,12 +267,23 @@ export default {
         { name: "Sistemas", code: "Sistemas" },
         { name: "Telematica", code: "Telematica" },
       ],
-      periodosLista: [{ name: "SEP-DIC", code: "SEP-DIC" }],
-      carreras: null,
-      periodos: null,
-      aspirantes: 0,
-      examinados: 0,
-      noAdmitidos: 0,
+      generacionLista: [
+        { name: "10", code: "10" },
+        { name: "11", code: "11" },
+        { name: "12", code: "12" },
+        { name: "13", code: "13" },
+        { name: "14", code: "14" },
+        { name: "15", code: "15" },
+        { name: "16", code: "16" },
+        { name: "17", code: "17" },
+        { name: "18", code: "18" },
+      ],
+      carrera: null,
+      generacion: null,
+      total: 0,
+      cedula: 0,
+      titulo_electronico: 0,
+      fecha_titulacion: null,
       productDialog: false,
       editDialog: false,
       deleteProductDialog: false,
@@ -306,29 +307,36 @@ export default {
   <Dialog v-model:visible="productDialog" :breakpoints="{ '960px': '75vw', '640px': '85vw' }" :style="{ width: '25vw' }"
     header="Nuevo Registro" :modal="true" class="p-fluid">
     <div class="field">
-      <form @submit.prevent="registrarAdmision">
+      <form @submit.prevent="registrarTitulacion">
         <!-- select con opciones -->
-        <Dropdown v-model="carreras" :options="carrerasLista" optionLabel="name" optionValue="code" :filter="true"
-          placeholder="Carrera..." />
+        <label for="minmax">Carrera</label>
+        <Dropdown v-model="carrera" :options="carrerasLista" optionLabel="name" optionValue="code" :filter="true"
+          placeholder="Selecciona..." />
 
         <div class="field col-12 md:col-3">
-          <label for="minmax">Aspirantes</label>
-          <InputNumber inputId="minmax" v-model="aspirantes" mode="decimal" :min="0" :max="10000" :showButtons="true" />
+          <label for="minmax">Generacion</label>
+          <Dropdown v-model="generacion" :options="generacionLista" optionLabel="name" optionValue="code" :filter="true"
+          placeholder="Selecciona..." />
         </div>
 
         <div class="field col-12 md:col-3">
-          <label for="minmax">Examinados</label>
-          <InputNumber inputId="minmax" v-model="examinados" mode="decimal" :min="0" :max="10000" :showButtons="true" />
+          <label for="minmax">Total</label>
+          <InputNumber inputId="minmax" v-model="total" mode="decimal" :min="0" :max="10000" :showButtons="true" />
         </div>
 
         <div class="field col-12 md:col-3">
-          <label for="minmax">No Admitidos</label>
-          <InputNumber inputId="minmax" v-model="noAdmitidos" mode="decimal" :min="0" :max="10000" :showButtons="true" />
+          <label for="minmax">Titulo electronico</label>
+          <InputNumber inputId="minmax" v-model="titulo_electronico" mode="decimal" :min="0" :max="10000" :showButtons="true" />
         </div>
 
-        <div class="field col-12 md:col-3 mt-3">
-          <Dropdown v-model="periodos" :options="periodosLista" optionLabel="name" optionValue="code"
-            placeholder="Periodo" />
+        <div class="field col-12 md:col-3">
+          <label for="minmax">Cedula</label>
+          <InputNumber inputId="minmax" v-model="cedula" mode="decimal" :min="0" :max="10000" :showButtons="true" />
+        </div>
+
+        <div class="field col-12 md:col-3">
+          <label for="minmax">Fecha</label>
+          <InputText  v-model="fecha_titulacion" />
         </div>
 
         <Button type="submit" id="btnRegisrar"
@@ -359,7 +367,7 @@ export default {
             :style="{ width: '70vw' }">
             <!-- contenido del dialog/model desde aqui... -->
             <div class="w-full" id="contenedorGrafica">
-              <GraficaIngreso :ingresos="ingresos" />
+              <GraficaIngreso :titulados="titulados" />
             </div>
             <template #footer>
               <Button label="Cerrar" icon="pi pi-check" @click="closeResponsive" autofocus />
@@ -374,10 +382,8 @@ export default {
           <MultiSelect v-model="filters.carrera.value" :options="filtrarCarreras()" placeholder="Carrera"
             display="chip" />
 
-          <MultiSelect v-model="filters.Proceso.value" :options="filtrarProcesos()" placeholder="Proceso"
+          <MultiSelect v-model="filters.carrera.value" :options="filtrarGeneraciones()" placeholder="Generacion"
             display="chip" />
-
-          <MultiSelect v-model="filters.periodo.value" :options="filtrarFecha()" placeholder="Fecha" display="chip" />
 
           <Button icon="pi pi-times" label="Limpiar" @click="limpiarFiltros()" />
         </div>
@@ -393,7 +399,7 @@ export default {
         <Column field="generacion" header="Generacion" :sortable="true"></Column>
         <Column field="total" header="Total" :sortable="true"></Column>
         <Column field="cedula" header="Cedula" :sortable="true"></Column>
-        <Column field="titulo_e" header="Titulo electronico" :sortable="true"></Column>
+        <Column field="titulo_electronico" header="Titulo electronico" :sortable="true"></Column>
         <Column :exportable="false" style="min-width: 8rem" class="p-6">
           <template #body="slotProps">
             <Button icon="pi pi-pencil" class="p-button-rounded p-button-success !mr-2"
@@ -412,33 +418,40 @@ export default {
       </DataTable>
 
       <!-- Dialog para editar el producto toma los valores del producto seleccionado -->
-      <Dialog header="Editar Admision" v-model:visible="editDialog" :breakpoints="{ '960px': '75vw', '75vw': '85vw' }"
+      <Dialog header="Editar Titulados" v-model:visible="editDialog" :breakpoints="{ '960px': '75vw', '75vw': '85vw' }"
         :style="{ width: '25vw' }" :modal="true" :closable="true" :dismissableMask="false">
         <div class="p-fluid p-formgrid p-grid">
-          <form @submit.prevent="editarAdmision">
-            <InputText id="id" v-model.trim="product.id" hidden /> 
+          <form @submit.prevent="editarTitulacion">
 
-            <div class="p-field p-col-12 p-md-6">
-              <label for="carrera">Carrera</label>
-              <InputText id="name" v-model.trim="product.carrera" />
+            <InputText id="id" v-model.trim="product.id" hidden /> 
+            <label for="minmax">Carrera</label>
+            <Dropdown v-model="carrera" :options="carrerasLista" optionLabel="name" optionValue="code" :filter="true"
+              placeholder="Selecciona..." />
+
+            <div class="field col-12 md:col-3">
+              <label for="minmax">Generacion</label>
+              <Dropdown v-model="generacion" :options="generacionLista" optionLabel="name" optionValue="code" :filter="true"
+              placeholder="Selecciona..." />
             </div>
-            <div class="p-field p-col-12 p-md-6">
-              <label for="aspirantes">Aspirantes</label>
-              <InputText id="name" v-model.trim="product.aspirantes" />
+
+            <div class="field col-12 md:col-3">
+              <label for="minmax">Total</label>
+              <InputNumber inputId="minmax" v-model="total" mode="decimal" :min="0" :max="10000" :showButtons="true" />
             </div>
-            <div class="p-field p-col-12 p-md-6">
-              <label for="examinados">Examinados</label>
-              <InputText inputId="minmax" v-model.trim="product.examinados" mode="decimal" :min="0" :max="10000"
-                :showButtons="true" />
+
+            <div class="field col-12 md:col-3">
+              <label for="minmax">Titulo electronico</label>
+              <InputNumber inputId="minmax" v-model="titulo_electronico" mode="decimal" :min="0" :max="10000" :showButtons="true" />
             </div>
-            <div class="p-field p-col-12 p-md-6">
-              <label for="no_admitidos">No Admitidos</label>
-              <InputText inputId="minmax" v-model.trim="product.no_admitidos" mode="decimal" :min="0" :max="10000"
-                :showButtons="true" />
+
+            <div class="field col-12 md:col-3">
+              <label for="minmax">Cedula</label>
+              <InputNumber inputId="minmax" v-model="cedula" mode="decimal" :min="0" :max="10000" :showButtons="true" />
             </div>
-            <div class="p-field p-col-12 p-md-6">
-              <label for="periodo">Periodo</label>
-              <InputText id="name" v-model.trim="product.periodo" required="true" />
+
+            <div class="field col-12 md:col-3">
+              <label for="minmax">Fecha</label>
+              <InputText  v-model="fecha_titulacion" />
             </div>
             <Button type="submit" label="Guardar" icon="pi pi-check" class="!mt-3" />
           </form>

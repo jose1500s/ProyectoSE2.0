@@ -128,6 +128,72 @@ class main extends Controller
 
   //  --------------------- FIN TAB ADMISION -----------------------
 
+  // ---------------------- TAB TITULADOS --------------------------
+
+   function registrarTitulacion(Request $request) {
+      $carrera = $request->input('carrera');
+      $generacion = $request->input('generacion');
+      $total = $request->input('total');
+      $cedula = $request->input('cedula');
+      $titulo_electronico = $request->input('titulo_electronico');
+      $fecha_titulacion = $request->input('fecha_titulacion');
+
+      // crear un nuevo registro en la tabla tb_indicador_titulados
+      $titulacion = new tb_indicador_titulados();
+      $titulacion->carrera = $carrera;
+      $titulacion->generacion = $generacion;
+      $titulacion->total = $total;
+      $titulacion->cedula = $cedula;
+      $titulacion->titulo_electronico = $titulo_electronico;
+      $titulacion->fecha_titulacion = $fecha_titulacion;
+      $titulacion->save();
+
+      // retornar a la vista ingreso
+      return redirect()->route('usuario.titulados');
+
+   }
+
+    // ruta para editar una admision
+    function editarTitulacion(Request $request) {
+      // obtener los datos dle form y luego actualizar el registro
+      $id = $request->input('id');
+      $carrera = $request->input('carrera');
+      $generacion = $request->input('generacion');
+      $total = $request->input('total');
+      $cedula = $request->input('cedula');
+      $titulo_electronico = $request->input('titulo_electronico');
+      $fecha_titulacion = $request->input('fecha_titulacion');
+   
+      // actualizar el registro
+      $titulacion = tb_indicador_titulados::find($id);
+      $titulacion->carrera = $carrera;
+      $titulacion->generacion = $generacion;
+      $titulacion->total = $total;
+      $titulacion->cedula = $cedula;
+      $titulacion->titulo_electronico = $titulo_electronico;
+      $titulacion->fecha_titulacion = $fecha_titulacion;
+      $titulacion->save();
+   
+      // retornar a la vista ingreso
+      return redirect()->route('usuario.titulados');
+     }
+   
+     function eliminarTitulacion(Request $request) {
+      $id = $request->input('id');
+      $titulacion = tb_indicador_titulados::findOrFail($id);
+      $titulacion->delete(); 
+      return redirect()->route('usuario.titulados');
+     }
+   
+     function eliminarTitulaciones(Request $request) {
+      $id = $request->id;
+      $titulacion = tb_indicador_titulados::whereIn('id', $id);
+      $titulacion->delete();
+      return redirect()->route('usuario.titulados');
+     }
+
+  // ---------------------- FIN TAB TITULADOS ----------------------
+
   //  --------------------- TAB NUEVO INGRESO -----------------------
 
   function registrarNIngreso(Request $request) {
