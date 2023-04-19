@@ -62,6 +62,106 @@ Route::middleware([
     Route::get('/cambio-de-carrera', [main::class, 'cambioDeCarrera'])->name('usuario.cambio_de_carrera');
 
     // Ruta para abrir el menu de seguro facultativo
-    Route::get('/seguro-facultativo', [main::class, 'seguroFacultativo'])->name('usuario.segurofacultativo');
+    Route::get('/equivalencia', [main::class, 'equivalencia'])->name('usuario.equivalencia');
 
+    // ---------- TAB ADMISIONES ------------
+    
+    // ruta del indicador INGRESO/ADMISION, para REGISTRAR una admision
+    Route::post('/registro-Admision', [main::class, 'registrarAdmision']);
+
+    // ruta del indicador INGRESO/ADMISION, para EDITAR una admision que recibe el id de la admision
+    Route::post('/editar-Admision/{id}', [main::class, 'editarAdmision']);
+
+    // ruta del indicador INGRESO/ADMISION, para ELIMINAR una admision que recibe el id de la admision
+    Route::post('/eliminar-Admision/{id}', [main::class, 'eliminarAdmision']);
+
+    // ruta del indicador INGRESO/ADMISION, para ELIMINAR VARIAS admisiones que recibe como array los ids de las admisiones
+    Route::post('/eliminar-Admisiones', [main::class, 'eliminarAdmisiones']);
+
+    // ---------- FIN TAB ADMISIONES ------------
+
+    // ---------- TAB NUEVO INGRESO -------------
+    Route::post('/registro-NIngreso', [main::class, 'registrarNIngreso']);
+
+    Route::post('/eliminar-NIngresos', [main::class, 'eliminarNIngresos']);
+
+    Route::post('/eliminar-NIngreso', [main::class, 'eliminarNIngreso']);
+
+    Route::post('/editar-NIngreso/{id}', [main::class, 'editarNIngreso']);
+   
+    // ---------- FIN TAB RE INGRESOS -------------
+    Route::post('/registrar-RIngresos', [main::class, 'registrarRIngreso']);
+
+    Route::post('/editar-RIngresos/{id}', [main::class, 'editarRIngresos']);
+
+    Route::post('/eliminar-RIngreso/{id}', [main::class, 'eliminarRIngreso']);
+
+    Route::post('/eliminar-RIngresos/{id}', [main::class, 'eliminarRIngresos']);
+
+    // ---------- FIN TAB RE INGRESOS -------------
+
+    // ---------- TAB EQUIVALENCIAS -------------
+    
+    // ruta del indicador INGRESO/EQUIVALENCIA, para REGISTRAR una equivalencia
+    Route::post('/registro-Equivalencia', [main::class, 'registrarEquivalencia']);
+
+    Route::post('/editar-Equivalencia/{id}', [main::class, 'editarEquivalencia']);
+
+    Route::post('/eliminar-Equivalencia/{id}', [main::class, 'eliminarEquivalencia']);
+
+    Route::post('/eliminar-Equivalencias/{id}', [main::class, 'eliminarEquivalencias']);
+
+    // ---------- FIN TAB Equivalencia -------------
+    // ---------- TAB Maestrias -------------
+    Route::post('/registro-Maestria', [main::class, 'registrarMaestria']);
+
+    Route::post('/editar-Maestria/{id}', [main::class, 'editarMaestria']);
+
+    Route::post('/eliminar-Maestria/{id}', [main::class, 'eliminarMaestria']);
+
+    Route::post('/eliminar-Maestrias/{id}', [main::class, 'eliminarMaestrias']);
+
+
+    // ruta del indicador EQUIVALENCIA, para REGISTRAR una equivalencia
+    Route::post('/registro-Equivalencia2', [main::class, 'registrarEquivalencia2']);
+
+    Route::post('/editar-Equivalencia2/{id}', [main::class, 'editarEquivalencia2']);
+
+    Route::post('/eliminar-Equivalencia2/{id}', [main::class, 'eliminarEquivalencia2']);
+
+    Route::post('/eliminar-Equivalencias2/{id}', [main::class, 'eliminarEquivalencias2']);
+
+
+       // --------------------------- TRANSPORTE -----------------------
+
+    Route::post('/registro-solicitudes', [main::class, 'registrarTranspSolicitudes']);
+
+    Route::post('/eliminar-solicitudes', [main::class, 'eliminarTranspSolicitudes']);
+
+    Route::post('eliminar-solicitud', [main::class, 'eliminarTranspSolicitud']);
+    
+    Route::post('/editar-solicitudes/{id}', [main::class, 'editarTranspSolicitudes']);
+    
+    Route::post('/registro-rutas', [main::class, 'registrarTranspRutas']);
+
+    Route::post('/eliminar-rutas', [main::class, 'eliminarTranspRutas']);
+    
+    Route::post('/editar-rutas/{id}', [main::class, 'editarTranspRutas']);
+
+    Route::post('eliminar-ruta', [main::class, 'eliminarTranspRuta']);
+
+    // --------------------------- FIN TRANSPORTE -----------------------
+
+    // --------------------------- BECAS -----------------------
+
+    // --------------------------- EGRESADOS -----------------------
+
+    Route::post('/registro-Egreso', [main::class, 'registrarEgresados']);
+
+    route::post('/eliminar-Egresos', [main::class, 'eliminarEgresados']);
+
+    route::post('/eliminar-Egreso/{id}', [main::class, 'eliminarEgreso']);
+
+    route::post('/editar-Egreso/{id}', [main::class, 'editarEgreso']);  
+    
 });

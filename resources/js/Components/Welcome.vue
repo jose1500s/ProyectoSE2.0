@@ -2,12 +2,16 @@
 import Card from 'primevue/card';
 import Chart from 'primevue/chart';
 import { ref } from "vue";
-import {Link} from '@inertiajs/vue3'
+import {Link} from '@inertiajs/vue3';
+import Tag from 'primevue/tag';
+
+
 export default {
     components: {
         Card,
         Chart,
         Link,
+        Tag,
     },
     setup() {
 
@@ -15,11 +19,9 @@ export default {
             labels: ['Mujeres', 'Hombres'],
             datasets: [
                 {
-                    
-                
                     data: [2230, 2960],
-                    backgroundColor: ["pink", "blue"],
-                    hoverBackgroundColor: ["pink", "blue"],
+                    backgroundColor: ["#f24a57", "#0f6ec5"],
+                    hoverBackgroundColor: ["#f24a57", "#0f6ec5"],
                     porcentajes: []
                 }
             ]
@@ -34,8 +36,8 @@ export default {
             datasets: [
                 {
                     data: [647, 336, 409, 91, 471, 510, 143],
-                    backgroundColor: ["black", "blue", "yellow", "red", "pink", "gray", "green"],
-                    hoverBackgroundColor: ["black", "blue", "yellow", "red", "pink", "gray", "green"],
+                    backgroundColor: ["#000000", "#d60212", "#05d3f8", "#5b1d99", "#9f102c", "#19058f", "#aef055"],
+                    hoverBackgroundColor: ["#000000", "#d60212", "#05d3f8", "#5b1d99", "#9f102c", "#19058f", "#aef055"],
                     porcentajes: []
                 }
             ]
@@ -50,8 +52,8 @@ export default {
             datasets: [
                 {
                     data: [34, 124, 12, 5],
-                    backgroundColor: ["#42A5F5", "#66BB6A", "#FFA726", "#EF5350"],
-                    hoverBackgroundColor: ["#64B5F6", "#81C784", "#FFB74D", "#E57373"],
+                    backgroundColor: ["#00686c", "#32c2b9", "#fad928", "#ff9915"],
+                    hoverBackgroundColor: ["#00686c", "#32c2b9", "#fad928", "#ff9915"],
                     porcentajes: []
                 }
             ],
@@ -80,7 +82,7 @@ export default {
 
 <template>
     <section class="bg-white">
-        <div class="mx-auto max-w-screen-xl px-4 sm:px-6 md:py-16 lg:px-8">
+        <div class="mx-auto max-w-screen-xl px-4 sm:px-6  lg:px-8">
             <div class="w-full text-center">
                 <!-- {{ $page.props.user.name}} -->
                 <div class="flex flex-col justify-between gap-6" id="upSide">
@@ -89,7 +91,8 @@ export default {
                             <h2>Bienvenido {{ $page.props.user.name }}</h2>
                         </div>
                         <div class="text-lg mt-4" id="parrafoDashboard">
-                            Aqui podras ver un resumen de todos los indicadores actuales.
+                            Aqui podras ver un resumen de todos los indicadores actuales. <br>
+                            Si deseas ver mas detalles de alguno de ellos, solo da click en el titulo de la tarjeta.
                         </div>
                     </div>
                     <div class="tarjetas flex justify-center gap-10 flex-wrap">
@@ -107,14 +110,16 @@ export default {
                                 <!-- aqui va la grafica de matricula -->
                                 <div class="" id="contenedorGrafica">
                                     <Chart type="doughnut" :data="ingresosData" :options="lightOptions" />
-                                    <p>Hombres: {{ ingresos[0] }}%
-                                    Mujeres: {{ ingresos[1] }}%</p>
+                                    <div>
+                                        <br>                                             
+                                        <Tag class="mr-3 etiquetamujer" icon="pi pi-user"> Mujeres: {{ ingresos[0] }}%</Tag>
+                                        <Tag class="mr-3 etiquetahombre" icon="pi pi-user"> Hombres: {{ ingresos[1] }}%</Tag>
+                                    </div>
+
                                 </div>
                             </template>
                         </Card>
-                    
 
-                    
                         <Card style="width: 20rem; margin-bottom: 2em" class="transform hover:scale-105 duration-100">
                             <template #title>
                                 <Link :href="route('usuario.bajas')">
@@ -125,10 +130,11 @@ export default {
                                 <!-- aqui la grafica de bajas -->
                                 <div class="" id="contenedorGrafica">
                                     <Chart type="doughnut" :data="bajasData" :options="lightOptions" />
-                                    <p>Voluntaria: {{ bajas[1] }}%
-                                    Temporal: {{ bajas[0] }}%
-                                    Académica: {{ bajas[2] }}%
-                                    Administrativa: {{ bajas[3] }}%</p>
+                                    <br>
+                                    <Tag class="mr-3 etiquetavoluntaria">Voluntaria: {{ bajas[1] }}%</Tag>
+                                    <Tag class="mr-3 etiquetatemporal">Temporal: {{ bajas[0] }}%</Tag><br><br>
+                                    <Tag class="mr-3 etiquetaacademica">Académica: {{ bajas[2] }}%</Tag>
+                                    <Tag class="mr-3 etiquetaadministrativa">Administrativa: {{ bajas[3] }}%</Tag>
                                 </div>
                             </template>
                         </Card>
@@ -145,13 +151,15 @@ export default {
                                 <!-- aqui va la grafica de matricula -->
                                 <div class="" id="contenedorGrafica">
                                     <Chart type="doughnut" :data="matriculaData" :options="lightOptions" />
-                                    <p>Negocios: {{ matricula[0] }}%
-                                    Manufactura: {{ matricula[5] }}%
-                                    Mecatrónica: {{ matricula[4] }}%
-                                    Sistemas: {{ matricula[2] }}%
-                                    Administración: {{ matricula[1] }}%
-                                    Telemática: {{ matricula[6] }}%
-                                    Automotriz: {{ matricula[5] }}%</p>
+                                    <br>
+                                    <Tag class="mr-3 etiquetanegocios">Negocios: {{ matricula[0] }}%</Tag>
+                                    <Tag class="mr-3 etiquetaadministracion">Administración: {{ matricula[1] }}%</Tag>
+                                    <Tag class="mr-3 etiquetasistemas">Sistemas: {{ matricula[2] }}%</Tag>
+                                    <Tag class="mr-3 etiquetaautomotriz">Automotriz: {{ matricula[3] }}%</Tag>
+                                    <Tag class="mr-3 etiquetamecatronica"> Mecatrónica: {{ matricula[4] }}%</Tag>
+                                    <Tag class="mr-3 etiquetamanufactura">Manufactura: {{ matricula[5] }}%</Tag>
+                                    <Tag class="mr-3 etiquetatelematica">Telemática: {{ matricula[6] }}%</Tag>
+                                    
                                 </div>
                             </template>
                         </Card>
@@ -177,7 +185,54 @@ export default {
 </template>
 
 <style scoped>
-Card {
-    cursor: pointer;
+.p-tag {
+    margin: 0.5em 0.3em 0.5em 0.3em;
+    padding: 0.5em;
+    border-radius: 3px;
+    font-size: 0.85em;
+    font-weight: 600;
 }
+.etiquetahombre	{
+   background-color: #0f6ec5	;
+}
+.etiquetamujer    {
+   background-color: #f24a57	;
+}
+.etiquetavoluntaria    {
+   background-color: #32c2b9	;
+}
+.etiquetatemporal    {
+   background-color: #00686c	;
+}
+.etiquetaacademica{
+    background-color: #fad928;
+}
+.etiquetaadministrativa{
+    background-color: #ff9915;
+}
+.etiquetanegocios{
+    background-color: #000000;
+}
+.etiquetamanufactura{
+    background-color: #19058f;
+}
+.etiquetamecatronica{
+    background-color: #9f102c;
+}
+.etiquetasistemas{
+    background-color: #05d3f8;
+}
+.etiquetaadministracion{
+    background-color: #d60212;
+}
+.etiquetatelematica{
+    background-color: #aef055;
+}
+.etiquetaautomotriz{
+    background-color: #5b1d99;
+}
+
+
+
+
 </style>
