@@ -40,7 +40,7 @@ class main extends Controller
 
    public function egresados(){
       $egresados = tb_egresados::all();
-      return Inertia::render('menusComponentes/Egresados',['egresados'=>$egresados]);
+      return Inertia::render('menusComponentes/Egresados/TabMenuEgre',['egresados'=>$egresados]);
    }
 
    public function titulados(){

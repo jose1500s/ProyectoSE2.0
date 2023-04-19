@@ -297,7 +297,7 @@ export default {
 </script>
 
 <template>
-  <AppLayout title="Egresados">
+  
     <Toolbar class="mb-4">
       <template #start>
         <Button
@@ -384,6 +384,7 @@ export default {
             />
           </div>
 
+          <div class="field col-12 md:col-3 mt-3">
           <Button
             type="submit"
             id="btnRegisrar"
@@ -404,7 +405,7 @@ export default {
                 />
               </svg>
             </span>
-          </Button>
+          </Button></div>
         </form>
       </div>
 
@@ -622,7 +623,7 @@ export default {
         </Dialog>
       </div>
     </section>
-  </AppLayout>
+  
 </template>
 
 <style scoped>
