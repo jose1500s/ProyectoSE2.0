@@ -522,6 +522,8 @@ function editarEquivalencia2(Request $request) {
       $carrera = $request->input('carrera');
       $ruta = $request->input('ruta');
       $solicitudes = $request->input('solicitudes');
+      $hombres = $request->input('hombres');
+      $mujeres = $request->input('mujeres');
       $seleccionados = $request->input('seleccionados');
       $cuatrimestre = $request->input('cuatrimestre');
       $turno = $request->input('turno');
@@ -531,6 +533,8 @@ function editarEquivalencia2(Request $request) {
       $transpSolicit = new tb_transporte_solicitudes_seleccionados();
       $transpSolicit->solicitudes = $solicitudes;
       $transpSolicit->seleccionados = $seleccionados;
+      $transpSolicit->hombres = $hombres;
+      $transpSolicit->mujeres = $mujeres;
       $transpSolicit->carrera = $carrera;
       $transpSolicit->ruta = $ruta;
       $transpSolicit->cuatrimestre = $cuatrimestre;
@@ -598,6 +602,8 @@ function editarEquivalencia2(Request $request) {
       $carrera = $request->input('carrera');
       $ruta = $request->input('ruta');
       $solicitudes = $request->input('solicitudes');
+      $hombres = $request->input('hombres');
+      $mujeres = $request->input('mujeres');
       $seleccionados = $request->input('seleccionados');
       $cuatrimestre = $request->input('cuatrimestre');
       $turno = $request->input('turno');
@@ -605,6 +611,8 @@ function editarEquivalencia2(Request $request) {
       // actualizar el registro
       $transpSolicit = tb_transporte_solicitudes_seleccionados::find($id);
       $transpSolicit->solicitudes = $solicitudes;
+      $transpSolicit->hombres = $hombres;
+      $transpSolicit->mujeres = $mujeres;
       $transpSolicit->seleccionados = $seleccionados;
       $transpSolicit->carrera = $carrera;
       $transpSolicit->ruta = $ruta;
