@@ -16,6 +16,8 @@ return new class extends Migration
         Schema::create('tb_transporte_solicitudes_seleccionados', function (Blueprint $table) {
             $table->id();
             $table->integer('solicitudes');
+            $table->integer('hombres');
+            $table->integer('mujeres');
             $table->integer('seleccionados');
             $table->string('carrera',50);
             $table->string('ruta',50);

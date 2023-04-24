@@ -397,6 +397,8 @@ export default {
         <Column field="carrera" header="Carrera" :sortable="true"></Column>
         <Column field="ruta" header="Ruta" :sortable="true"></Column>
         <Column field="solicitudes" header="Solicitudes" :sortable="true"></Column>
+        <Column field="hombres" header="Hombres" :sortable="true"></Column>
+        <Column field="mujeres" header="Mujeres" :sortable="true"></Column>
         <Column field="seleccionados" header="Seleccionados" :sortable="true"></Column>
         <Column field="cuatrimestre" header="Cuatrimestre" :sortable="true"></Column>
         <Column field="turno" header="Turno" :sortable="true"></Column>
