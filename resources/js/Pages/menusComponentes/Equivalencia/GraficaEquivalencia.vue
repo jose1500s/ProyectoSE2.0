@@ -5,7 +5,7 @@ export default {
         Chart,
     },
     props: {
-        equivalencias: Array,
+        equiva: Array,
     },
     methods: {
         filtrarCarreras() {
