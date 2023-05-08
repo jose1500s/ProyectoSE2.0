@@ -470,7 +470,7 @@ function eliminarEquivalencias(Request $request) {
       $solicitudes = $request->input('solicitudes');
       $hombres = $request->input('hombres');
       $mujeres = $request->input('mujeres');
-      $seleccionados = $request->input('seleccionados');
+      $seleccionados = $hombres + $mujeres;
       $cuatrimestre = $request->input('cuatrimestre');
       $turno = $request->input('turno');
       
@@ -550,7 +550,7 @@ function eliminarEquivalencias(Request $request) {
       $solicitudes = $request->input('solicitudes');
       $hombres = $request->input('hombres');
       $mujeres = $request->input('mujeres');
-      $seleccionados = $request->input('seleccionados');
+      $seleccionados = $hombres + $mujeres;
       $cuatrimestre = $request->input('cuatrimestre');
       $turno = $request->input('turno');
 
