@@ -109,7 +109,6 @@ export default {
         this.product.solicitudes == 0 ||
         this.product.hombres == 0 ||
         this.product.mujeres == 0 ||
-        this.product.seleccionados == 0 ||
         this.product.carrera == null ||
         this.product.ruta == null ||
         this.product.cuatrimestre == null ||
@@ -129,7 +128,6 @@ export default {
           solicitudes: this.product.solicitudes,
           hombres: this.product.hombres,
           mujeres: this.product.mujeres,
-          seleccionados: this.product.seleccionados,
           carrera: this.product.carrera,
           ruta: this.product.ruta,
           cuatrimestre: this.product.cuatrimestre,
@@ -173,7 +171,6 @@ export default {
         this.SOsolicitudes == 0 ||
         this.SOhombres == 0 ||
         this.SOmujeres == 0 ||
-        this.SOseleccionados == 0 ||
         this.SOcuatri == null ||
         this.SOturno == null
       ) {
@@ -192,7 +189,6 @@ export default {
           solicitudes: this.SOsolicitudes,
           hombres: this.SOhombres,
           mujeres: this.SOmujeres,
-          seleccionados: this.SOseleccionados,
           cuatrimestre: this.SOcuatri,
           turno: this.SOturno
         };
@@ -309,7 +305,6 @@ export default {
             SOcarrera: null,
             SOruta: null,
             SOsolicitudes: 0,
-            SOseleccionados: 0,
             SOhombres: 0,
             SOmujeres: 0,
             SOcuatri: null,
@@ -496,18 +491,6 @@ export default {
             </div>
 
             <div class="field col-12 md:col-3">
-              <label for="minmax">Seleccionados</label>
-              <InputNumber
-                inputId="minmax"
-                v-model="SOseleccionados"
-                mode="decimal"
-                :min="0"
-                :max="10000"
-                :showButtons="true"
-              />
-            </div>
-
-            <div class="field col-12 md:col-3">
               <Dropdown
                 v-model="SOcuatri"
                 :options="cuatrisLista"
@@ -611,11 +594,6 @@ export default {
             <div class="p-field p-col-12 p-md-12">
               <label for="total_ingresos">Mujeres</label>
               <inputNumber id="total_ingresos" v-model="product.mujeres"  />
-            </div>
-
-            <div class="p-field p-col-12 p-md-12">
-              <label for="total_ingresos">Seleccionados</label>
-              <InputNumber id="total_ingresos" v-model="product.seleccionados"  />
             </div>
 
             <div class="p-field p-col-12 p-md-12">
