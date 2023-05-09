@@ -1,7 +1,7 @@
 <script>
 // componentes
 import AppLayout from "@/Layouts/AppLayout.vue";
-import GraficaIngreso from "@/Pages/menusComponentes/Ingreso/GraficaIngreso.vue";
+import GraficaIngreso from "./GraficaIngreso.vue";
 // PrimeVue
 import DataTable from "primevue/datatable";
 import Column from "primevue/column";
@@ -17,6 +17,7 @@ import ConfirmDialog from "primevue/confirmdialog";
 import Toolbar from "primevue/toolbar";
 import Dropdown from "primevue/dropdown";
 import InputNumber from "primevue/inputnumber";
+import axios from "axios";
 export default {
   components: {
     AppLayout,
@@ -28,18 +29,17 @@ export default {
     MultiSelect,
     Chart,
     Dialog,
-    GraficaIngreso,
     Toast,
     ConfirmDialog,
     Toolbar,
     Dropdown,
     InputNumber,
+    GraficaIngreso,
   },
   props: {
     ingresos: Array,
-  },
-  setup() {
-    //use
+    admisiones: Array,
+    datosCarrerasFiltro: Array,
   },
   methods: {
     filtrarCarreras() {
@@ -238,7 +238,7 @@ export default {
     deleteSelectedProducts() {
       // tomar el id de todos los productos seleccionados
       const data = {
-        id: this.selectedProducts.map((item) => item.id), 
+        id: this.selectedProducts.map((item) => item.id),
       };
       this.$inertia.post("/eliminar-Admisiones", data, {
         preserveState: true,
@@ -254,17 +254,40 @@ export default {
         },
       });
     },
+    checarSeleccionados() {
+      console.log('seleccionados', this.selectedProducts)
+    },
     confirmDeleteSelected() {
       this.deleteProductsDialog = true;
     },
+    filtroCarreras() {
+      let data = {
+        carrera: this.filters.carrera.value,
+
+      };
+      axios.post('/obtener-filtro-carreras-admision', data)
+        .then(response => {
+          this.datosFiltrados = response.data.datosCarrerasFiltro;
+          this.admisionesTodosLosRegistros = response.data.admisiones;
+          // Aquí puedes realizar otras operaciones con los datos recibidos
+        })
+        .catch(error => {
+          console.log(error);
+        });
+
+    },
+  },
+  mounted() {
+
   },
   data() {
     return {
       filters: {
         carrera: { value: null, matchMode: FilterMatchMode.IN },
-        Proceso: { value: null, matchMode: FilterMatchMode.IN },
-        periodo: { value: null, matchMode: FilterMatchMode.IN }, 
+        periodo: { value: null, matchMode: FilterMatchMode.IN },
       },
+      datosFiltrados: [],
+      admisionesTodosLosRegistros: [],
       noDataMessage: "No se encontraron datos",
       displayResponsive: false,
       carrerasLista: [
@@ -276,7 +299,12 @@ export default {
         { name: "Sistemas", code: "Sistemas" },
         { name: "Telematica", code: "Telematica" },
       ],
-      periodosLista: [{ name: "SEP-DIC", code: "SEP-DIC" }],
+      periodosLista: [
+        { name: "SEP-DIC", code: "SEP-DIC" },
+        { name: "ENE-MAR", code: "ENE-MAR" },
+        { name: "ABR-JUN", code: "ABR-JUN" },
+        { name: "JUL-SEP", code: "JUL-SEP" },
+      ],
       carreras: null,
       periodos: null,
       aspirantes: 0,
@@ -287,7 +315,6 @@ export default {
       deleteProductDialog: false,
       selectedProducts: null,
       deleteProductsDialog: false,
-
     };
   },
 };
@@ -298,6 +325,9 @@ export default {
     <template #start>
       <Button label="Nuevo Registro" icon="pi pi-plus" class="p-button-success !mr-2" @click="openNew" />
       <Button label="Eliminar" icon="pi pi-trash" class="p-button-danger" @click="confirmDeleteSelected"
+        :disabled="!selectedProducts || !selectedProducts.length" />
+        <!-- boton para checar los productos seleccionados -->
+      <Button label="Checar" icon="pi pi-check" class="p-button-warning" @click="checarSeleccionados"
         :disabled="!selectedProducts || !selectedProducts.length" />
     </template>
   </Toolbar>
@@ -344,7 +374,6 @@ export default {
       </form>
     </div>
   </Dialog>
-
   <section class="bg-white" id="tablaIngreso">
     <div class="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8 p-[20px]">
       <div class="text-center mb-5">
@@ -354,33 +383,22 @@ export default {
           </div>
           <!-- model para abrir grafica -->
           <Button label="Grafica" icon="pi pi-chart-bar" @click="openResponsive" />
-          <Dialog header="Grafica" v-model:visible="displayResponsive" :breakpoints="{ '960px': '75vw', '75vw': '90vw' }"
-            :style="{ width: '70vw' }">
-            <!-- contenido del dialog/model desde aqui... -->
-            <div class="w-full" id="contenedorGrafica">
-              <GraficaIngreso :ingresos="ingresos" />
-            </div>
-            <template #footer>
-              <Button label="Cerrar" icon="pi pi-check" @click="closeResponsive" autofocus />
-              <!-- boton para guardar la grafica como img -->
-              <Button label="Guardar" icon="pi pi-save" @click="saveImage" />
-            </template>
-          </Dialog>
+
+
 
           <Button icon="pi pi-external-link" label="Exportar Excel" @click="exportCSV($event)" />
 
           <!-- Filtros -->
-          <MultiSelect v-model="filters.carrera.value" :options="filtrarCarreras()" placeholder="Carrera"
-            display="chip" />
+          <MultiSelect v-model="filters.carrera.value" :options="carrerasLista" optionLabel="name" optionValue="code"
+            placeholder="Carrera" display="chip" @change="filtroCarreras($event)" />
 
-          <MultiSelect v-model="filters.Proceso.value" :options="filtrarProcesos()" placeholder="Proceso"
-            display="chip" />
 
-          <MultiSelect v-model="filters.periodo.value" :options="filtrarFecha()" placeholder="Fecha" display="chip" />
+          <MultiSelect v-model="filters.periodo.value" :options="periodosLista" optionLabel="name" optionValue="code"  placeholder="Periodo" display="chip" />
 
           <Button icon="pi pi-times" label="Limpiar" @click="limpiarFiltros()" />
         </div>
       </div>
+
 
       <DataTable :value="ingresos" :paginator="true" class="p-datatable-customers" :rows="7" ref="dt"
         v-model:filters="filters" v-model:selection="selectedProducts" :emptyMessage="noDataMessage" stripedRows
@@ -402,6 +420,7 @@ export default {
           </template>
         </Column>
 
+
         <!-- mensaje de no hay datos -->
         <template #empty>
           <div class="flex justify-center align-middle text-xl">
@@ -410,12 +429,27 @@ export default {
         </template>
       </DataTable>
 
+
+
+      <Dialog header="Gráfica dinámica" v-model:visible="displayResponsive" :breakpoints="{ '960px': '75vw', '75vw': '90vw' }"
+        :style="{ width: '70vw' }">
+        <!-- contenido del dialog/model desde aqui... -->
+        <div class="w-full" id="contenedorGrafica">
+          <GraficaIngreso :carrerasFiltradas="datosFiltrados"/>
+        </div>
+        <template #footer>
+          <Button label="Cerrar" icon="pi pi-check" @click="closeResponsive" autofocus />
+          <!-- boton para guardar la grafica como img -->
+          <Button label="Guardar" icon="pi pi-save" @click="saveImage" />
+        </template>
+      </Dialog>
+
       <!-- Dialog para editar el producto toma los valores del producto seleccionado -->
       <Dialog header="Editar Admision" v-model:visible="editDialog" :breakpoints="{ '960px': '75vw', '75vw': '85vw' }"
         :style="{ width: '25vw' }" :modal="true" :closable="true" :dismissableMask="false">
         <div class="p-fluid p-formgrid p-grid">
           <form @submit.prevent="editarAdmision">
-            <InputText id="id" v-model.trim="product.id" hidden /> 
+            <InputText id="id" v-model.trim="product.id" hidden />
 
             <div class="p-field p-col-12 p-md-6">
               <label for="carrera">Carrera</label>
@@ -478,15 +512,18 @@ export default {
 .p-multiselect-label-container {
   max-width: 170px;
 }
+
 .p-dialog-footer {
   display: flex;
   justify-content: center;
   align-items: center;
 }
+
 div#contenedorGrafica canvas {
   width: 100% !important;
   height: auto !important;
 }
+
 #btnRegisrar {
   margin-top: 1.5rem;
   font-size: 1.1rem;

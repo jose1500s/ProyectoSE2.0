@@ -15,6 +15,6 @@ class tansporteSolicitudesSeleccionadosSeeder extends Seeder
      */
     public function run()
     {
-        tb_transporte_solicitudes_seleccionados::factory()->count(50)->create();
+        tb_transporte_solicitudes_seleccionados::factory()->count(15)->create();
     }
 }

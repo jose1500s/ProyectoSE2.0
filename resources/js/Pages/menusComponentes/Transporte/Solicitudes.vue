@@ -107,7 +107,8 @@ export default {
       if (
         this.product.id == null ||
         this.product.solicitudes == 0 ||
-        this.product.seleccionados == 0 ||
+        this.product.hombres == 0 ||
+        this.product.mujeres == 0 ||
         this.product.carrera == null ||
         this.product.ruta == null ||
         this.product.cuatrimestre == null ||
@@ -125,7 +126,8 @@ export default {
        const data = {
           id: this.product.id,
           solicitudes: this.product.solicitudes,
-          seleccionados: this.product.seleccionados,
+          hombres: this.product.hombres,
+          mujeres: this.product.mujeres,
           carrera: this.product.carrera,
           ruta: this.product.ruta,
           cuatrimestre: this.product.cuatrimestre,
@@ -167,7 +169,8 @@ export default {
         this.SOcarrera == null ||
         this.SOruta == null ||
         this.SOsolicitudes == 0 ||
-        this.SOseleccionados == 0 ||
+        this.SOhombres == 0 ||
+        this.SOmujeres == 0 ||
         this.SOcuatri == null ||
         this.SOturno == null
       ) {
@@ -184,7 +187,8 @@ export default {
           carrera: this.SOcarrera,
           ruta: this.SOruta,
           solicitudes: this.SOsolicitudes,
-          seleccionados: this.SOseleccionados,
+          hombres: this.SOhombres,
+          mujeres: this.SOmujeres,
           cuatrimestre: this.SOcuatri,
           turno: this.SOturno
         };
@@ -301,7 +305,8 @@ export default {
             SOcarrera: null,
             SOruta: null,
             SOsolicitudes: 0,
-            SOseleccionados: 0,
+            SOhombres: 0,
+            SOmujeres: 0,
             SOcuatri: null,
             SOturno: null,
         }
@@ -397,6 +402,8 @@ export default {
         <Column field="carrera" header="Carrera" :sortable="true"></Column>
         <Column field="ruta" header="Ruta" :sortable="true"></Column>
         <Column field="solicitudes" header="Solicitudes" :sortable="true"></Column>
+        <Column field="hombres" header="Hombres" :sortable="true"></Column>
+        <Column field="mujeres" header="Mujeres" :sortable="true"></Column>
         <Column field="seleccionados" header="Seleccionados" :sortable="true"></Column>
         <Column field="cuatrimestre" header="Cuatrimestre" :sortable="true"></Column>
         <Column field="turno" header="Turno" :sortable="true"></Column>
@@ -460,10 +467,22 @@ export default {
             </div>
 
             <div class="field col-12 md:col-3">
-              <label for="minmax">Seleccionados</label>
+              <label for="minmax">Hombres</label>
               <InputNumber
                 inputId="minmax"
-                v-model="SOseleccionados"
+                v-model="SOhombres"
+                mode="decimal"
+                :min="0"
+                :max="10000"
+                :showButtons="true"
+              />
+            </div>
+
+            <div class="field col-12 md:col-3">
+              <label for="minmax">Mujeres</label>
+              <InputNumber
+                inputId="minmax"
+                v-model="SOmujeres"
                 mode="decimal"
                 :min="0"
                 :max="10000"
@@ -568,8 +587,13 @@ export default {
             </div>
 
             <div class="p-field p-col-12 p-md-12">
-              <label for="total_ingresos">Seleccionados</label>
-              <InputNumber id="total_ingresos" v-model="product.seleccionados"  />
+              <label for="total_ingresos">Hombres</label>
+              <inputNumber id="total_ingresos" v-model="product.hombres"  />
+            </div>
+
+            <div class="p-field p-col-12 p-md-12">
+              <label for="total_ingresos">Mujeres</label>
+              <inputNumber id="total_ingresos" v-model="product.mujeres"  />
             </div>
 
             <div class="p-field p-col-12 p-md-12">

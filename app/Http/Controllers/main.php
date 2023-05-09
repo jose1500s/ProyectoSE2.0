@@ -30,6 +30,7 @@ class main extends Controller
       return Inertia::render('menusComponentes/Ingreso/TabMenu', ['maestrias' => $maestrias,'ingresos' => $ingresos, 'equivalencias' => $equivalencias, 'ningresos' => $ningresos, 'reingresos' => $reingresos]);
    }
 
+
    public function bajas() {
       return Inertia::render('menusComponentes/Bajas');
    }
@@ -140,6 +141,72 @@ class main extends Controller
   }
 
   //  --------------------- FIN TAB ADMISION -----------------------
+
+  // ---------------------- TAB TITULADOS --------------------------
+
+   function registrarTitulacion(Request $request) {
+      $carrera = $request->input('carrera');
+      $generacion = $request->input('generacion');
+      $total = $request->input('total');
+      $cedula = $request->input('cedula');
+      $titulo_electronico = $request->input('titulo_electronico');
+      $fecha_titulacion = $request->input('fecha_titulacion');
+
+      // crear un nuevo registro en la tabla tb_indicador_titulados
+      $titulacion = new tb_indicador_titulados();
+      $titulacion->carrera = $carrera;
+      $titulacion->generacion = $generacion;
+      $titulacion->total = $total;
+      $titulacion->cedula = $cedula;
+      $titulacion->titulo_electronico = $titulo_electronico;
+      $titulacion->fecha_titulacion = $fecha_titulacion;
+      $titulacion->save();
+
+      // retornar a la vista ingreso
+      return redirect()->route('usuario.titulados');
+
+   }
+
+    // ruta para editar una admision
+    function editarTitulacion(Request $request) {
+      // obtener los datos dle form y luego actualizar el registro
+      $id = $request->input('id');
+      $carrera = $request->input('carrera');
+      $generacion = $request->input('generacion');
+      $total = $request->input('total');
+      $cedula = $request->input('cedula');
+      $titulo_electronico = $request->input('titulo_electronico');
+      $fecha_titulacion = $request->input('fecha_titulacion');
+   
+      // actualizar el registro
+      $titulacion = tb_indicador_titulados::find($id);
+      $titulacion->carrera = $carrera;
+      $titulacion->generacion = $generacion;
+      $titulacion->total = $total;
+      $titulacion->cedula = $cedula;
+      $titulacion->titulo_electronico = $titulo_electronico;
+      $titulacion->fecha_titulacion = $fecha_titulacion;
+      $titulacion->save();
+   
+      // retornar a la vista ingreso
+      return redirect()->route('usuario.titulados');
+     }
+   
+     function eliminarTitulacion(Request $request) {
+      $id = $request->input('id');
+      $titulacion = tb_indicador_titulados::findOrFail($id);
+      $titulacion->delete(); 
+      return redirect()->route('usuario.titulados');
+     }
+   
+     function eliminarTitulaciones(Request $request) {
+      $id = $request->id;
+      $titulacion = tb_indicador_titulados::whereIn('id', $id);
+      $titulacion->delete();
+      return redirect()->route('usuario.titulados');
+     }
+
+  // ---------------------- FIN TAB TITULADOS ----------------------
 
   //  --------------------- TAB NUEVO INGRESO -----------------------
 
@@ -393,61 +460,7 @@ function eliminarEquivalencias(Request $request) {
       return redirect()->route('usuario.ingreso');
    }
 
-
-   //  --------------------- TAB NUEVO EQUIVALENCIA2 -----------------------
-   // ruta para guardar una nueva equivalencia del indicador ingreso en la equivalencia
-  function registrarEquivalencia2(Request $request) {
-   $carrera = $request->input('carreras');
-   $aspirantes = $request->input('aspirantes');
-   $examinados = $request->input('examinados');
-   $no_admitidos = $request->input('noAdmitidos');
-   $periodo = $request->input('periodos');
-
-   // crear un nuevo registro en la tabla tb_equivalencia
-   $admision = new tb_indicador_equivalencia();
-   $admision->carrera = $carrera;
-   $admision->aspirantes = $aspirantes;
-   $admision->examinados = $examinados;
-   $admision->no_admitidos = $no_admitidos;
-   $admision->periodo = $periodo;
-   $admision->save();
-
-   // retornar a la vista ingreso
-   return redirect()->route('usuario.equivalencia');
-
-} 
-
-// ruta para editar una equivalencia
-function editarEquivalencia2(Request $request) {
-   // obtener los datos dle form y luego actualizar el registro
-   $id = $request->input('id');
-   $carrera = $request->input('carrera');
-   $aspirantes = $request->input('aspirantes');
-   $examinados = $request->input('examinados');
-   $no_admitidos = $request->input('no_admitidos');
-   $periodo = $request->input('periodo');
-
-   // actualizar el registro
-   $admision = tb_indicador_equivalencia::find($id);
-   $admision->carrera = $carrera;
-   $admision->aspirantes = $aspirantes;
-   $admision->examinados = $examinados;
-   $admision->no_admitidos = $no_admitidos;
-   $admision->periodo = $periodo;
-   $admision->save();
-
-   // retornar a la vista ingreso
-   return redirect()->route('usuario.equivalencia');
-  }
-
-  function eliminarEquivalencia2(Request $request) {
-   $id = $request->input('id');
-   $equiva = tb_indicador_equivalencia::findOrFail($id);
-   $equiva->delete(); 
-   return redirect()->route('usuario.equivalencia');
-}
-
-
+//  --------------------- Fin Maestrias -----------------------//
 
 //---------------TRANSPORTE----------------//
 
@@ -455,7 +468,9 @@ function editarEquivalencia2(Request $request) {
       $carrera = $request->input('carrera');
       $ruta = $request->input('ruta');
       $solicitudes = $request->input('solicitudes');
-      $seleccionados = $request->input('seleccionados');
+      $hombres = $request->input('hombres');
+      $mujeres = $request->input('mujeres');
+      $seleccionados = $hombres + $mujeres;
       $cuatrimestre = $request->input('cuatrimestre');
       $turno = $request->input('turno');
       
@@ -464,6 +479,8 @@ function editarEquivalencia2(Request $request) {
       $transpSolicit = new tb_transporte_solicitudes_seleccionados();
       $transpSolicit->solicitudes = $solicitudes;
       $transpSolicit->seleccionados = $seleccionados;
+      $transpSolicit->hombres = $hombres;
+      $transpSolicit->mujeres = $mujeres;
       $transpSolicit->carrera = $carrera;
       $transpSolicit->ruta = $ruta;
       $transpSolicit->cuatrimestre = $cuatrimestre;
@@ -531,13 +548,17 @@ function editarEquivalencia2(Request $request) {
       $carrera = $request->input('carrera');
       $ruta = $request->input('ruta');
       $solicitudes = $request->input('solicitudes');
-      $seleccionados = $request->input('seleccionados');
+      $hombres = $request->input('hombres');
+      $mujeres = $request->input('mujeres');
+      $seleccionados = $hombres + $mujeres;
       $cuatrimestre = $request->input('cuatrimestre');
       $turno = $request->input('turno');
 
       // actualizar el registro
       $transpSolicit = tb_transporte_solicitudes_seleccionados::find($id);
       $transpSolicit->solicitudes = $solicitudes;
+      $transpSolicit->hombres = $hombres;
+      $transpSolicit->mujeres = $mujeres;
       $transpSolicit->seleccionados = $seleccionados;
       $transpSolicit->carrera = $carrera;
       $transpSolicit->ruta = $ruta;
