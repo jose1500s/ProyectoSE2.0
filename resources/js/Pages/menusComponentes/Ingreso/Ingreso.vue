@@ -18,6 +18,8 @@ import Toolbar from "primevue/toolbar";
 import Dropdown from "primevue/dropdown";
 import InputNumber from "primevue/inputnumber";
 import axios from "axios";
+import readXlsxFile from "read-excel-file";
+
 export default {
   components: {
     AppLayout,
@@ -43,7 +45,15 @@ export default {
   },
   methods: {
     filtrarCarreras() {
-      const carreras = ['Negocios', 'Administracion', 'Sistemas', 'Automotriz', 'Mecatronica', 'Manufactura', 'Telematica'];
+      const carreras = [
+        "Negocios",
+        "Administracion",
+        "Sistemas",
+        "Automotriz",
+        "Mecatronica",
+        "Manufactura",
+        "Telematica",
+      ];
       return carreras;
     },
     filtrarProcesos() {
@@ -52,7 +62,7 @@ export default {
       // const procesos = this.ingresos.map((item) => item.Proceso);
       // const procesosFiltradas = [...new Set(procesos)];
       // estaticos:
-      const procesos = ['1er Proceso', '2do Proceso', '3er Proceso']
+      const procesos = ["1er Proceso", "2do Proceso", "3er Proceso"];
       return procesos;
     },
     filtrarFecha() {
@@ -60,7 +70,7 @@ export default {
       // y retornar un arreglo con los nombres de las carreras sin repetir
       // const fechas = this.ingresos.map((item) => item.fecha);
       // const fechasFiltradas = [...new Set(fechas)];
-      const fechas = ['SEP-DIC']
+      const fechas = ["SEP-DIC"];
       return fechas;
     },
     exportCSV() {
@@ -254,32 +264,49 @@ export default {
         },
       });
     },
-    checarSeleccionados() {
-      console.log('seleccionados', this.selectedProducts)
-    },
     confirmDeleteSelected() {
       this.deleteProductsDialog = true;
     },
     filtroCarreras() {
       let data = {
         carrera: this.filters.carrera.value,
-
       };
-      axios.post('/obtener-filtro-carreras-admision', data)
-        .then(response => {
+      axios
+        .post("/obtener-filtro-carreras-admision", data)
+        .then((response) => {
           this.datosFiltrados = response.data.datosCarrerasFiltro;
           this.admisionesTodosLosRegistros = response.data.admisiones;
           // Aquí puedes realizar otras operaciones con los datos recibidos
         })
-        .catch(error => {
+        .catch((error) => {
           console.log(error);
         });
-
     },
+    cargarExcel(event) {
+      const files = event.target.files;
+      if (files && files.length > 0) {
+        this.file = files[0];
+        const reader = new FileReader();
+        reader.onload = () => {
+          this.fileContent = reader.result;
+        };
+        reader.readAsArrayBuffer(this.file);
+      }
+    },
+    importarExcel() {
+      if (this.fileContent) {
+        readXlsxFile(this.file).then(rows => {
+          // Aquí puedes llamar a tu método "importar" y pasarle los datos del archivo
+          this.importar(rows);
+        }).catch(error => {
+          console.log(error);
+        });
+      } else {
+        console.log('No se seleccionó ningún archivo');
+      }
+    }
   },
-  mounted() {
-
-  },
+  mounted() {},
   data() {
     return {
       filters: {
@@ -287,6 +314,7 @@ export default {
         periodo: { value: null, matchMode: FilterMatchMode.IN },
       },
       datosFiltrados: [],
+      datosExcel: [],
       admisionesTodosLosRegistros: [],
       noDataMessage: "No se encontraron datos",
       displayResponsive: false,
@@ -315,6 +343,8 @@ export default {
       deleteProductDialog: false,
       selectedProducts: null,
       deleteProductsDialog: false,
+      file: null,
+      fileContent: null,
     };
   },
 };
@@ -323,51 +353,117 @@ export default {
 <template>
   <Toolbar class="mb-4">
     <template #start>
-      <Button label="Nuevo Registro" icon="pi pi-plus" class="p-button-success !mr-2" @click="openNew" />
-      <Button label="Eliminar" icon="pi pi-trash" class="p-button-danger" @click="confirmDeleteSelected"
-        :disabled="!selectedProducts || !selectedProducts.length" />
-        <!-- boton para checar los productos seleccionados -->
-      <Button label="Checar" icon="pi pi-check" class="p-button-warning" @click="checarSeleccionados"
-        :disabled="!selectedProducts || !selectedProducts.length" />
+      <Button
+        label="Nuevo Registro"
+        icon="pi pi-plus"
+        class="p-button-success !mr-2"
+        @click="openNew"
+      />
+      <Button
+        label="Eliminar"
+        icon="pi pi-trash"
+        class="p-button-danger"
+        @click="confirmDeleteSelected"
+        :disabled="!selectedProducts || !selectedProducts.length"
+      />
+      <!-- button para importar excel -->
+
+      <input
+        type="file"
+        ref="fileInput"
+        @change="cargarExcel"
+        accept=".xlsx, .xls, .csv"
+      />
+      <button type="button" class="btn btn-success" @click="importarExcel">
+        Importar
+      </button>
     </template>
   </Toolbar>
 
-  <Dialog v-model:visible="productDialog" :breakpoints="{ '960px': '75vw', '640px': '85vw' }" :style="{ width: '25vw' }"
-    header="Nuevo Registro" :modal="true" class="p-fluid">
+  <Dialog
+    v-model:visible="productDialog"
+    :breakpoints="{ '960px': '75vw', '640px': '85vw' }"
+    :style="{ width: '25vw' }"
+    header="Nuevo Registro"
+    :modal="true"
+    class="p-fluid"
+  >
     <div class="field">
       <form @submit.prevent="registrarAdmision">
         <!-- select con opciones -->
-        <Dropdown v-model="carreras" :options="carrerasLista" optionLabel="name" optionValue="code" :filter="true"
-          placeholder="Carrera..." />
+        <Dropdown
+          v-model="carreras"
+          :options="carrerasLista"
+          optionLabel="name"
+          optionValue="code"
+          :filter="true"
+          placeholder="Carrera..."
+        />
 
         <div class="field col-12 md:col-3">
           <label for="minmax">Aspirantes</label>
-          <InputNumber inputId="minmax" v-model="aspirantes" mode="decimal" :min="0" :max="10000" :showButtons="true" />
+          <InputNumber
+            inputId="minmax"
+            v-model="aspirantes"
+            mode="decimal"
+            :min="0"
+            :max="10000"
+            :showButtons="true"
+          />
         </div>
 
         <div class="field col-12 md:col-3">
           <label for="minmax">Examinados</label>
-          <InputNumber inputId="minmax" v-model="examinados" mode="decimal" :min="0" :max="10000" :showButtons="true" />
+          <InputNumber
+            inputId="minmax"
+            v-model="examinados"
+            mode="decimal"
+            :min="0"
+            :max="10000"
+            :showButtons="true"
+          />
         </div>
 
         <div class="field col-12 md:col-3">
           <label for="minmax">No Admitidos</label>
-          <InputNumber inputId="minmax" v-model="noAdmitidos" mode="decimal" :min="0" :max="10000" :showButtons="true" />
+          <InputNumber
+            inputId="minmax"
+            v-model="noAdmitidos"
+            mode="decimal"
+            :min="0"
+            :max="10000"
+            :showButtons="true"
+          />
         </div>
 
         <div class="field col-12 md:col-3 mt-3">
-          <Dropdown v-model="periodos" :options="periodosLista" optionLabel="name" optionValue="code"
-            placeholder="Periodo" />
+          <Dropdown
+            v-model="periodos"
+            :options="periodosLista"
+            optionLabel="name"
+            optionValue="code"
+            placeholder="Periodo"
+          />
         </div>
 
-        <Button type="submit" id="btnRegisrar"
-          class="flex items-center justify-center space-x-2 rounded-md border-2 border-blue-500 px-4 py-2 font-medium text-blue-600 transition hover:bg-blue-500 hover:text-white">
+        <Button
+          type="submit"
+          id="btnRegisrar"
+          class="flex items-center justify-center space-x-2 rounded-md border-2 border-blue-500 px-4 py-2 font-medium text-blue-600 transition hover:bg-blue-500 hover:text-white"
+        >
           <span> Registrar </span>
           <span>
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="h-6 w-6">
-              <path fill-rule="evenodd"
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              class="h-6 w-6"
+            >
+              <path
+                fill-rule="evenodd"
                 d="M16.72 7.72a.75.75 0 011.06 0l3.75 3.75a.75.75 0 010 1.06l-3.75 3.75a.75.75 0 11-1.06-1.06l2.47-2.47H3a.75.75 0 010-1.5h16.19l-2.47-2.47a.75.75 0 010-1.06z"
-                clip-rule="evenodd" />
+                clip-rule="evenodd"
+              />
             </svg>
           </span>
         </Button>
@@ -382,44 +478,97 @@ export default {
             <Toast />
           </div>
           <!-- model para abrir grafica -->
-          <Button label="Grafica" icon="pi pi-chart-bar" @click="openResponsive" />
+          <Button
+            label="Grafica"
+            icon="pi pi-chart-bar"
+            @click="openResponsive"
+          />
 
-
-
-          <Button icon="pi pi-external-link" label="Exportar Excel" @click="exportCSV($event)" />
+          <Button
+            icon="pi pi-external-link"
+            label="Exportar Excel"
+            @click="exportCSV($event)"
+          />
 
           <!-- Filtros -->
-          <MultiSelect v-model="filters.carrera.value" :options="carrerasLista" optionLabel="name" optionValue="code"
-            placeholder="Carrera" display="chip" @change="filtroCarreras($event)" />
+          <MultiSelect
+            v-model="filters.carrera.value"
+            :options="carrerasLista"
+            optionLabel="name"
+            optionValue="code"
+            placeholder="Carrera"
+            display="chip"
+            @change="filtroCarreras($event)"
+          />
 
+          <MultiSelect
+            v-model="filters.periodo.value"
+            :options="periodosLista"
+            optionLabel="name"
+            optionValue="code"
+            placeholder="Periodo"
+            display="chip"
+          />
 
-          <MultiSelect v-model="filters.periodo.value" :options="periodosLista" optionLabel="name" optionValue="code"  placeholder="Periodo" display="chip" />
-
-          <Button icon="pi pi-times" label="Limpiar" @click="limpiarFiltros()" />
+          <Button
+            icon="pi pi-times"
+            label="Limpiar"
+            @click="limpiarFiltros()"
+          />
         </div>
       </div>
 
-
-      <DataTable :value="ingresos" :paginator="true" class="p-datatable-customers" :rows="7" ref="dt"
-        v-model:filters="filters" v-model:selection="selectedProducts" :emptyMessage="noDataMessage" stripedRows
-        sortMode="multiple" removableSort>
-        <Column selectionMode="multiple" style="width: 3rem" :exportable="false"></Column>
+      <DataTable
+        :value="ingresos"
+        :paginator="true"
+        class="p-datatable-customers"
+        :rows="7"
+        ref="dt"
+        v-model:filters="filters"
+        v-model:selection="selectedProducts"
+        :emptyMessage="noDataMessage"
+        stripedRows
+        sortMode="multiple"
+        removableSort
+      >
+        <Column
+          selectionMode="multiple"
+          style="width: 3rem"
+          :exportable="false"
+        ></Column>
 
         <Column field="id" header="ID" :sortable="true" hidden></Column>
         <Column field="carrera" header="Carrera" :sortable="true"></Column>
-        <Column field="aspirantes" header="Aspirantes" :sortable="true"></Column>
-        <Column field="examinados" header="Examinados" :sortable="true"></Column>
-        <Column field="no_admitidos" header="No Admitidos" :sortable="true"></Column>
+        <Column
+          field="aspirantes"
+          header="Aspirantes"
+          :sortable="true"
+        ></Column>
+        <Column
+          field="examinados"
+          header="Examinados"
+          :sortable="true"
+        ></Column>
+        <Column
+          field="no_admitidos"
+          header="No Admitidos"
+          :sortable="true"
+        ></Column>
         <Column field="periodo" header="Periodo" :sortable="true"></Column>
         <Column :exportable="false" style="min-width: 8rem" class="p-6">
           <template #body="slotProps">
-            <Button icon="pi pi-pencil" class="p-button-rounded p-button-success !mr-2"
-              @click="editProduct(slotProps.data)" />
-            <Button icon="pi pi-trash" class="p-button-rounded p-button-warning"
-              @click="confirmDeleteProduct(slotProps.data)" />
+            <Button
+              icon="pi pi-pencil"
+              class="p-button-rounded p-button-success !mr-2"
+              @click="editProduct(slotProps.data)"
+            />
+            <Button
+              icon="pi pi-trash"
+              class="p-button-rounded p-button-warning"
+              @click="confirmDeleteProduct(slotProps.data)"
+            />
           </template>
         </Column>
-
 
         <!-- mensaje de no hay datos -->
         <template #empty>
@@ -429,24 +578,38 @@ export default {
         </template>
       </DataTable>
 
-
-
-      <Dialog header="Gráfica dinámica" v-model:visible="displayResponsive" :breakpoints="{ '960px': '75vw', '75vw': '90vw' }"
-        :style="{ width: '70vw' }">
+      <Dialog
+        header="Gráfica dinámica"
+        v-model:visible="displayResponsive"
+        :breakpoints="{ '960px': '75vw', '75vw': '90vw' }"
+        :style="{ width: '70vw' }"
+      >
         <!-- contenido del dialog/model desde aqui... -->
         <div class="w-full" id="contenedorGrafica">
-          <GraficaIngreso :carrerasFiltradas="datosFiltrados"/>
+          <GraficaIngreso :carrerasFiltradas="datosFiltrados" />
         </div>
         <template #footer>
-          <Button label="Cerrar" icon="pi pi-check" @click="closeResponsive" autofocus />
+          <Button
+            label="Cerrar"
+            icon="pi pi-check"
+            @click="closeResponsive"
+            autofocus
+          />
           <!-- boton para guardar la grafica como img -->
           <Button label="Guardar" icon="pi pi-save" @click="saveImage" />
         </template>
       </Dialog>
 
       <!-- Dialog para editar el producto toma los valores del producto seleccionado -->
-      <Dialog header="Editar Admision" v-model:visible="editDialog" :breakpoints="{ '960px': '75vw', '75vw': '85vw' }"
-        :style="{ width: '25vw' }" :modal="true" :closable="true" :dismissableMask="false">
+      <Dialog
+        header="Editar Admision"
+        v-model:visible="editDialog"
+        :breakpoints="{ '960px': '75vw', '75vw': '85vw' }"
+        :style="{ width: '25vw' }"
+        :modal="true"
+        :closable="true"
+        :dismissableMask="false"
+      >
         <div class="p-fluid p-formgrid p-grid">
           <form @submit.prevent="editarAdmision">
             <InputText id="id" v-model.trim="product.id" hidden />
@@ -461,49 +624,100 @@ export default {
             </div>
             <div class="p-field p-col-12 p-md-6">
               <label for="examinados">Examinados</label>
-              <InputText inputId="minmax" v-model.trim="product.examinados" mode="decimal" :min="0" :max="10000"
-                :showButtons="true" />
+              <InputText
+                inputId="minmax"
+                v-model.trim="product.examinados"
+                mode="decimal"
+                :min="0"
+                :max="10000"
+                :showButtons="true"
+              />
             </div>
             <div class="p-field p-col-12 p-md-6">
               <label for="no_admitidos">No Admitidos</label>
-              <InputText inputId="minmax" v-model.trim="product.no_admitidos" mode="decimal" :min="0" :max="10000"
-                :showButtons="true" />
+              <InputText
+                inputId="minmax"
+                v-model.trim="product.no_admitidos"
+                mode="decimal"
+                :min="0"
+                :max="10000"
+                :showButtons="true"
+              />
             </div>
             <div class="p-field p-col-12 p-md-6">
               <label for="periodo">Periodo</label>
-              <InputText id="name" v-model.trim="product.periodo" required="true" />
+              <InputText
+                id="name"
+                v-model.trim="product.periodo"
+                required="true"
+              />
             </div>
-            <Button type="submit" label="Guardar" icon="pi pi-check" class="!mt-3" />
+            <Button
+              type="submit"
+              label="Guardar"
+              icon="pi pi-check"
+              class="!mt-3"
+            />
           </form>
         </div>
       </Dialog>
 
       <!-- Dialog para eliminar un registro -->
-      <Dialog v-model:visible="deleteProductDialog" :style="{ width: '450px' }" header="Confirmar" :modal="true">
+      <Dialog
+        v-model:visible="deleteProductDialog"
+        :style="{ width: '450px' }"
+        header="Confirmar"
+        :modal="true"
+      >
         <div class="confirmation-content flex justify-center items-center">
           <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem" />
-          <span v-if="product">¿Confirma eliminar el registro <b>{{ product.carrera }}</b>?</span>
+          <span v-if="product"
+            >¿Confirma eliminar el registro <b>{{ product.carrera }}</b
+            >?</span
+          >
         </div>
         <template #footer>
-          <Button label="No" icon="pi pi-times" class="p-button-text" @click="deleteProductDialog = false" />
-          <Button label="Si" icon="pi pi-check" class="p-button-text" @click="deleteProduct" />
+          <Button
+            label="No"
+            icon="pi pi-times"
+            class="p-button-text"
+            @click="deleteProductDialog = false"
+          />
+          <Button
+            label="Si"
+            icon="pi pi-check"
+            class="p-button-text"
+            @click="deleteProduct"
+          />
         </template>
       </Dialog>
 
       <!-- Dialog para eliminar el/los productos seleccionados de la tabla -->
-      <Dialog v-model:visible="deleteProductsDialog" :style="{ width: '550px' }" header="Confirm" :modal="true">
+      <Dialog
+        v-model:visible="deleteProductsDialog"
+        :style="{ width: '550px' }"
+        header="Confirm"
+        :modal="true"
+      >
         <div class="confirmation-content flex items-center justify-center">
           <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem" />
-          <span>
-            ¿Confirma eliminar los registros seleccionados?
-          </span>
+          <span> ¿Confirma eliminar los registros seleccionados? </span>
         </div>
         <template #footer>
-          <Button label="No" icon="pi pi-times" class="p-button-text" @click="deleteProductsDialog = false" />
-          <Button label="Yes" icon="pi pi-check" class="p-button-text" @click="deleteSelectedProducts" />
+          <Button
+            label="No"
+            icon="pi pi-times"
+            class="p-button-text"
+            @click="deleteProductsDialog = false"
+          />
+          <Button
+            label="Yes"
+            icon="pi pi-check"
+            class="p-button-text"
+            @click="deleteSelectedProducts"
+          />
         </template>
       </Dialog>
-
     </div>
   </section>
 </template>
