@@ -574,6 +574,7 @@ class ComposerStaticInite696e33916a30e4c051086b264065ffc
         'App\\Console\\Kernel' => __DIR__ . '/../..' . '/app/Console/Kernel.php',
         'App\\Exceptions\\Handler' => __DIR__ . '/../..' . '/app/Exceptions/Handler.php',
         'App\\Http\\Controllers\\Controller' => __DIR__ . '/../..' . '/app/Http/Controllers/Controller.php',
+        'App\\Http\\Controllers\\Ingreso\\admisionGraficasController' => __DIR__ . '/../..' . '/app/Http/Controllers/Ingreso/admisionGraficasController.php',
         'App\\Http\\Controllers\\main' => __DIR__ . '/../..' . '/app/Http/Controllers/main.php',
         'App\\Http\\Kernel' => __DIR__ . '/../..' . '/app/Http/Kernel.php',
         'App\\Http\\Middleware\\Authenticate' => __DIR__ . '/../..' . '/app/Http/Middleware/Authenticate.php',

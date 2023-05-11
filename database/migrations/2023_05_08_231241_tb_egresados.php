@@ -13,6 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
+        //
         Schema::create('tb_egresados', function (Blueprint $table) {
             $table->id();
             $table->string('carrera', 50);
@@ -20,7 +21,10 @@ return new class extends Migration
             $table->integer('egresados');
             $table->string('año_egreso', 4);
             $table->string('cuatrimestre');
+            $table->integer('hombres');
+            $table->integer('mujeres');
             $table->timestamps();
+             
         });
     }
 
@@ -31,6 +35,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tb_egresados');
+        //
     }
 };
