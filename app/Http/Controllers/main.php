@@ -608,11 +608,11 @@ function eliminarEquivalencias(Request $request) {
       function registrarEgresados(Request $request) {
          $carrera = $request->input('carrera');
          $generacion = $request->input('generacion');
-         $egresados = $request->input('negresados');
          $año_egreso = $request->input('año_egreso');
          $cuatrimestre = $request->input('cuatrimestre');
          $hombres = $request->input('hombres');
          $mujeres = $request->input('mujeres');
+         $egresados = $hombres + $mujeres;
          // crear un nuevo registro en la tabla egresados
          $egresado = new tb_egresados();
          $egresado->carrera = $carrera;
@@ -646,7 +646,9 @@ function eliminarEquivalencias(Request $request) {
       $id = $request->input('id');
       $carrera = $request->input('carrera');
       $generacion = $request->input('generacion');
-      $egresados = $request->input('egresados');
+      $hombres = $request->input('hombres');
+      $mujeres = $request->input('mujeres');
+      $egresados = $hombres + $mujeres;
       $año_egreso = $request->input('año_egreso');
       $cuatrimestre = $request->input('cuatrimestre');
 
@@ -657,6 +659,8 @@ function eliminarEquivalencias(Request $request) {
       $egresado->egresados = $egresados;
       $egresado->año_egreso = $año_egreso;
       $egresado->cuatrimestre = $cuatrimestre;
+      $egresado->hombres = $hombres;
+      $egresado->mujeres = $mujeres;
       $egresado->save();
 
       // retornar a la vista ingreso
