@@ -43,6 +43,8 @@ export default {
       negresados: null,
       año_egreso: null,
       cuatrimestre: null,
+      hombres: 0,
+      mujeres: 0,
       productDialog: false,
       editDialog: false,
       deleteProductDialog: false,
@@ -70,7 +72,9 @@ export default {
         this.generacion == null ||
         this.negresados == null ||
         this.año_egreso == null ||
-        this.cuatrimestre == null
+        this.cuatrimestre == null ||
+        this.hombres == 0 ||
+        this.mujeres == 0
       ) {
         // si alguno de los campos esta vacio, no enviar el formulario y mostrar un mensaje de error
         this.$toast.add({
@@ -87,6 +91,8 @@ export default {
           negresados: this.negresados,
           año_egreso: this.año_egreso,
           cuatrimestre: this.cuatrimestre,
+          hombres: this.hombres,
+          mujeres: this.mujeres,
         };
         this.$inertia.post("/registro-Egreso", data, {
           preserveState: true,
@@ -113,7 +119,9 @@ export default {
         this.product.generacion == null ||
         this.product.egresados == null ||
         this.product.año_egreso == null ||
-        this.product.cuatrimestre == null
+        this.product.cuatrimestre == null ||
+        this.product.hombres == 0 ||
+        this.product.mujeres == 0
       ) {
         // si alguno de los campos esta vacio, no enviar el formulario y mostrar un mensaje de error
         this.$toast.add({
@@ -131,6 +139,8 @@ export default {
           egresados: this.product.egresados,
           año_egreso: this.product.año_egreso,
           cuatrimestre: this.product.cuatrimestre,
+          hombres: this.product.hombres,
+          mujeres: this.product.mujeres,
         };
         this.$inertia.post(`/editar-Egreso/${this.product.id}`, data2, {
           preserveState: true,
@@ -352,10 +362,34 @@ export default {
           </div>
 
           <div class="field col-12 md:col-3">
-            <label for="minmax">Egresados</label>
+            <label for="minmax">Nº de Egresados</label>
             <InputText
               inputId="minmax"
               v-model="negresados"
+              mode="decimal"
+              :min="0"
+              :max="10000"
+              :showButtons="true"
+            />
+          </div>
+
+          <div class="field col-12 md:col-3">
+            <label for="minmax">Nº de Hombres</label>
+            <InputText
+              inputId="minmax"
+              v-model="hombres"
+              mode="decimal"
+              :min="0"
+              :max="10000"
+              :showButtons="true"
+            />
+          </div>
+
+          <div class="field col-12 md:col-3">
+            <label for="minmax">Nº de Mujeres</label>
+            <InputText
+              inputId="minmax"
+              v-model="mujeres"
               mode="decimal"
               :min="0"
               :max="10000"
@@ -471,9 +505,12 @@ export default {
           <Column field="id" header="ID" :sortable="true" hidden ></Column>
           <Column field="carrera" header="Carrera" :sortable="true"></Column>
           <Column field="generacion" header="Generacion" :sortable="true"></Column>
-          <Column field="egresados" header="Egresados" :sortable="true" ></Column>
+          <Column field="egresados" header="Nº de Egresados" :sortable="true" ></Column>
+          <Column field="hombres" header=" Nº Hombres" :sortable="true"></Column>
+          <Column field="mujeres" header="Nº Mujeres" :sortable="true"></Column>
           <Column field="año_egreso" header="Año de egreso" :sortable="true"></Column>
           <Column field="cuatrimestre" header="Cuatrimestre" :sortable="true"></Column>
+          
           <Column :exportable="false" style="min-width: 8rem" class="p-6">
             <template #body="slotProps">
               <Button
