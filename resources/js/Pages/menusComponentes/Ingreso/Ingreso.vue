@@ -267,6 +267,9 @@ export default {
     confirmDeleteSelected() {
       this.deleteProductsDialog = true;
     },
+    openImportExcel() {
+      this.importExcelDialog = true;
+    },
     filtroCarreras() {
       let data = {
         carrera: this.filters.carrera.value,
@@ -282,29 +285,21 @@ export default {
           console.log(error);
         });
     },
-    cargarExcel(event) {
-      const files = event.target.files;
-      if (files && files.length > 0) {
-        this.file = files[0];
-        const reader = new FileReader();
-        reader.onload = () => {
-          this.fileContent = reader.result;
-        };
-        reader.readAsArrayBuffer(this.file);
-      }
-    },
-    importarExcel() {
-      if (this.fileContent) {
-        readXlsxFile(this.file).then(rows => {
-          // Aquí puedes llamar a tu método "importar" y pasarle los datos del archivo
-          this.importar(rows);
-        }).catch(error => {
-          console.log(error);
+    subirExcel() {
+      const input = document.getElementById("inputExcel");
+      readXlsxFile(input.files[0]).then((rows) => {
+        //mandar a datosExcel los datos apartir de la psicion 1 del array
+        this.datosExcel = rows.slice(1);
+        // imprimir los datos del excel
+        console.log("datos Excel:", this.datosExcel);
+        this.$toast.add({
+          severity: "success",
+          summary: "Exito",
+          detail: "Importado exitosamente",
+          life: 3000,
         });
-      } else {
-        console.log('No se seleccionó ningún archivo');
-      }
-    }
+      });
+    },
   },
   mounted() {},
   data() {
@@ -333,6 +328,14 @@ export default {
         { name: "ABR-JUN", code: "ABR-JUN" },
         { name: "JUL-SEP", code: "JUL-SEP" },
       ],
+      columnasPreviewExcel: [
+        { name: "ID", code: "0" },
+        { name: "Carrera", code: "1" },
+        { name: "Aspirantes", code: "2" },
+        { name: "Examinados", code: "3" },
+        { name: "No Admitidos", code: "4" },
+        { name: "Periodo", code: "5" },
+      ],
       carreras: null,
       periodos: null,
       aspirantes: 0,
@@ -343,6 +346,7 @@ export default {
       deleteProductDialog: false,
       selectedProducts: null,
       deleteProductsDialog: false,
+      importExcelDialog: false,
       file: null,
       fileContent: null,
     };
@@ -366,19 +370,52 @@ export default {
         @click="confirmDeleteSelected"
         :disabled="!selectedProducts || !selectedProducts.length"
       />
-      <!-- button para importar excel -->
 
-      <input
-        type="file"
-        ref="fileInput"
-        @change="cargarExcel"
-        accept=".xlsx, .xls, .csv"
+      <Button
+        class="!ml-3"
+        icon="pi pi-external-link"
+        label="Exportar Excel"
+        @click="exportCSV($event)"
       />
-      <button type="button" class="btn btn-success" @click="importarExcel">
-        Importar
-      </button>
+
+      <!-- button dialog para importar excel-->
+      <Button
+        label="Importar Excel"
+        icon="pi pi-upload"
+        class="!ml-2"
+        @click="openImportExcel"
+      />
     </template>
   </Toolbar>
+
+  <!-- Dialog para importar excel -->
+  <Dialog
+    v-model:visible="importExcelDialog"
+    :breakpoints="{ '1260px': '75vw', '640px': '85vw' }"
+    :style="{ width: '45vw' }"
+    header="Nuevo Registro"
+    :modal="true"
+    class="p-fluid"
+  >
+    <input type="file" id="inputExcel" @change="subirExcel" />
+
+    <!-- preview del documento subido en el array datosExcel -->
+    <DataTable
+     v-if="datosExcel.length > 0"
+    :value="datosExcel"
+    > 
+      <Column
+        v-for="columna in columnasPreviewExcel"
+        :key="columna.code"
+        :field="columna.code"
+        :header="columna.name"
+      />
+    </DataTable>
+
+    <div  class="max-w-[50%] m-auto p-7">
+      <Button label="Importar" />
+    </div>
+  </Dialog>
 
   <Dialog
     v-model:visible="productDialog"
@@ -482,12 +519,6 @@ export default {
             label="Grafica"
             icon="pi pi-chart-bar"
             @click="openResponsive"
-          />
-
-          <Button
-            icon="pi pi-external-link"
-            label="Exportar Excel"
-            @click="exportCSV($event)"
           />
 
           <!-- Filtros -->
