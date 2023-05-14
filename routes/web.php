@@ -179,7 +179,8 @@ Route::middleware([
 
     route::post('/editar-Egreso/{id}', [main::class, 'editarEgreso']);  
     
-
+    // ruta para importar excels
+    Route::post('/importar-excel-admisiones', [main::class, 'importarDataExcelAdmisiones']);
 
     // ---------- rutas para GRAFICAS -------------
     Route::post('/obtener-filtro-carreras-admision', [admisionGraficasController::class, 'filtrarDatosCarreras']);

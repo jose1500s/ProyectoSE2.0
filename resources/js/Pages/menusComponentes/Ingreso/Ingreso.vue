@@ -74,7 +74,7 @@ export default {
       return fechas;
     },
     exportCSV() {
-      this.$refs.dt.exportCSV();
+      this.$refs.dt.exportCSV(); 
     },
     limpiarFiltros() {
       // limpia/eliminar los filtros realizados en la  tabla y volver a mostrar todos los datos
@@ -269,6 +269,8 @@ export default {
     },
     openImportExcel() {
       this.importExcelDialog = true;
+      // cada que se abra se resetea el valor del array de datosExcel para que no se repitan los datos
+      this.datosExcel = [];
     },
     filtroCarreras() {
       let data = {
@@ -287,21 +289,80 @@ export default {
     },
     subirExcel() {
       const input = document.getElementById("inputExcel");
-      readXlsxFile(input.files[0]).then((rows) => {
-        //mandar a datosExcel los datos apartir de la psicion 1 del array
-        this.datosExcel = rows.slice(1);
-        // imprimir los datos del excel
-        console.log("datos Excel:", this.datosExcel);
+      // si el archivo no es .xlsx no se sube y mandar un mensaje de error
+      if (input.files[0].type != "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet") {
         this.$toast.add({
-          severity: "success",
-          summary: "Exito",
-          detail: "Importado exitosamente",
-          life: 3000,
+          severity: "error",
+          summary: "Error",
+          detail: "El archivo debe ser .xlsx",
+          life: 6000,
         });
-      });
+        return false;
+      } else {
+        readXlsxFile(input.files[0]).then((rows) => {
+          //mandar a datosExcel los datos apartir de la psicion 1 del array
+          this.datosExcel = rows.slice(1);
+          // mandar a columnasExcel las columnas del archivo
+          this.columnasExcel = rows[0];
+          console.log(this.datosExcel)
+          console.log(this.columnasExcel) 
+          // si el archivo no tiene las columnas 'carrera', 'aspirantes', 'examinados', 'no admitidos' y 'periodo' no se sube y mandar un mensaje de error
+          if (
+            this.columnasExcel[1] != "Carrera" ||
+            this.columnasExcel[2] != "Aspirantes" ||
+            this.columnasExcel[3] != "Examinados" ||
+            this.columnasExcel[4] != "No Admitidos" ||
+            this.columnasExcel[5] != "Periodo"
+          ) {
+            this.wrongFormatExcel = true;
+            this.$toast.add({
+              severity: "error",
+              summary: "Error",
+              detail: "Formato de archivo incorrecto",
+              life: 5000,
+            });
+            return false;
+          } else {
+            this.wrongFormatExcel = false;
+          }
+
+        });
+      }
     },
+    importarExcel() {
+      const datosInsertar = []
+      for (let i = 0; i < this.datosExcel.length; i++) {
+        datosInsertar.push({
+          carrera: this.datosExcel[i][1],
+          aspirantes: this.datosExcel[i][2],
+          examinados: this.datosExcel[i][3],
+          no_admitidos: this.datosExcel[i][4],
+          periodo: this.datosExcel[i][5],
+        })
+      }
+
+      const data = {
+        datos: datosInsertar,
+      };
+
+      this.$inertia.post("/importar-excel-admisiones", data, {
+        preserveState: true,
+        preserveScroll: true,
+        onSuccess: () => {
+          this.importExcelDialog = false;
+          this.$toast.add({
+            severity: "success",
+            summary: "Exito",
+            detail: "Importado exitosamente",
+            life: 3000,
+          });
+        },
+      });
+
+
+    }
   },
-  mounted() {},
+  mounted() { },
   data() {
     return {
       filters: {
@@ -310,6 +371,7 @@ export default {
       },
       datosFiltrados: [],
       datosExcel: [],
+      columnasExcel: [],
       admisionesTodosLosRegistros: [],
       noDataMessage: "No se encontraron datos",
       displayResponsive: false,
@@ -347,6 +409,7 @@ export default {
       selectedProducts: null,
       deleteProductsDialog: false,
       importExcelDialog: false,
+      wrongFormatExcel: false,
       file: null,
       fileContent: null,
     };
@@ -357,150 +420,70 @@ export default {
 <template>
   <Toolbar class="mb-4">
     <template #start>
-      <Button
-        label="Nuevo Registro"
-        icon="pi pi-plus"
-        class="p-button-success !mr-2"
-        @click="openNew"
-      />
-      <Button
-        label="Eliminar"
-        icon="pi pi-trash"
-        class="p-button-danger"
-        @click="confirmDeleteSelected"
-        :disabled="!selectedProducts || !selectedProducts.length"
-      />
+      <Button label="Nuevo Registro" icon="pi pi-plus" class="p-button-success !mr-2" @click="openNew" />
+      <Button label="Eliminar" icon="pi pi-trash" class="p-button-danger" @click="confirmDeleteSelected"
+        :disabled="!selectedProducts || !selectedProducts.length" />
 
-      <Button
-        class="!ml-3"
-        icon="pi pi-external-link"
-        label="Exportar Excel"
-        @click="exportCSV($event)"
-      />
+      <Button class="!ml-3" icon="pi pi-external-link" label="Exportar Excel" @click="exportCSV($event)" />
 
       <!-- button dialog para importar excel-->
-      <Button
-        label="Importar Excel"
-        icon="pi pi-upload"
-        class="!ml-2"
-        @click="openImportExcel"
-      />
+      <Button label="Importar Excel" icon="pi pi-upload" class="!ml-2" @click="openImportExcel" />
     </template>
   </Toolbar>
 
   <!-- Dialog para importar excel -->
-  <Dialog
-    v-model:visible="importExcelDialog"
-    :breakpoints="{ '1260px': '75vw', '640px': '85vw' }"
-    :style="{ width: '45vw' }"
-    header="Nuevo Registro"
-    :modal="true"
-    class="p-fluid"
-  >
+  <Dialog v-model:visible="importExcelDialog" :breakpoints="{ '1260px': '75vw', '640px': '85vw' }"
+    :style="{ width: '45vw' }" header="Importar Excel" :modal="true" class="p-fluid">
     <input type="file" id="inputExcel" @change="subirExcel" />
 
     <!-- preview del documento subido en el array datosExcel -->
-    <DataTable
-     v-if="datosExcel.length > 0"
-    :value="datosExcel"
-    > 
-      <Column
-        v-for="columna in columnasPreviewExcel"
-        :key="columna.code"
-        :field="columna.code"
-        :header="columna.name"
-      />
+    <DataTable v-if="datosExcel.length > 0" :value="datosExcel">
+      <Column v-for="columna in columnasPreviewExcel" :key="columna.code" :field="columna.code" :header="columna.name" />
     </DataTable>
 
-    <div  class="max-w-[50%] m-auto p-7">
-      <Button label="Importar" />
+    <div class="max-w-[50%] m-auto p-7">
+      <Button label="Importar" @click="importarExcel" id="btnImportarExcel"
+        :disabled="datosExcel.length == 0 || wrongFormatExcel"
+      />
     </div>
   </Dialog>
 
-  <Dialog
-    v-model:visible="productDialog"
-    :breakpoints="{ '960px': '75vw', '640px': '85vw' }"
-    :style="{ width: '25vw' }"
-    header="Nuevo Registro"
-    :modal="true"
-    class="p-fluid"
-  >
+  <Dialog v-model:visible="productDialog" :breakpoints="{ '960px': '75vw', '640px': '85vw' }" :style="{ width: '25vw' }"
+    header="Nuevo Registro" :modal="true" class="p-fluid">
     <div class="field">
       <form @submit.prevent="registrarAdmision">
         <!-- select con opciones -->
-        <Dropdown
-          v-model="carreras"
-          :options="carrerasLista"
-          optionLabel="name"
-          optionValue="code"
-          :filter="true"
-          placeholder="Carrera..."
-        />
+        <Dropdown v-model="carreras" :options="carrerasLista" optionLabel="name" optionValue="code" :filter="true"
+          placeholder="Carrera..." />
 
         <div class="field col-12 md:col-3">
           <label for="minmax">Aspirantes</label>
-          <InputNumber
-            inputId="minmax"
-            v-model="aspirantes"
-            mode="decimal"
-            :min="0"
-            :max="10000"
-            :showButtons="true"
-          />
+          <InputNumber inputId="minmax" v-model="aspirantes" mode="decimal" :min="0" :max="10000" :showButtons="true" />
         </div>
 
         <div class="field col-12 md:col-3">
           <label for="minmax">Examinados</label>
-          <InputNumber
-            inputId="minmax"
-            v-model="examinados"
-            mode="decimal"
-            :min="0"
-            :max="10000"
-            :showButtons="true"
-          />
+          <InputNumber inputId="minmax" v-model="examinados" mode="decimal" :min="0" :max="10000" :showButtons="true" />
         </div>
 
         <div class="field col-12 md:col-3">
           <label for="minmax">No Admitidos</label>
-          <InputNumber
-            inputId="minmax"
-            v-model="noAdmitidos"
-            mode="decimal"
-            :min="0"
-            :max="10000"
-            :showButtons="true"
-          />
+          <InputNumber inputId="minmax" v-model="noAdmitidos" mode="decimal" :min="0" :max="10000" :showButtons="true" />
         </div>
 
         <div class="field col-12 md:col-3 mt-3">
-          <Dropdown
-            v-model="periodos"
-            :options="periodosLista"
-            optionLabel="name"
-            optionValue="code"
-            placeholder="Periodo"
-          />
+          <Dropdown v-model="periodos" :options="periodosLista" optionLabel="name" optionValue="code"
+            placeholder="Periodo" />
         </div>
 
-        <Button
-          type="submit"
-          id="btnRegisrar"
-          class="flex items-center justify-center space-x-2 rounded-md border-2 border-blue-500 px-4 py-2 font-medium text-blue-600 transition hover:bg-blue-500 hover:text-white"
-        >
+        <Button type="submit" id="btnRegisrar"
+          class="flex items-center justify-center space-x-2 rounded-md border-2 border-blue-500 px-4 py-2 font-medium text-blue-600 transition hover:bg-blue-500 hover:text-white">
           <span> Registrar </span>
           <span>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="currentColor"
-              class="h-6 w-6"
-            >
-              <path
-                fill-rule="evenodd"
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="h-6 w-6">
+              <path fill-rule="evenodd"
                 d="M16.72 7.72a.75.75 0 011.06 0l3.75 3.75a.75.75 0 010 1.06l-3.75 3.75a.75.75 0 11-1.06-1.06l2.47-2.47H3a.75.75 0 010-1.5h16.19l-2.47-2.47a.75.75 0 010-1.06z"
-                clip-rule="evenodd"
-              />
+                clip-rule="evenodd" />
             </svg>
           </span>
         </Button>
@@ -515,89 +498,36 @@ export default {
             <Toast />
           </div>
           <!-- model para abrir grafica -->
-          <Button
-            label="Grafica"
-            icon="pi pi-chart-bar"
-            @click="openResponsive"
-          />
+          <Button label="Grafica" icon="pi pi-chart-bar" @click="openResponsive" />
 
           <!-- Filtros -->
-          <MultiSelect
-            v-model="filters.carrera.value"
-            :options="carrerasLista"
-            optionLabel="name"
-            optionValue="code"
-            placeholder="Carrera"
-            display="chip"
-            @change="filtroCarreras($event)"
-          />
+          <MultiSelect v-model="filters.carrera.value" :options="carrerasLista" optionLabel="name" optionValue="code"
+            placeholder="Carrera" display="chip" @change="filtroCarreras($event)" />
 
-          <MultiSelect
-            v-model="filters.periodo.value"
-            :options="periodosLista"
-            optionLabel="name"
-            optionValue="code"
-            placeholder="Periodo"
-            display="chip"
-          />
+          <MultiSelect v-model="filters.periodo.value" :options="periodosLista" optionLabel="name" optionValue="code"
+            placeholder="Periodo" display="chip" />
 
-          <Button
-            icon="pi pi-times"
-            label="Limpiar"
-            @click="limpiarFiltros()"
-          />
+          <Button icon="pi pi-times" label="Limpiar" @click="limpiarFiltros()" />
         </div>
       </div>
 
-      <DataTable
-        :value="ingresos"
-        :paginator="true"
-        class="p-datatable-customers"
-        :rows="7"
-        ref="dt"
-        v-model:filters="filters"
-        v-model:selection="selectedProducts"
-        :emptyMessage="noDataMessage"
-        stripedRows
-        sortMode="multiple"
-        removableSort
-      >
-        <Column
-          selectionMode="multiple"
-          style="width: 3rem"
-          :exportable="false"
-        ></Column>
+      <DataTable exportFilename="Admisiones" :value="ingresos" :paginator="true" class="p-datatable-customers" :rows="7" ref="dt"
+        v-model:filters="filters" v-model:selection="selectedProducts" :emptyMessage="noDataMessage" stripedRows
+        sortMode="multiple" removableSort>
+        <Column selectionMode="multiple" style="width: 3rem" :exportable="false"></Column>
 
         <Column field="id" header="ID" :sortable="true" hidden></Column>
         <Column field="carrera" header="Carrera" :sortable="true"></Column>
-        <Column
-          field="aspirantes"
-          header="Aspirantes"
-          :sortable="true"
-        ></Column>
-        <Column
-          field="examinados"
-          header="Examinados"
-          :sortable="true"
-        ></Column>
-        <Column
-          field="no_admitidos"
-          header="No Admitidos"
-          :sortable="true"
-        ></Column>
+        <Column field="aspirantes" header="Aspirantes" :sortable="true"></Column>
+        <Column field="examinados" header="Examinados" :sortable="true"></Column>
+        <Column field="no_admitidos" header="No Admitidos" :sortable="true"></Column>
         <Column field="periodo" header="Periodo" :sortable="true"></Column>
         <Column :exportable="false" style="min-width: 8rem" class="p-6">
           <template #body="slotProps">
-            <Button
-              icon="pi pi-pencil"
-              class="p-button-rounded p-button-success !mr-2"
-              @click="editProduct(slotProps.data)"
-            />
-            <Button
-              icon="pi pi-trash"
-              class="p-button-rounded p-button-warning"
-              @click="confirmDeleteProduct(slotProps.data)"
-            />
+            <Button icon="pi pi-pencil" class="p-button-rounded p-button-success !mr-2"
+              @click="editProduct(slotProps.data)" />
+            <Button icon="pi pi-trash" class="p-button-rounded p-button-warning"
+              @click="confirmDeleteProduct(slotProps.data)" />
           </template>
         </Column>
 
@@ -609,38 +539,22 @@ export default {
         </template>
       </DataTable>
 
-      <Dialog
-        header="Gráfica dinámica"
-        v-model:visible="displayResponsive"
-        :breakpoints="{ '960px': '75vw', '75vw': '90vw' }"
-        :style="{ width: '70vw' }"
-      >
+      <Dialog header="Gráfica dinámica" v-model:visible="displayResponsive"
+        :breakpoints="{ '960px': '75vw', '75vw': '90vw' }" :style="{ width: '70vw' }">
         <!-- contenido del dialog/model desde aqui... -->
         <div class="w-full" id="contenedorGrafica">
           <GraficaIngreso :carrerasFiltradas="datosFiltrados" />
         </div>
         <template #footer>
-          <Button
-            label="Cerrar"
-            icon="pi pi-check"
-            @click="closeResponsive"
-            autofocus
-          />
+          <Button label="Cerrar" icon="pi pi-check" @click="closeResponsive" autofocus />
           <!-- boton para guardar la grafica como img -->
           <Button label="Guardar" icon="pi pi-save" @click="saveImage" />
         </template>
       </Dialog>
 
       <!-- Dialog para editar el producto toma los valores del producto seleccionado -->
-      <Dialog
-        header="Editar Admision"
-        v-model:visible="editDialog"
-        :breakpoints="{ '960px': '75vw', '75vw': '85vw' }"
-        :style="{ width: '25vw' }"
-        :modal="true"
-        :closable="true"
-        :dismissableMask="false"
-      >
+      <Dialog header="Editar Admision" v-model:visible="editDialog" :breakpoints="{ '960px': '75vw', '75vw': '85vw' }"
+        :style="{ width: '25vw' }" :modal="true" :closable="true" :dismissableMask="false">
         <div class="p-fluid p-formgrid p-grid">
           <form @submit.prevent="editarAdmision">
             <InputText id="id" v-model.trim="product.id" hidden />
@@ -655,98 +569,44 @@ export default {
             </div>
             <div class="p-field p-col-12 p-md-6">
               <label for="examinados">Examinados</label>
-              <InputText
-                inputId="minmax"
-                v-model.trim="product.examinados"
-                mode="decimal"
-                :min="0"
-                :max="10000"
-                :showButtons="true"
-              />
+              <InputText inputId="minmax" v-model.trim="product.examinados" mode="decimal" :min="0" :max="10000"
+                :showButtons="true" />
             </div>
             <div class="p-field p-col-12 p-md-6">
               <label for="no_admitidos">No Admitidos</label>
-              <InputText
-                inputId="minmax"
-                v-model.trim="product.no_admitidos"
-                mode="decimal"
-                :min="0"
-                :max="10000"
-                :showButtons="true"
-              />
+              <InputText inputId="minmax" v-model.trim="product.no_admitidos" mode="decimal" :min="0" :max="10000"
+                :showButtons="true" />
             </div>
             <div class="p-field p-col-12 p-md-6">
               <label for="periodo">Periodo</label>
-              <InputText
-                id="name"
-                v-model.trim="product.periodo"
-                required="true"
-              />
+              <InputText id="name" v-model.trim="product.periodo" required="true" />
             </div>
-            <Button
-              type="submit"
-              label="Guardar"
-              icon="pi pi-check"
-              class="!mt-3"
-            />
+            <Button type="submit" label="Guardar" icon="pi pi-check" class="!mt-3" />
           </form>
         </div>
       </Dialog>
 
       <!-- Dialog para eliminar un registro -->
-      <Dialog
-        v-model:visible="deleteProductDialog"
-        :style="{ width: '450px' }"
-        header="Confirmar"
-        :modal="true"
-      >
+      <Dialog v-model:visible="deleteProductDialog" :style="{ width: '450px' }" header="Confirmar" :modal="true">
         <div class="confirmation-content flex justify-center items-center">
           <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem" />
-          <span v-if="product"
-            >¿Confirma eliminar el registro <b>{{ product.carrera }}</b
-            >?</span
-          >
+          <span v-if="product">¿Confirma eliminar el registro <b>{{ product.carrera }}</b>?</span>
         </div>
         <template #footer>
-          <Button
-            label="No"
-            icon="pi pi-times"
-            class="p-button-text"
-            @click="deleteProductDialog = false"
-          />
-          <Button
-            label="Si"
-            icon="pi pi-check"
-            class="p-button-text"
-            @click="deleteProduct"
-          />
+          <Button label="No" icon="pi pi-times" class="p-button-text" @click="deleteProductDialog = false" />
+          <Button label="Si" icon="pi pi-check" class="p-button-text" @click="deleteProduct" />
         </template>
       </Dialog>
 
       <!-- Dialog para eliminar el/los productos seleccionados de la tabla -->
-      <Dialog
-        v-model:visible="deleteProductsDialog"
-        :style="{ width: '550px' }"
-        header="Confirm"
-        :modal="true"
-      >
+      <Dialog v-model:visible="deleteProductsDialog" :style="{ width: '550px' }" header="Confirm" :modal="true">
         <div class="confirmation-content flex items-center justify-center">
           <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem" />
           <span> ¿Confirma eliminar los registros seleccionados? </span>
         </div>
         <template #footer>
-          <Button
-            label="No"
-            icon="pi pi-times"
-            class="p-button-text"
-            @click="deleteProductsDialog = false"
-          />
-          <Button
-            label="Yes"
-            icon="pi pi-check"
-            class="p-button-text"
-            @click="deleteSelectedProducts"
-          />
+          <Button label="No" icon="pi pi-times" class="p-button-text" @click="deleteProductsDialog = false" />
+          <Button label="Yes" icon="pi pi-check" class="p-button-text" @click="deleteSelectedProducts" />
         </template>
       </Dialog>
     </div>
