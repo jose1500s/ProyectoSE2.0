@@ -289,6 +289,7 @@ export default {
     },
     subirExcel() {
       const input = document.getElementById("inputExcel");
+      
       // si el archivo no es .xlsx no se sube y mandar un mensaje de error
       if (input.files[0].type != "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet") {
         this.$toast.add({
@@ -359,8 +360,8 @@ export default {
         },
       });
 
-
-    }
+    },
+    
   },
   mounted() { },
   data() {
@@ -412,6 +413,7 @@ export default {
       wrongFormatExcel: false,
       file: null,
       fileContent: null,
+      selectedProductsForChart: null,
     };
   },
 };
@@ -434,7 +436,21 @@ export default {
   <!-- Dialog para importar excel -->
   <Dialog v-model:visible="importExcelDialog" :breakpoints="{ '1260px': '75vw', '640px': '85vw' }"
     :style="{ width: '45vw' }" header="Importar Excel" :modal="true" class="p-fluid">
-    <input type="file" id="inputExcel" @change="subirExcel" />
+
+    
+    <!-- aqui selecciona el archivo de excel -->
+<div class="border border-dashed border-gray-500 relative">
+    <input type="file" id="inputExcel" @change="subirExcel" multiple class="cursor-pointer relative block opacity-0 w-full h-full p-20 z-50">
+    <div class="text-center p-10 absolute top-0 right-0 left-0 m-auto">
+        <h4>
+          Arrastra y suelta el archivo aquí
+            <br/>ó
+        </h4>
+        <p class="">
+          Selecciona un archivo de excel
+        </p>
+    </div>
+</div>
 
     <!-- preview del documento subido en el array datosExcel -->
     <DataTable v-if="datosExcel.length > 0" :value="datosExcel">
@@ -446,9 +462,11 @@ export default {
         :disabled="datosExcel.length == 0 || wrongFormatExcel"
       />
     </div>
+
+    
   </Dialog>
 
-  <Dialog v-model:visible="productDialog" :breakpoints="{ '960px': '75vw', '640px': '85vw' }" :style="{ width: '25vw' }"
+  <Dialog v-model:visible="productDialog" :breakpoits="{ '960px': '75vw', '640px': '85vw' }" :style="{ width: '25vw' }"
     header="Nuevo Registro" :modal="true" class="p-fluid">
     <div class="field">
       <form @submit.prevent="registrarAdmision">
@@ -527,7 +545,7 @@ export default {
             <Button icon="pi pi-pencil" class="p-button-rounded p-button-success !mr-2"
               @click="editProduct(slotProps.data)" />
             <Button icon="pi pi-trash" class="p-button-rounded p-button-warning"
-              @click="confirmDeleteProduct(slotProps.data)" />
+              @click="confirmDeleteProduct(slotProps.data)" /> 
           </template>
         </Column>
 
@@ -537,13 +555,14 @@ export default {
             <h2>No se encontraron datos</h2>
           </div>
         </template>
+
       </DataTable>
 
       <Dialog header="Gráfica dinámica" v-model:visible="displayResponsive"
         :breakpoints="{ '960px': '75vw', '75vw': '90vw' }" :style="{ width: '70vw' }">
         <!-- contenido del dialog/model desde aqui... -->
         <div class="w-full" id="contenedorGrafica">
-          <GraficaIngreso :carrerasFiltradas="datosFiltrados" />
+          <GraficaIngreso :data="selectedProducts" />
         </div>
         <template #footer>
           <Button label="Cerrar" icon="pi pi-check" @click="closeResponsive" autofocus />
