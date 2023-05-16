@@ -270,7 +270,7 @@ export default {
                 { name: "Procesos", code: "Procesos" },
                 { name: "Pymes", code: "Pymes" },
                 { name: "Sistemas", code: "Sistemas" },
-                { name: "Telematica", code: "Telematica" },
+                { name: "Redes", code: "Redes" },
             ],
             rutasLista: [
                 { name: "Loma-Av. De La Luz", code: "Loma-Av. De La Luz" },

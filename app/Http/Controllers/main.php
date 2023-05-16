@@ -15,6 +15,7 @@ use App\Models\tb_indicador_titulados;
 use App\Models\tb_transporte_lugares;
 use App\Models\tb_transporte_solicitudes_seleccionados;
 use App\Models\tb_egresados;
+use App\Models\tb_egresados_totales;
 
 class main extends Controller
 {
@@ -41,7 +42,8 @@ class main extends Controller
 
    public function egresados(){
       $egresados = tb_egresados::all();
-      return Inertia::render('menusComponentes/Egresados/TabMenuEgre',['egresados'=>$egresados]);
+      $egresados_totales = tb_egresados_totales::all();
+      return Inertia::render('menusComponentes/Egresados/TabMenuEgre',['egresados'=>$egresados,'totales'=>$egresados_totales]);
    }
 
    public function titulados(){
@@ -665,6 +667,64 @@ function eliminarEquivalencias(Request $request) {
 
       // retornar a la vista ingreso
       return redirect()->route('usuario.egresados');
+      }
+
+//--------------------------------TOTALES------------------------------------
+
+      function registrarEgresadosTotales(Request $request){
+         $carrera = $request->input('carrera');
+         $año_egreso = $request->input('anio');
+         $cuatrimestre = $request->input('cuatrimestre');
+         $hombres = $request->input('hombres');
+         $mujeres = $request->input('mujeres');
+         $egresados = $hombres + $mujeres;
+         // crear un nuevo registro en la tabla egresados
+         $egresadoTotal = new tb_egresados_totales();
+         $egresadoTotal->carrera = $carrera;
+         $egresadoTotal->egresados = $egresados;
+         $egresadoTotal->anio = $año_egreso;
+         $egresadoTotal->periodo= $cuatrimestre;
+         $egresadoTotal->hombres= $hombres;
+         $egresadoTotal->mujeres= $mujeres;
+         $egresadoTotal->save();
+         return redirect()->route('usuario.egresados');
+      }
+      
+      function eliminarEgresoTotales(Request $request){
+         $id = $request->input('id');
+         $egresadoTotal = tb_egresados_totales::findOrFail($id);
+         $egresadoTotal->delete(); 
+         return redirect()->route('usuario.egresados');
+      }
+
+      function eliminarEgresosTotales(Request $request){
+         $id = $request->id;
+         $egresadoTotal = tb_egresados_totales::whereIn('id', $id);
+         $egresadoTotal->delete();
+         return redirect()->route('usuario.egresados');
+      }
+
+      function editarEgresoTotales(Request $request){
+         $id = $request->input('id');
+         $carrera = $request->input('carrera');
+         $año_egreso = $request->input('anio');
+         $cuatrimestre = $request->input('cuatrimestre');
+         $hombres = $request->input('hombres');
+         $mujeres = $request->input('mujeres');
+         $egresados = $hombres + $mujeres;
+
+      // actualizar el registro
+         $egresadoTotal = tb_egresados_totales::find($id);
+         $egresadoTotal->carrera = $carrera;
+         $egresadoTotal->egresados = $egresados;
+         $egresadoTotal->anio = $año_egreso;
+         $egresadoTotal->periodo= $cuatrimestre;
+         $egresadoTotal->hombres= $hombres;
+         $egresadoTotal->mujeres= $mujeres;
+         $egresadoTotal->save();
+
+      // retornar a la vista ingreso
+         return redirect()->route('usuario.egresados');
       }
 
 // ------------------------------ FIN EGRESADOS ----------------------------

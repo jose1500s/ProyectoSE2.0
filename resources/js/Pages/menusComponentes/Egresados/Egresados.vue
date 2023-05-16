@@ -364,7 +364,7 @@ export default {
           </div>
 
           <div class="field col-12 md:col-3">
-            <label for="minmax">Nº de Hombres</label>
+            <label for="minmax">Hombres</label>
             <InputText
               inputId="minmax"
               v-model="hombres"
@@ -376,7 +376,7 @@ export default {
           </div>
 
           <div class="field col-12 md:col-3">
-            <label for="minmax">Nº de Mujeres</label>
+            <label for="minmax">Mujeres</label>
             <InputText
               inputId="minmax"
               v-model="mujeres"
@@ -500,9 +500,9 @@ export default {
           <Column field="id" header="ID" :sortable="true" hidden ></Column>
           <Column field="carrera" header="Carrera" :sortable="true"></Column>
           <Column field="generacion" header="Generacion" :sortable="true"></Column>
-          <Column field="hombres" header=" Nº Hombres" :sortable="true"></Column>
-          <Column field="mujeres" header="Nº Mujeres" :sortable="true"></Column>
-          <Column field="egresados" header="Nº de Egresados" :sortable="true" ></Column>
+          <Column field="hombres" header="Hombres" :sortable="true"></Column>
+          <Column field="mujeres" header="Mujeres" :sortable="true"></Column>
+          <Column field="egresados" header="Egresados" :sortable="true" ></Column>
           <Column field="año_egreso" header="Año de egreso" :sortable="true"></Column>
           <Column field="cuatrimestre" header="Cuatrimestre" :sortable="true"></Column>
           
