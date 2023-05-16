@@ -562,7 +562,7 @@ export default {
         :breakpoints="{ '960px': '75vw', '75vw': '90vw' }" :style="{ width: '70vw' }">
         <!-- contenido del dialog/model desde aqui... -->
         <div class="w-full" id="contenedorGrafica">
-          <GraficaIngreso :data="selectedProducts" />
+          <GraficaIngreso  :data="selectedProducts" />
         </div>
         <template #footer>
           <Button label="Cerrar" icon="pi pi-check" @click="closeResponsive" autofocus />
@@ -632,7 +632,7 @@ export default {
   </section>
 </template>
 
-<style type="text/css">
+<style type="text/css" scoped>
 .p-multiselect-label-container {
   max-width: 170px;
 }
@@ -643,10 +643,6 @@ export default {
   align-items: center;
 }
 
-div#contenedorGrafica canvas {
-  width: 100% !important;
-  height: auto !important;
-}
 
 #btnRegisrar {
   margin-top: 1.5rem;

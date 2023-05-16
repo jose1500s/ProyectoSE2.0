@@ -60,7 +60,7 @@ export default {
                         stacked: true
                     }
                 },
-                indexAxis: this.orientacionGrafica,
+                indexAxis: this.orientacionGrafica ? this.orientacionGrafica : 'y',
             }
         },
         actualizarChartOptions() {
@@ -93,7 +93,7 @@ export default {
 
 </script>
 <template>
-    <div class="flex items-center gap-3 text-center">
+    <div class="flex items-center gap-3 text-center" id="selects">
         <div>
             <select class="mb-5" v-model="tipoGrafica">
                 <option value="">Tipo de grafica</option>
@@ -115,12 +115,16 @@ export default {
     <div v-if="data === null || data.length === 0" class="text-2xl text-center m-auto h-96 grid items-center">
         <h2>Seleccione datos para graficar</h2>
     </div>
-    <div v-else-if="data.length <= 10">
-        <Chart :type="tipoGrafica ? tipoGrafica : 'bar'" :data="chartData" :options="chartOptions" class="!max-h-[90%]" />
+    <div v-else-if="data.length <= 15">
+        <Chart :type="tipoGrafica ? tipoGrafica : 'bar'" :data="chartData" :options="chartOptions" class="" />
     </div>
-    <div v-else="data.length > 10" class="text-2xl text-center m-auto h-96 grid items-center">
+    <div v-else class="text-2xl text-center m-auto h-96 grid items-center">
         <h2>Demasiados datos seleccionados, máximo 10</h2>
     </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.p-chart {
+    max-height: 420px !important;
+}
+</style>
