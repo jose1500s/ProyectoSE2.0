@@ -60,7 +60,11 @@ export default {
                         stacked: true
                     }
                 },
+                plugins: {
+                    
+                },
                 indexAxis: this.orientacionGrafica ? this.orientacionGrafica : 'y',
+
             }
         },
         actualizarChartOptions() {

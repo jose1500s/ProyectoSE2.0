@@ -74,7 +74,7 @@ export default {
       return fechas;
     },
     exportCSV() {
-      this.$refs.dt.exportCSV(); 
+      this.$refs.dt.exportCSV();
     },
     limpiarFiltros() {
       // limpia/eliminar los filtros realizados en la  tabla y volver a mostrar todos los datos
@@ -289,7 +289,7 @@ export default {
     },
     subirExcel() {
       const input = document.getElementById("inputExcel");
-      
+
       // si el archivo no es .xlsx no se sube y mandar un mensaje de error
       if (input.files[0].type != "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet") {
         this.$toast.add({
@@ -306,7 +306,7 @@ export default {
           // mandar a columnasExcel las columnas del archivo
           this.columnasExcel = rows[0];
           console.log(this.datosExcel)
-          console.log(this.columnasExcel) 
+          console.log(this.columnasExcel)
           // si el archivo no tiene las columnas 'carrera', 'aspirantes', 'examinados', 'no admitidos' y 'periodo' no se sube y mandar un mensaje de error
           if (
             this.columnasExcel[1] != "Carrera" ||
@@ -361,7 +361,7 @@ export default {
       });
 
     },
-    
+
   },
   mounted() { },
   data() {
@@ -369,6 +369,7 @@ export default {
       filters: {
         carrera: { value: null, matchMode: FilterMatchMode.IN },
         periodo: { value: null, matchMode: FilterMatchMode.IN },
+        globlal: { value: null, matchMode: FilterMatchMode.CONTAINS },
       },
       datosFiltrados: [],
       datosExcel: [],
@@ -385,11 +386,12 @@ export default {
         { name: "Sistemas", code: "Sistemas" },
         { name: "Telematica", code: "Telematica" },
       ],
+
       periodosLista: [
-        { name: "SEP-DIC", code: "SEP-DIC" },
-        { name: "ENE-MAR", code: "ENE-MAR" },
-        { name: "ABR-JUN", code: "ABR-JUN" },
-        { name: "JUL-SEP", code: "JUL-SEP" },
+        { name: "SEP-DIC " + new Date().getFullYear(), code: "SEP-DIC" + new Date().getFullYear() },
+        { name: "ENE-MAR " + new Date().getFullYear(), code: "ENE-MAR" + new Date().getFullYear() },
+        { name: "ABR-JUN " + new Date().getFullYear(), code: "ABR-JUN" + new Date().getFullYear() },
+        { name: "JUL-SEP " + new Date().getFullYear(), code: "JUL-SEP" + new Date().getFullYear() },
       ],
       columnasPreviewExcel: [
         { name: "ID", code: "0" },
@@ -430,6 +432,8 @@ export default {
 
       <!-- button dialog para importar excel-->
       <Button label="Importar Excel" icon="pi pi-upload" class="!ml-2" @click="openImportExcel" />
+
+
     </template>
   </Toolbar>
 
@@ -437,20 +441,21 @@ export default {
   <Dialog v-model:visible="importExcelDialog" :breakpoints="{ '1260px': '75vw', '640px': '85vw' }"
     :style="{ width: '45vw' }" header="Importar Excel" :modal="true" class="p-fluid">
 
-    
+
     <!-- aqui selecciona el archivo de excel -->
-<div class="border border-dashed border-gray-500 relative">
-    <input type="file" id="inputExcel" @change="subirExcel" multiple class="cursor-pointer relative block opacity-0 w-full h-full p-20 z-50">
-    <div class="text-center p-10 absolute top-0 right-0 left-0 m-auto">
+    <div class="border border-dashed border-gray-500 relative">
+      <input type="file" id="inputExcel" @change="subirExcel" multiple
+        class="cursor-pointer relative block opacity-0 w-full h-full p-20 z-50">
+      <div class="text-center p-10 absolute top-0 right-0 left-0 m-auto">
         <h4>
           Arrastra y suelta el archivo aquí
-            <br/>ó
+          <br />ó
         </h4>
         <p class="">
           Selecciona un archivo de excel
         </p>
+      </div>
     </div>
-</div>
 
     <!-- preview del documento subido en el array datosExcel -->
     <DataTable v-if="datosExcel.length > 0" :value="datosExcel">
@@ -459,11 +464,10 @@ export default {
 
     <div class="max-w-[50%] m-auto p-7">
       <Button label="Importar" @click="importarExcel" id="btnImportarExcel"
-        :disabled="datosExcel.length == 0 || wrongFormatExcel"
-      />
+        :disabled="datosExcel.length == 0 || wrongFormatExcel" />
     </div>
 
-    
+
   </Dialog>
 
   <Dialog v-model:visible="productDialog" :breakpoits="{ '960px': '75vw', '640px': '85vw' }" :style="{ width: '25vw' }"
@@ -528,10 +532,12 @@ export default {
           <Button icon="pi pi-times" label="Limpiar" @click="limpiarFiltros()" />
         </div>
       </div>
+   
+      <DataTable exportFilename="Admisiones" :value="ingresos" :paginator="true"  class="p-datatable-customers" :rows="7"
+        ref="dt" v-model:filters="filters" v-model:selection="selectedProducts" :emptyMessage="noDataMessage" stripedRows
+        sortMode="multiple" removableSort 
+        >
 
-      <DataTable exportFilename="Admisiones" :value="ingresos" :paginator="true" class="p-datatable-customers" :rows="7" ref="dt"
-        v-model:filters="filters" v-model:selection="selectedProducts" :emptyMessage="noDataMessage" stripedRows
-        sortMode="multiple" removableSort>
         <Column selectionMode="multiple" style="width: 3rem" :exportable="false"></Column>
 
         <Column field="id" header="ID" :sortable="true" hidden></Column>
@@ -545,9 +551,10 @@ export default {
             <Button icon="pi pi-pencil" class="p-button-rounded p-button-success !mr-2"
               @click="editProduct(slotProps.data)" />
             <Button icon="pi pi-trash" class="p-button-rounded p-button-warning"
-              @click="confirmDeleteProduct(slotProps.data)" /> 
+              @click="confirmDeleteProduct(slotProps.data)" />
           </template>
         </Column>
+
 
         <!-- mensaje de no hay datos -->
         <template #empty>
@@ -562,7 +569,7 @@ export default {
         :breakpoints="{ '960px': '75vw', '75vw': '90vw' }" :style="{ width: '70vw' }">
         <!-- contenido del dialog/model desde aqui... -->
         <div class="w-full" id="contenedorGrafica">
-          <GraficaIngreso  :data="selectedProducts" />
+          <GraficaIngreso :data="selectedProducts" />
         </div>
         <template #footer>
           <Button label="Cerrar" icon="pi pi-check" @click="closeResponsive" autofocus />
