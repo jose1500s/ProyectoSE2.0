@@ -177,10 +177,17 @@ Route::middleware([
 
     route::post('/eliminar-Egreso/{id}', [main::class, 'eliminarEgreso']);
 
-    route::post('/editar-Egreso/{id}', [main::class, 'editarEgreso']);  
+    route::post('/editar-Egreso/{id}', [main::class, 'editarEgreso']);
     
+    //--------------------------------EGRESADOS TOTALES-------------------------------
 
+    Route::post('/registrar-Egreso-Totales', [main::class, 'registrarEgresadosTotales']);
+    
+    Route::post('/eliminar-Egreso-Totales/{id}', [main::class, 'eliminarEgresoTotales']);
 
+    Route::post('/eliminar-Egresos-Totales', [main::class, 'eliminarEgresosTotales']);
+
+    Route::post('/editar-Egreso-Totales/{id}', [main::class, 'editarEgresoTotales']);
     // ---------- rutas para GRAFICAS -------------
     Route::post('/obtener-filtro-carreras-admision', [admisionGraficasController::class, 'filtrarDatosCarreras']);
 });

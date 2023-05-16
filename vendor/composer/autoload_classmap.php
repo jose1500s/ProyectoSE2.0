@@ -32,6 +32,7 @@ return array(
     'App\\Models\\User' => $baseDir . '/app/Models/User.php',
     'App\\Models\\tb_admision' => $baseDir . '/app/Models/tb_admision.php',
     'App\\Models\\tb_egresados' => $baseDir . '/app/Models/tb_egresados.php',
+    'App\\Models\\tb_egresados_totales' => $baseDir . '/app/Models/tb_egresados_totales.php',
     'App\\Models\\tb_equivalencia' => $baseDir . '/app/Models/tb_equivalencia.php',
     'App\\Models\\tb_indicador_equivalencia' => $baseDir . '/app/Models/tb_indicador_equivalencia.php',
     'App\\Models\\tb_indicador_titulados' => $baseDir . '/app/Models/tb_indicador_titulados.php',
