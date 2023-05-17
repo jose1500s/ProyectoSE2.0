@@ -145,11 +145,12 @@ class main extends Controller
   // ---------------------- TAB TITULADOS --------------------------
 
    function registrarTitulacion(Request $request) {
-      $carrera = $request->input('carrera');
+      
       $generacion = $request->input('generacion');
+      $carrera = $request->input('carrera');
       $total = $request->input('total');
       $cedula = $request->input('cedula');
-      $titulo_electronico = $request->input('titulo_electronico');
+      $cuatrimestre_egreso = $request->input('cuatrimestre_egreso');
       $fecha_titulacion = $request->input('fecha_titulacion');
 
       // crear un nuevo registro en la tabla tb_indicador_titulados
@@ -158,7 +159,7 @@ class main extends Controller
       $titulacion->generacion = $generacion;
       $titulacion->total = $total;
       $titulacion->cedula = $cedula;
-      $titulacion->titulo_electronico = $titulo_electronico;
+      $titulacion->cuatrimestre_egreso = $cuatrimestre_egreso;
       $titulacion->fecha_titulacion = $fecha_titulacion;
       $titulacion->save();
 
@@ -175,7 +176,7 @@ class main extends Controller
       $generacion = $request->input('generacion');
       $total = $request->input('total');
       $cedula = $request->input('cedula');
-      $titulo_electronico = $request->input('titulo_electronico');
+      $cuatrimestre_egreso = $request->input('cuatrimestre_egreso');
       $fecha_titulacion = $request->input('fecha_titulacion');
    
       // actualizar el registro
@@ -184,7 +185,7 @@ class main extends Controller
       $titulacion->generacion = $generacion;
       $titulacion->total = $total;
       $titulacion->cedula = $cedula;
-      $titulacion->titulo_electronico = $titulo_electronico;
+      $titulacion->cuatrimestre_egreso = $cuatrimestre_egreso;
       $titulacion->fecha_titulacion = $fecha_titulacion;
       $titulacion->save();
    
