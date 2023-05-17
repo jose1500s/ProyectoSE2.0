@@ -312,7 +312,7 @@ export default {
     return {
       filters: {
         carrera: { value: null, matchMode: FilterMatchMode.IN },
-        // Proceso: { value: null, matchMode: FilterMatchMode.IN },
+        generacion: { value: null, matchMode: FilterMatchMode.IN },
         // periodo: { value: null, matchMode: FilterMatchMode.IN },
       },
       noDataMessage: "No se encontraron datos",
@@ -445,7 +445,7 @@ export default {
           <MultiSelect v-model="filters.carrera.value" :options="filtrarCarreras()" placeholder="Carrera"
             display="chip" />
 
-          <MultiSelect v-model="filters.carrera.value" :options="filtrarGeneraciones()" placeholder="Generacion"
+          <MultiSelect v-model="filters.generacion.value" :options="filtrarGeneraciones()" placeholder="Generacion"
             display="chip" />
 
           <Button icon="pi pi-times" label="Limpiar" @click="limpiarFiltros()" />
@@ -488,7 +488,7 @@ export default {
           <form @submit.prevent="editarTitulacion">
             <InputText id="id" v-model.trim="product.id" hidden />
             <label for="minmax">Carrera</label>
-            <Dropdown v-model="carrera" :options="carrerasLista" optionLabel="name" optionValue="code" :filter="true"
+            <InputText  v-model="product.carrera" :options="carrerasLista" optionLabel="name" optionValue="code" :filter="true"
               placeholder="Selecciona..." />
 
             <div class="field col-12 md:col-3">
