@@ -388,30 +388,6 @@ export default {
           </div>
 
           <div class="field col-12 md:col-3">
-            <label for="minmax">Nº de Hombres</label>
-            <InputText
-              inputId="minmax"
-              v-model="hombres"
-              mode="decimal"
-              :min="0"
-              :max="10000"
-              :showButtons="true"
-            />
-          </div>
-
-          <div class="field col-12 md:col-3">
-            <label for="minmax">Nº de Mujeres</label>
-            <InputText
-              inputId="minmax"
-              v-model="mujeres"
-              mode="decimal"
-              :min="0"
-              :max="10000"
-              :showButtons="true"
-            />
-          </div>
-
-          <div class="field col-12 md:col-3">
             <label for="minmax">Año de egreso</label>
             <InputText
               inputId="minmax"
