@@ -6,3 +6,5 @@ node_modules\.vite\deps\**\*
 node_modules\.vite\deps
 #public-hot
 public/hot
+# vs code 
+.vscode
