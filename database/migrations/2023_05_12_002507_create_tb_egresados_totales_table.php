@@ -13,14 +13,14 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('tb_indicador_titulados', function (Blueprint $table) {
+        Schema::create('tb_egresados_totales', function (Blueprint $table) {
             $table->id();
-            $table->string('generacion', 50);
-            $table->string('carrera', 50);
-            $table->integer('total');
-            $table->integer('cedula');
-            $table->date('cuatrimestre_egreso');
-            $table->date('fecha_titulacion');
+            $table->string('carrera');
+            $table->integer('hombres');
+            $table->integer('mujeres');
+            $table->integer('egresados');
+            $table->string('periodo');
+            $table->integer('anio');
             $table->timestamps();
         });
     }
@@ -32,6 +32,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tb_indicador_titulados');
+        Schema::dropIfExists('tb_egresados_totales');
     }
 };
