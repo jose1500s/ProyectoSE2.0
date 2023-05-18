@@ -74,6 +74,23 @@ class main extends Controller
       return Inertia::render('menusComponentes/Equivalencia/TabMenuEqui', ['equiva' => $equiva]);
    }
 
+   public function importarDataExcelAdmisiones(Request $request) {
+    $datosExcel = $request->input('datos');
+
+    foreach ($datosExcel as $fila) {
+      $admision = new tb_admision();
+      $admision->carrera = $fila['carrera'];
+      $admision->aspirantes = $fila['aspirantes'];
+      $admision->examinados = $fila['examinados'];
+      $admision->no_admitidos = $fila['no_admitidos'];
+      $admision->periodo = $fila['periodo'];
+      $admision->save();
+    }
+
+      return redirect()->route('usuario.ingreso');
+}
+
+
 
    // ruta para guardar una nueva admision del indicador ingreso en la admision
    function registrarAdmision(Request $request) {

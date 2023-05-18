@@ -182,7 +182,7 @@ Route::middleware([
     //--------------------------------EGRESADOS TOTALES-------------------------------
 
     Route::post('/registrar-Egreso-Totales', [main::class, 'registrarEgresadosTotales']);
-    
+
     Route::post('/eliminar-Egreso-Totales/{id}', [main::class, 'eliminarEgresoTotales']);
 
     Route::post('/eliminar-Egresos-Totales', [main::class, 'eliminarEgresosTotales']);
@@ -190,4 +190,6 @@ Route::middleware([
     Route::post('/editar-Egreso-Totales/{id}', [main::class, 'editarEgresoTotales']);
     // ---------- rutas para GRAFICAS -------------
     Route::post('/obtener-filtro-carreras-admision', [admisionGraficasController::class, 'filtrarDatosCarreras']);
+    // ruta para importar excels
+     Route::post('/importar-excel-admisiones', [main::class, 'importarDataExcelAdmisiones']);
 });

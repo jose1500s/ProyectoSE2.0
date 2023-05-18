@@ -18,6 +18,8 @@ import Toolbar from "primevue/toolbar";
 import Dropdown from "primevue/dropdown";
 import InputNumber from "primevue/inputnumber";
 import axios from "axios";
+import readXlsxFile from "read-excel-file";
+
 export default {
   components: {
     AppLayout,
@@ -43,7 +45,15 @@ export default {
   },
   methods: {
     filtrarCarreras() {
-      const carreras = ['Negocios', 'Administracion', 'Sistemas', 'Automotriz', 'Mecatronica', 'Manufactura', 'Telematica'];
+      const carreras = [
+        "Negocios",
+        "Administracion",
+        "Sistemas",
+        "Automotriz",
+        "Mecatronica",
+        "Manufactura",
+        "Telematica",
+      ];
       return carreras;
     },
     filtrarProcesos() {
@@ -52,7 +62,7 @@ export default {
       // const procesos = this.ingresos.map((item) => item.Proceso);
       // const procesosFiltradas = [...new Set(procesos)];
       // estaticos:
-      const procesos = ['1er Proceso', '2do Proceso', '3er Proceso']
+      const procesos = ["1er Proceso", "2do Proceso", "3er Proceso"];
       return procesos;
     },
     filtrarFecha() {
@@ -60,7 +70,7 @@ export default {
       // y retornar un arreglo con los nombres de las carreras sin repetir
       // const fechas = this.ingresos.map((item) => item.fecha);
       // const fechasFiltradas = [...new Set(fechas)];
-      const fechas = ['SEP-DIC']
+      const fechas = ["SEP-DIC"];
       return fechas;
     },
     exportCSV() {
@@ -254,39 +264,116 @@ export default {
         },
       });
     },
-    checarSeleccionados() {
-      console.log('seleccionados', this.selectedProducts)
-    },
     confirmDeleteSelected() {
       this.deleteProductsDialog = true;
+    },
+    openImportExcel() {
+      this.importExcelDialog = true;
+      // cada que se abra se resetea el valor del array de datosExcel para que no se repitan los datos
+      this.datosExcel = [];
     },
     filtroCarreras() {
       let data = {
         carrera: this.filters.carrera.value,
-
       };
-      axios.post('/obtener-filtro-carreras-admision', data)
-        .then(response => {
+      axios
+        .post("/obtener-filtro-carreras-admision", data)
+        .then((response) => {
           this.datosFiltrados = response.data.datosCarrerasFiltro;
           this.admisionesTodosLosRegistros = response.data.admisiones;
           // Aquí puedes realizar otras operaciones con los datos recibidos
         })
-        .catch(error => {
+        .catch((error) => {
           console.log(error);
         });
+    },
+    subirExcel() {
+      const input = document.getElementById("inputExcel");
+
+      // si el archivo no es .xlsx no se sube y mandar un mensaje de error
+      if (input.files[0].type != "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet") {
+        this.$toast.add({
+          severity: "error",
+          summary: "Error",
+          detail: "El archivo debe ser .xlsx",
+          life: 6000,
+        });
+        return false;
+      } else {
+        readXlsxFile(input.files[0]).then((rows) => {
+          //mandar a datosExcel los datos apartir de la psicion 1 del array
+          this.datosExcel = rows.slice(1);
+          // mandar a columnasExcel las columnas del archivo
+          this.columnasExcel = rows[0];
+          console.log(this.datosExcel)
+          console.log(this.columnasExcel)
+          // si el archivo no tiene las columnas 'carrera', 'aspirantes', 'examinados', 'no admitidos' y 'periodo' no se sube y mandar un mensaje de error
+          if (
+            this.columnasExcel[1] != "Carrera" ||
+            this.columnasExcel[2] != "Aspirantes" ||
+            this.columnasExcel[3] != "Examinados" ||
+            this.columnasExcel[4] != "No Admitidos" ||
+            this.columnasExcel[5] != "Periodo"
+          ) {
+            this.wrongFormatExcel = true;
+            this.$toast.add({
+              severity: "error",
+              summary: "Error",
+              detail: "Formato de archivo incorrecto",
+              life: 5000,
+            });
+            return false;
+          } else {
+            this.wrongFormatExcel = false;
+          }
+
+        });
+      }
+    },
+    importarExcel() {
+      const datosInsertar = []
+      for (let i = 0; i < this.datosExcel.length; i++) {
+        datosInsertar.push({
+          carrera: this.datosExcel[i][1],
+          aspirantes: this.datosExcel[i][2],
+          examinados: this.datosExcel[i][3],
+          no_admitidos: this.datosExcel[i][4],
+          periodo: this.datosExcel[i][5],
+        })
+      }
+
+      const data = {
+        datos: datosInsertar,
+      };
+
+      this.$inertia.post("/importar-excel-admisiones", data, {
+        preserveState: true,
+        preserveScroll: true,
+        onSuccess: () => {
+          this.importExcelDialog = false;
+          this.$toast.add({
+            severity: "success",
+            summary: "Exito",
+            detail: "Importado exitosamente",
+            life: 3000,
+          });
+        },
+      });
 
     },
-  },
-  mounted() {
 
   },
+  mounted() { },
   data() {
     return {
       filters: {
         carrera: { value: null, matchMode: FilterMatchMode.IN },
         periodo: { value: null, matchMode: FilterMatchMode.IN },
+        globlal: { value: null, matchMode: FilterMatchMode.CONTAINS },
       },
       datosFiltrados: [],
+      datosExcel: [],
+      columnasExcel: [],
       admisionesTodosLosRegistros: [],
       noDataMessage: "No se encontraron datos",
       displayResponsive: false,
@@ -299,11 +386,20 @@ export default {
         { name: "Sistemas", code: "Sistemas" },
         { name: "Telematica", code: "Telematica" },
       ],
+
       periodosLista: [
-        { name: "SEP-DIC", code: "SEP-DIC" },
-        { name: "ENE-MAR", code: "ENE-MAR" },
-        { name: "ABR-JUN", code: "ABR-JUN" },
-        { name: "JUL-SEP", code: "JUL-SEP" },
+        { name: "SEP-DIC " + new Date().getFullYear(), code: "SEP-DIC" + new Date().getFullYear() },
+        { name: "ENE-MAR " + new Date().getFullYear(), code: "ENE-MAR" + new Date().getFullYear() },
+        { name: "ABR-JUN " + new Date().getFullYear(), code: "ABR-JUN" + new Date().getFullYear() },
+        { name: "JUL-SEP " + new Date().getFullYear(), code: "JUL-SEP" + new Date().getFullYear() },
+      ],
+      columnasPreviewExcel: [
+        { name: "ID", code: "0" },
+        { name: "Carrera", code: "1" },
+        { name: "Aspirantes", code: "2" },
+        { name: "Examinados", code: "3" },
+        { name: "No Admitidos", code: "4" },
+        { name: "Periodo", code: "5" },
       ],
       carreras: null,
       periodos: null,
@@ -315,6 +411,11 @@ export default {
       deleteProductDialog: false,
       selectedProducts: null,
       deleteProductsDialog: false,
+      importExcelDialog: false,
+      wrongFormatExcel: false,
+      file: null,
+      fileContent: null,
+      selectedProductsForChart: null,
     };
   },
 };
@@ -326,13 +427,50 @@ export default {
       <Button label="Nuevo Registro" icon="pi pi-plus" class="p-button-success !mr-2" @click="openNew" />
       <Button label="Eliminar" icon="pi pi-trash" class="p-button-danger" @click="confirmDeleteSelected"
         :disabled="!selectedProducts || !selectedProducts.length" />
-        <!-- boton para checar los productos seleccionados -->
-      <Button label="Checar" icon="pi pi-check" class="p-button-warning" @click="checarSeleccionados"
-        :disabled="!selectedProducts || !selectedProducts.length" />
+
+      <Button class="!ml-3" icon="pi pi-external-link" label="Exportar Excel" @click="exportCSV($event)" />
+
+      <!-- button dialog para importar excel-->
+      <Button label="Importar Excel" icon="pi pi-upload" class="!ml-2" @click="openImportExcel" />
+
+
     </template>
   </Toolbar>
 
-  <Dialog v-model:visible="productDialog" :breakpoints="{ '960px': '75vw', '640px': '85vw' }" :style="{ width: '25vw' }"
+  <!-- Dialog para importar excel -->
+  <Dialog v-model:visible="importExcelDialog" :breakpoints="{ '1260px': '75vw', '640px': '85vw' }"
+    :style="{ width: '45vw' }" header="Importar Excel" :modal="true" class="p-fluid">
+
+
+    <!-- aqui selecciona el archivo de excel -->
+    <div class="border border-dashed border-gray-500 relative">
+      <input type="file" id="inputExcel" @change="subirExcel" multiple
+        class="cursor-pointer relative block opacity-0 w-full h-full p-20 z-50">
+      <div class="text-center p-10 absolute top-0 right-0 left-0 m-auto">
+        <h4>
+          Arrastra y suelta el archivo aquí
+          <br />ó
+        </h4>
+        <p class="">
+          Selecciona un archivo de excel
+        </p>
+      </div>
+    </div>
+
+    <!-- preview del documento subido en el array datosExcel -->
+    <DataTable v-if="datosExcel.length > 0" :value="datosExcel">
+      <Column v-for="columna in columnasPreviewExcel" :key="columna.code" :field="columna.code" :header="columna.name" />
+    </DataTable>
+
+    <div class="max-w-[50%] m-auto p-7">
+      <Button label="Importar" @click="importarExcel" id="btnImportarExcel"
+        :disabled="datosExcel.length == 0 || wrongFormatExcel" />
+    </div>
+
+
+  </Dialog>
+
+  <Dialog v-model:visible="productDialog" :breakpoits="{ '960px': '75vw', '640px': '85vw' }" :style="{ width: '25vw' }"
     header="Nuevo Registro" :modal="true" class="p-fluid">
     <div class="field">
       <form @submit.prevent="registrarAdmision">
@@ -384,25 +522,22 @@ export default {
           <!-- model para abrir grafica -->
           <Button label="Grafica" icon="pi pi-chart-bar" @click="openResponsive" />
 
-
-
-          <Button icon="pi pi-external-link" label="Exportar Excel" @click="exportCSV($event)" />
-
           <!-- Filtros -->
           <MultiSelect v-model="filters.carrera.value" :options="carrerasLista" optionLabel="name" optionValue="code"
             placeholder="Carrera" display="chip" @change="filtroCarreras($event)" />
 
-
-          <MultiSelect v-model="filters.periodo.value" :options="periodosLista" optionLabel="name" optionValue="code"  placeholder="Periodo" display="chip" />
+          <MultiSelect v-model="filters.periodo.value" :options="periodosLista" optionLabel="name" optionValue="code"
+            placeholder="Periodo" display="chip" />
 
           <Button icon="pi pi-times" label="Limpiar" @click="limpiarFiltros()" />
         </div>
       </div>
+   
+      <DataTable exportFilename="Admisiones" :value="ingresos" :paginator="true"  class="p-datatable-customers" :rows="7"
+        ref="dt" v-model:filters="filters" v-model:selection="selectedProducts" :emptyMessage="noDataMessage" stripedRows
+        sortMode="multiple" removableSort 
+        >
 
-
-      <DataTable :value="ingresos" :paginator="true" class="p-datatable-customers" :rows="7" ref="dt"
-        v-model:filters="filters" v-model:selection="selectedProducts" :emptyMessage="noDataMessage" stripedRows
-        sortMode="multiple" removableSort>
         <Column selectionMode="multiple" style="width: 3rem" :exportable="false"></Column>
 
         <Column field="id" header="ID" :sortable="true" hidden></Column>
@@ -427,15 +562,14 @@ export default {
             <h2>No se encontraron datos</h2>
           </div>
         </template>
+
       </DataTable>
 
-
-
-      <Dialog header="Gráfica dinámica" v-model:visible="displayResponsive" :breakpoints="{ '960px': '75vw', '75vw': '90vw' }"
-        :style="{ width: '70vw' }">
+      <Dialog header="Gráfica dinámica" v-model:visible="displayResponsive"
+        :breakpoints="{ '960px': '75vw', '75vw': '90vw' }" :style="{ width: '70vw' }">
         <!-- contenido del dialog/model desde aqui... -->
         <div class="w-full" id="contenedorGrafica">
-          <GraficaIngreso :carrerasFiltradas="datosFiltrados"/>
+          <GraficaIngreso :data="selectedProducts" />
         </div>
         <template #footer>
           <Button label="Cerrar" icon="pi pi-check" @click="closeResponsive" autofocus />
@@ -494,21 +628,18 @@ export default {
       <Dialog v-model:visible="deleteProductsDialog" :style="{ width: '550px' }" header="Confirm" :modal="true">
         <div class="confirmation-content flex items-center justify-center">
           <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem" />
-          <span>
-            ¿Confirma eliminar los registros seleccionados?
-          </span>
+          <span> ¿Confirma eliminar los registros seleccionados? </span>
         </div>
         <template #footer>
           <Button label="No" icon="pi pi-times" class="p-button-text" @click="deleteProductsDialog = false" />
           <Button label="Yes" icon="pi pi-check" class="p-button-text" @click="deleteSelectedProducts" />
         </template>
       </Dialog>
-
     </div>
   </section>
 </template>
 
-<style type="text/css">
+<style type="text/css" scoped>
 .p-multiselect-label-container {
   max-width: 170px;
 }
@@ -519,10 +650,6 @@ export default {
   align-items: center;
 }
 
-div#contenedorGrafica canvas {
-  width: 100% !important;
-  height: auto !important;
-}
 
 #btnRegisrar {
   margin-top: 1.5rem;

@@ -26,7 +26,7 @@ const submit = () => {
 </script>
 
 <template>
-  <Head title="Register" />
+  <Head title="Registro" />
 
   <section class="bg-white">
     <div class="lg:grid lg:min-h-screen lg:grid-cols-12">
