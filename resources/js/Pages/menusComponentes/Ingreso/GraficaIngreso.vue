@@ -1,98 +1,134 @@
 <script>
 import Chart from 'primevue/chart';
+import { ref, watch } from 'vue'
+
+
 export default {
     components: {
         Chart,
     },
     props: {
-        ingresos: Array,
-    },
-    methods: {
-        filtrarCarreras() {
-            // filtar del arreglo ingresos.carrera, todos los que se repiten
-            // y retornar un arreglo con los nombres de las carreras sin repetir
-            const carreras = this.ingresos.map(item => item.carrera);
-            const carrerasFiltradas = [...new Set(carreras)];
-            return carrerasFiltradas;
+        data: {
+            type: Array,
         },
     },
-    data() {
-        return {
-            chartData: {
-                // filtrar primero las carreras para que no se repitan
-                labels: this.filtrarCarreras(),
+    mounted: function () {
+        // si viene vacio el array data no se grafica
+        if (this.data === null || this.data.length === 0) {
+            return;
+        }
+        this.chartData = this.setChartData();
+        this.chartOptions = this.setChartOptions();
+
+    },
+    created() {
+        this.actualizarChartOptions(); // llama al método cuando se inicialice el componente
+    },
+    methods: {
+        setChartData() {
+            return {
+                labels: this.data.map((item) => item.carrera + '-' + item.periodo),
                 datasets: [
                     {
                         label: 'Aspirantes',
-                        data: this.ingresos.map(item => item.aspirantes),
-                        backgroundColor: 'rgba(255,99,132,0.2)',
-                        borderColor: '#FF6384',
-                        borderWidth: 1,
-                        tension: 0.4,
-                        pointStyle: 'rectRot', 
-                        pointRadius: 7,
-                        fill: true
+                        backgroundColor: '#FFB84C',
+                        data: this.data.map((item) => item.aspirantes)
                     },
                     {
                         label: 'Examinados',
-                        data: this.ingresos.map(item => item.examinados),
-                        backgroundColor: 'rgba(54,162,235,0.2)',
-                        borderColor: '#36A2EB',
-                        borderWidth: 1,
-                        tension: 0.4,
-                        pointStyle: 'rectRot',
-                        pointRadius: 7, 
-                        fill: true
+                        backgroundColor: '#7DB9B6',
+                        data: this.data.map((item) => item.examinados)
                     },
                     {
-                        label: 'Admitidos',
-                        data: this.ingresos.map(item => item.admitidos),
-                        backgroundColor: 'rgba(255,167,38,0.2)',
-                        borderColor: '#FFCE56',
-                        borderWidth: 1,
-                        tension: 0.4,
-                        pointStyle: 'rectRot',
-                        pointRadius: 7, 
-                        fill: true
+                        label: 'No Admitidos',
+                        backgroundColor: '#EB455F',
+                        data: this.data.map((item) => item.no_admitidos)
                     },
-                    {
-                        label: 'Rechazados',
-                        data: this.ingresos.map(item => item.rechazados),
-                        backgroundColor: 'rgba(75,192,192,0.2)',
-                        borderColor: '#4BC0C0',
-                        borderWidth: 1,
-                        tension: 0.4,
-                        pointStyle: 'rectRot',
-                        pointRadius: 7, 
-                        fill: true     
-                    },
-                    {
-                        label: 'Inscritos',
-                        data: this.ingresos.map(item => item.inscritos),
-                        backgroundColor: 'rgba(255,159,64,0.2)',
-                        borderColor: '#FF9F40',
-                        borderWidth: 1,
-                        tension: 0.4, 
-                        pointStyle: 'rectRot',
-                        pointRadius: 7,
-                        fill: true     
-                    },
-                ],
-            },
-            chartOptions: {
+                ]
+            }
+        },
+        setChartOptions() {
+            return {
                 responsive: true,
-                maintainAspectRatio: true, // esto es para que el grafico se ajuste al tamaño de la pantalla
-            
-            },
+                maintainAspectRatio: false,
+                aspectRatio: 0.6,
+                scales: {
+                    x: {
+                        stacked: true,
+                    },
+                    y: {
+                        stacked: true
+                    }
+                },
+                plugins: {
+                    
+                },
+                indexAxis: this.orientacionGrafica ? this.orientacionGrafica : 'y',
+
+            }
+        },
+        actualizarChartOptions() {
+            this.chartOptions = {
+                responsive: true,
+                maintainAspectRatio: false,
+                aspectRatio: 0.6,
+                scales: {
+                    x: {
+                        stacked: true,
+                    },
+                    y: {
+                        stacked: true,
+                    }
+                },
+                indexAxis: this.orientacionGrafica,
+            };
+        },
+
+    },
+    data() {
+        return {
+            chartData: null,
+            chartOptions: null,
+            tipoGrafica: '',
+            orientacionGrafica: '',
         }
-    }
+    },
 }
 
 </script>
-
 <template>
-    <div class="card">
-        <chart type="line" :data="chartData" :options="chartOptions" />
+    <div class="flex items-center gap-3 text-center" id="selects">
+        <div>
+            <select class="mb-5" v-model="tipoGrafica">
+                <option value="">Tipo de grafica</option>
+                <option value="pie">Pie</option>
+                <option value="doughnut">doughnut</option>
+                <option value="line">line</option>
+                <option value="bar">Bar</option>
+            </select>
+        </div>
+        <div v-if="tipoGrafica === 'bar'">
+            <select class="mb-5 ml-3" v-model="orientacionGrafica" @change="actualizarChartOptions">
+                <option value="">Orientación</option>
+                <option value="y">Horizontal</option>
+                <option value="x">Vertical</option>
+            </select>
+        </div>
+    </div>
+
+    <div v-if="data === null || data.length === 0" class="text-2xl text-center m-auto h-96 grid items-center">
+        <h2>Seleccione datos para graficar</h2>
+    </div>
+    <div v-else-if="data.length <= 15">
+        <Chart :type="tipoGrafica ? tipoGrafica : 'bar'" :data="chartData" :options="chartOptions" class="" />
+    </div>
+    <div v-else class="text-2xl text-center m-auto h-96 grid items-center">
+        <h2>Demasiados datos seleccionados, máximo 10</h2>
     </div>
 </template>
 
+<style scoped>
+.p-chart {
+    max-height: 420px !important;
+}
+</style>

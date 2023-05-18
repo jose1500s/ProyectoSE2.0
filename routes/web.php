@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Auth;
 // importar el componente Register.vue de la carpeta Auth dentro de pages
 use resources\js\pages\Auth\Login;
 use App\Http\Controllers\main;
+use App\Http\Controllers\Ingreso\admisionGraficasController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -20,7 +22,7 @@ use App\Http\Controllers\main;
 */
 
 Route::get('/', function () {
-    return Inertia::render('Auth/Login', [ // si quiero renderizar un componente que no esta en la carpeta pages, debo poner la ruta completa ejemplo: 'resources\js\pages\Auth\Login'
+    return Inertia::render('Auth/Login', [
         'canResetPassword' => Route::has('password.request'),
         'canRegister' => Route::has('register'),
         'laravelVersion' => Application::VERSION,
@@ -80,6 +82,26 @@ Route::middleware([
 
     // ---------- FIN TAB ADMISIONES ------------
 
+    // ---------- TAB TITULADOS ------------
+
+    // ruta del indicador TITULADOS, para REGISTRAR una admision
+    Route::post('/registro-Titulado', [main::class, 'registrarTitulacion']);
+
+    // ruta del indicador TITULADOS, para EDITAR una admision que recibe el id de la admision
+    Route::post('/editar-Titulado/{id}', [main::class, 'editarTitulacion']);
+
+    // ruta del indicador TITULADOS, para ELIMINAR una admision que recibe el id de la admision
+    Route::post('/eliminar-Titulado/{id}', [main::class, 'eliminarTitulacion']);
+
+    // ruta del indicador TITULADOS, para ELIMINAR VARIAS admisiones que recibe como array los ids de las admisiones
+    Route::post('/eliminar-Titulados', [main::class, 'eliminarTitulaciones']);
+
+    // ---------- FIN TAB TITULADOS ------------
+
+    // ruta del indicador TITULADOS, para REGISTRAR una admision
+
+
+
     // ---------- TAB NUEVO INGRESO -------------
     Route::post('/registro-NIngreso', [main::class, 'registrarNIngreso']);
 
@@ -112,6 +134,7 @@ Route::middleware([
     Route::post('/eliminar-Equivalencias/{id}', [main::class, 'eliminarEquivalencias']);
 
     // ---------- FIN TAB Equivalencia -------------
+
     // ---------- TAB Maestrias -------------
     Route::post('/registro-Maestria', [main::class, 'registrarMaestria']);
 
@@ -121,18 +144,10 @@ Route::middleware([
 
     Route::post('/eliminar-Maestrias/{id}', [main::class, 'eliminarMaestrias']);
 
-
-    // ruta del indicador EQUIVALENCIA, para REGISTRAR una equivalencia
-    Route::post('/registro-Equivalencia2', [main::class, 'registrarEquivalencia2']);
-
-    Route::post('/editar-Equivalencia2/{id}', [main::class, 'editarEquivalencia2']);
-
-    Route::post('/eliminar-Equivalencia2/{id}', [main::class, 'eliminarEquivalencia2']);
-
-    Route::post('/eliminar-Equivalencias2/{id}', [main::class, 'eliminarEquivalencias2']);
+    // ---------- FIN TAB Maestrias -------------
 
 
-       // --------------------------- TRANSPORTE -----------------------
+    // --------------------------- TRANSPORTE -----------------------
 
     Route::post('/registro-solicitudes', [main::class, 'registrarTranspSolicitudes']);
 
@@ -162,6 +177,19 @@ Route::middleware([
 
     route::post('/eliminar-Egreso/{id}', [main::class, 'eliminarEgreso']);
 
-    route::post('/editar-Egreso/{id}', [main::class, 'editarEgreso']);  
+    route::post('/editar-Egreso/{id}', [main::class, 'editarEgreso']);
     
+    //--------------------------------EGRESADOS TOTALES-------------------------------
+
+    Route::post('/registrar-Egreso-Totales', [main::class, 'registrarEgresadosTotales']);
+
+    Route::post('/eliminar-Egreso-Totales/{id}', [main::class, 'eliminarEgresoTotales']);
+
+    Route::post('/eliminar-Egresos-Totales', [main::class, 'eliminarEgresosTotales']);
+
+    Route::post('/editar-Egreso-Totales/{id}', [main::class, 'editarEgresoTotales']);
+    // ---------- rutas para GRAFICAS -------------
+    Route::post('/obtener-filtro-carreras-admision', [admisionGraficasController::class, 'filtrarDatosCarreras']);
+    // ruta para importar excels
+     Route::post('/importar-excel-admisiones', [main::class, 'importarDataExcelAdmisiones']);
 });

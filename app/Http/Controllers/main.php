@@ -15,6 +15,7 @@ use App\Models\tb_indicador_titulados;
 use App\Models\tb_transporte_lugares;
 use App\Models\tb_transporte_solicitudes_seleccionados;
 use App\Models\tb_egresados;
+use App\Models\tb_egresados_totales;
 
 class main extends Controller
 {
@@ -30,6 +31,7 @@ class main extends Controller
       return Inertia::render('menusComponentes/Ingreso/TabMenu', ['maestrias' => $maestrias,'ingresos' => $ingresos, 'equivalencias' => $equivalencias, 'ningresos' => $ningresos, 'reingresos' => $reingresos]);
    }
 
+
    public function bajas() {
       return Inertia::render('menusComponentes/Bajas');
    }
@@ -40,7 +42,8 @@ class main extends Controller
 
    public function egresados(){
       $egresados = tb_egresados::all();
-      return Inertia::render('menusComponentes/Egresados/TabMenuEgre',['egresados'=>$egresados]);
+      $egresados_totales = tb_egresados_totales::all();
+      return Inertia::render('menusComponentes/Egresados/TabMenuEgre',['egresados'=>$egresados,'totales'=>$egresados_totales]);
    }
 
    public function titulados(){
@@ -70,6 +73,23 @@ class main extends Controller
       $equiva = tb_indicador_equivalencia::all();
       return Inertia::render('menusComponentes/Equivalencia/TabMenuEqui', ['equiva' => $equiva]);
    }
+
+   public function importarDataExcelAdmisiones(Request $request) {
+    $datosExcel = $request->input('datos');
+
+    foreach ($datosExcel as $fila) {
+      $admision = new tb_admision();
+      $admision->carrera = $fila['carrera'];
+      $admision->aspirantes = $fila['aspirantes'];
+      $admision->examinados = $fila['examinados'];
+      $admision->no_admitidos = $fila['no_admitidos'];
+      $admision->periodo = $fila['periodo'];
+      $admision->save();
+    }
+
+      return redirect()->route('usuario.ingreso');
+}
+
 
 
    // ruta para guardar una nueva admision del indicador ingreso en la admision
@@ -140,6 +160,73 @@ class main extends Controller
   }
 
   //  --------------------- FIN TAB ADMISION -----------------------
+
+  // ---------------------- TAB TITULADOS --------------------------
+
+   function registrarTitulacion(Request $request) {
+      
+      $generacion = $request->input('generacion');
+      $carrera = $request->input('carrera');
+      $total = $request->input('total');
+      $cedula = $request->input('cedula');
+      $cuatrimestre_egreso = $request->input('cuatrimestre_egreso');
+      $fecha_titulacion = $request->input('fecha_titulacion');
+
+      // crear un nuevo registro en la tabla tb_indicador_titulados
+      $titulacion = new tb_indicador_titulados();
+      $titulacion->carrera = $carrera;
+      $titulacion->generacion = $generacion;
+      $titulacion->total = $total;
+      $titulacion->cedula = $cedula;
+      $titulacion->cuatrimestre_egreso = $cuatrimestre_egreso;
+      $titulacion->fecha_titulacion = $fecha_titulacion;
+      $titulacion->save();
+
+      // retornar a la vista ingreso
+      return redirect()->route('usuario.titulados');
+
+   }
+
+    // ruta para editar una admision
+    function editarTitulacion(Request $request) {
+      // obtener los datos dle form y luego actualizar el registro
+      $id = $request->input('id');
+      $carrera = $request->input('carrera');
+      $generacion = $request->input('generacion');
+      $total = $request->input('total');
+      $cedula = $request->input('cedula');
+      $cuatrimestre_egreso = $request->input('cuatrimestre_egreso');
+      $fecha_titulacion = $request->input('fecha_titulacion');
+   
+      // actualizar el registro
+      $titulacion = tb_indicador_titulados::find($id);
+      $titulacion->carrera = $carrera;
+      $titulacion->generacion = $generacion;
+      $titulacion->total = $total;
+      $titulacion->cedula = $cedula;
+      $titulacion->cuatrimestre_egreso = $cuatrimestre_egreso;
+      $titulacion->fecha_titulacion = $fecha_titulacion;
+      $titulacion->save();
+   
+      // retornar a la vista ingreso
+      return redirect()->route('usuario.titulados');
+     }
+   
+     function eliminarTitulacion(Request $request) {
+      $id = $request->input('id');
+      $titulacion = tb_indicador_titulados::findOrFail($id);
+      $titulacion->delete(); 
+      return redirect()->route('usuario.titulados');
+     }
+   
+     function eliminarTitulaciones(Request $request) {
+      $id = $request->id;
+      $titulacion = tb_indicador_titulados::whereIn('id', $id);
+      $titulacion->delete();
+      return redirect()->route('usuario.titulados');
+     }
+
+  // ---------------------- FIN TAB TITULADOS ----------------------
 
   //  --------------------- TAB NUEVO INGRESO -----------------------
 
@@ -393,61 +480,7 @@ function eliminarEquivalencias(Request $request) {
       return redirect()->route('usuario.ingreso');
    }
 
-
-   //  --------------------- TAB NUEVO EQUIVALENCIA2 -----------------------
-   // ruta para guardar una nueva equivalencia del indicador ingreso en la equivalencia
-  function registrarEquivalencia2(Request $request) {
-   $carrera = $request->input('carreras');
-   $aspirantes = $request->input('aspirantes');
-   $examinados = $request->input('examinados');
-   $no_admitidos = $request->input('noAdmitidos');
-   $periodo = $request->input('periodos');
-
-   // crear un nuevo registro en la tabla tb_equivalencia
-   $admision = new tb_indicador_equivalencia();
-   $admision->carrera = $carrera;
-   $admision->aspirantes = $aspirantes;
-   $admision->examinados = $examinados;
-   $admision->no_admitidos = $no_admitidos;
-   $admision->periodo = $periodo;
-   $admision->save();
-
-   // retornar a la vista ingreso
-   return redirect()->route('usuario.equivalencia');
-
-} 
-
-// ruta para editar una equivalencia
-function editarEquivalencia2(Request $request) {
-   // obtener los datos dle form y luego actualizar el registro
-   $id = $request->input('id');
-   $carrera = $request->input('carrera');
-   $aspirantes = $request->input('aspirantes');
-   $examinados = $request->input('examinados');
-   $no_admitidos = $request->input('no_admitidos');
-   $periodo = $request->input('periodo');
-
-   // actualizar el registro
-   $admision = tb_indicador_equivalencia::find($id);
-   $admision->carrera = $carrera;
-   $admision->aspirantes = $aspirantes;
-   $admision->examinados = $examinados;
-   $admision->no_admitidos = $no_admitidos;
-   $admision->periodo = $periodo;
-   $admision->save();
-
-   // retornar a la vista ingreso
-   return redirect()->route('usuario.equivalencia');
-  }
-
-  function eliminarEquivalencia2(Request $request) {
-   $id = $request->input('id');
-   $equiva = tb_indicador_equivalencia::findOrFail($id);
-   $equiva->delete(); 
-   return redirect()->route('usuario.equivalencia');
-}
-
-
+//  --------------------- Fin Maestrias -----------------------//
 
 //---------------TRANSPORTE----------------//
 
@@ -455,7 +488,9 @@ function editarEquivalencia2(Request $request) {
       $carrera = $request->input('carrera');
       $ruta = $request->input('ruta');
       $solicitudes = $request->input('solicitudes');
-      $seleccionados = $request->input('seleccionados');
+      $hombres = $request->input('hombres');
+      $mujeres = $request->input('mujeres');
+      $seleccionados = $hombres + $mujeres;
       $cuatrimestre = $request->input('cuatrimestre');
       $turno = $request->input('turno');
       
@@ -464,6 +499,8 @@ function editarEquivalencia2(Request $request) {
       $transpSolicit = new tb_transporte_solicitudes_seleccionados();
       $transpSolicit->solicitudes = $solicitudes;
       $transpSolicit->seleccionados = $seleccionados;
+      $transpSolicit->hombres = $hombres;
+      $transpSolicit->mujeres = $mujeres;
       $transpSolicit->carrera = $carrera;
       $transpSolicit->ruta = $ruta;
       $transpSolicit->cuatrimestre = $cuatrimestre;
@@ -531,13 +568,17 @@ function editarEquivalencia2(Request $request) {
       $carrera = $request->input('carrera');
       $ruta = $request->input('ruta');
       $solicitudes = $request->input('solicitudes');
-      $seleccionados = $request->input('seleccionados');
+      $hombres = $request->input('hombres');
+      $mujeres = $request->input('mujeres');
+      $seleccionados = $hombres + $mujeres;
       $cuatrimestre = $request->input('cuatrimestre');
       $turno = $request->input('turno');
 
       // actualizar el registro
       $transpSolicit = tb_transporte_solicitudes_seleccionados::find($id);
       $transpSolicit->solicitudes = $solicitudes;
+      $transpSolicit->hombres = $hombres;
+      $transpSolicit->mujeres = $mujeres;
       $transpSolicit->seleccionados = $seleccionados;
       $transpSolicit->carrera = $carrera;
       $transpSolicit->ruta = $ruta;
@@ -587,9 +628,11 @@ function editarEquivalencia2(Request $request) {
       function registrarEgresados(Request $request) {
          $carrera = $request->input('carrera');
          $generacion = $request->input('generacion');
-         $egresados = $request->input('negresados');
          $año_egreso = $request->input('año_egreso');
          $cuatrimestre = $request->input('cuatrimestre');
+         $hombres = $request->input('hombres');
+         $mujeres = $request->input('mujeres');
+         $egresados = $hombres + $mujeres;
          // crear un nuevo registro en la tabla egresados
          $egresado = new tb_egresados();
          $egresado->carrera = $carrera;
@@ -597,6 +640,8 @@ function editarEquivalencia2(Request $request) {
          $egresado->egresados = $egresados;
          $egresado->año_egreso = $año_egreso;
          $egresado->cuatrimestre= $cuatrimestre;
+         $egresado->hombres= $hombres;
+         $egresado->mujeres= $mujeres;
          $egresado->save();
 
          // retornar a la vista ingreso
@@ -621,7 +666,9 @@ function editarEquivalencia2(Request $request) {
       $id = $request->input('id');
       $carrera = $request->input('carrera');
       $generacion = $request->input('generacion');
-      $egresados = $request->input('egresados');
+      $hombres = $request->input('hombres');
+      $mujeres = $request->input('mujeres');
+      $egresados = $hombres + $mujeres;
       $año_egreso = $request->input('año_egreso');
       $cuatrimestre = $request->input('cuatrimestre');
 
@@ -632,10 +679,70 @@ function editarEquivalencia2(Request $request) {
       $egresado->egresados = $egresados;
       $egresado->año_egreso = $año_egreso;
       $egresado->cuatrimestre = $cuatrimestre;
+      $egresado->hombres = $hombres;
+      $egresado->mujeres = $mujeres;
       $egresado->save();
 
       // retornar a la vista ingreso
       return redirect()->route('usuario.egresados');
+      }
+
+//--------------------------------TOTALES------------------------------------
+
+      function registrarEgresadosTotales(Request $request){
+         $carrera = $request->input('carrera');
+         $año_egreso = $request->input('anio');
+         $cuatrimestre = $request->input('cuatrimestre');
+         $hombres = $request->input('hombres');
+         $mujeres = $request->input('mujeres');
+         $egresados = $hombres + $mujeres;
+         // crear un nuevo registro en la tabla egresados
+         $egresadoTotal = new tb_egresados_totales();
+         $egresadoTotal->carrera = $carrera;
+         $egresadoTotal->egresados = $egresados;
+         $egresadoTotal->anio = $año_egreso;
+         $egresadoTotal->periodo= $cuatrimestre;
+         $egresadoTotal->hombres= $hombres;
+         $egresadoTotal->mujeres= $mujeres;
+         $egresadoTotal->save();
+         return redirect()->route('usuario.egresados');
+      }
+      
+      function eliminarEgresoTotales(Request $request){
+         $id = $request->input('id');
+         $egresadoTotal = tb_egresados_totales::findOrFail($id);
+         $egresadoTotal->delete(); 
+         return redirect()->route('usuario.egresados');
+      }
+
+      function eliminarEgresosTotales(Request $request){
+         $id = $request->id;
+         $egresadoTotal = tb_egresados_totales::whereIn('id', $id);
+         $egresadoTotal->delete();
+         return redirect()->route('usuario.egresados');
+      }
+
+      function editarEgresoTotales(Request $request){
+         $id = $request->input('id');
+         $carrera = $request->input('carrera');
+         $año_egreso = $request->input('anio');
+         $cuatrimestre = $request->input('cuatrimestre');
+         $hombres = $request->input('hombres');
+         $mujeres = $request->input('mujeres');
+         $egresados = $hombres + $mujeres;
+
+      // actualizar el registro
+         $egresadoTotal = tb_egresados_totales::find($id);
+         $egresadoTotal->carrera = $carrera;
+         $egresadoTotal->egresados = $egresados;
+         $egresadoTotal->anio = $año_egreso;
+         $egresadoTotal->periodo= $cuatrimestre;
+         $egresadoTotal->hombres= $hombres;
+         $egresadoTotal->mujeres= $mujeres;
+         $egresadoTotal->save();
+
+      // retornar a la vista ingreso
+         return redirect()->route('usuario.egresados');
       }
 
 // ------------------------------ FIN EGRESADOS ----------------------------

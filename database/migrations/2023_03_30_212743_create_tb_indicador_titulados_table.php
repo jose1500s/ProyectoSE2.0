@@ -15,12 +15,12 @@ return new class extends Migration
     {
         Schema::create('tb_indicador_titulados', function (Blueprint $table) {
             $table->id();
-            $table->string('Generacion', 50);
-            $table->string('Carrera', 50);
-            $table->integer('Total');
-            $table->string('fecha_titulacion', 50);
-            $table->boolean('cedula');
-            $table->boolean('titulo_electronico');
+            $table->string('generacion', 50);
+            $table->string('carrera', 50);
+            $table->integer('total');
+            $table->integer('cedula');
+            $table->date('cuatrimestre_egreso');
+            $table->date('fecha_titulacion');
             $table->timestamps();
         });
     }

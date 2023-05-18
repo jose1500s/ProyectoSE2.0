@@ -43,6 +43,9 @@ export default {
       negresados: null,
       año_egreso: null,
       cuatrimestre: null,
+      hombres: 0,
+      mujeres: 0,
+      negresados: 0,
       productDialog: false,
       editDialog: false,
       deleteProductDialog: false,
@@ -70,7 +73,9 @@ export default {
         this.generacion == null ||
         this.negresados == null ||
         this.año_egreso == null ||
-        this.cuatrimestre == null
+        this.cuatrimestre == null ||
+        this.hombres == 0 ||
+        this.mujeres == 0
       ) {
         // si alguno de los campos esta vacio, no enviar el formulario y mostrar un mensaje de error
         this.$toast.add({
@@ -87,6 +92,8 @@ export default {
           negresados: this.negresados,
           año_egreso: this.año_egreso,
           cuatrimestre: this.cuatrimestre,
+          hombres: this.hombres,
+          mujeres: this.mujeres,
         };
         this.$inertia.post("/registro-Egreso", data, {
           preserveState: true,
@@ -111,9 +118,10 @@ export default {
         this.product.id == 0 ||
         this.product.carrera == null ||
         this.product.generacion == null ||
-        this.product.egresados == null ||
         this.product.año_egreso == null ||
-        this.product.cuatrimestre == null
+        this.product.cuatrimestre == null ||
+        this.product.hombres == 0 ||
+        this.product.mujeres == 0
       ) {
         // si alguno de los campos esta vacio, no enviar el formulario y mostrar un mensaje de error
         this.$toast.add({
@@ -128,9 +136,10 @@ export default {
           id: this.product.id,
           carrera: this.product.carrera,
           generacion: this.product.generacion,
-          egresados: this.product.egresados,
           año_egreso: this.product.año_egreso,
           cuatrimestre: this.product.cuatrimestre,
+          hombres: this.product.hombres,
+          mujeres: this.product.mujeres,
         };
         this.$inertia.post(`/editar-Egreso/${this.product.id}`, data2, {
           preserveState: true,
@@ -147,6 +156,9 @@ export default {
         });
       }
     },
+    exportCSV() {
+            this.$refs.dt.exportCSV();
+        },
 
     editProduct(product) {
       this.product = { ...product }; // esto es para que se muestre los datos del producto en el formulario
@@ -352,10 +364,22 @@ export default {
           </div>
 
           <div class="field col-12 md:col-3">
-            <label for="minmax">Egresados</label>
+            <label for="minmax">Hombres</label>
             <InputText
               inputId="minmax"
-              v-model="negresados"
+              v-model="hombres"
+              mode="decimal"
+              :min="0"
+              :max="10000"
+              :showButtons="true"
+            />
+          </div>
+
+          <div class="field col-12 md:col-3">
+            <label for="minmax">Mujeres</label>
+            <InputText
+              inputId="minmax"
+              v-model="mujeres"
               mode="decimal"
               :min="0"
               :max="10000"
@@ -420,6 +444,11 @@ export default {
             </div>
 
             <!-- Filtros -->
+            <Button
+                    icon="pi pi-external-link"
+                    label="Exportar Excel"
+                    @click="exportCSV($event)"
+                />
             <MultiSelect
               v-model="filters.carrera.value"
               :options="filtrarCarreras()"
@@ -471,9 +500,12 @@ export default {
           <Column field="id" header="ID" :sortable="true" hidden ></Column>
           <Column field="carrera" header="Carrera" :sortable="true"></Column>
           <Column field="generacion" header="Generacion" :sortable="true"></Column>
+          <Column field="hombres" header="Hombres" :sortable="true"></Column>
+          <Column field="mujeres" header="Mujeres" :sortable="true"></Column>
           <Column field="egresados" header="Egresados" :sortable="true" ></Column>
           <Column field="año_egreso" header="Año de egreso" :sortable="true"></Column>
           <Column field="cuatrimestre" header="Cuatrimestre" :sortable="true"></Column>
+          
           <Column :exportable="false" style="min-width: 8rem" class="p-6">
             <template #body="slotProps">
               <Button
@@ -525,11 +557,21 @@ export default {
                   required="true"
                 />
               </div>
+
               <div class="p-field p-col-12 p-md-6">
-                <label for="egresados">Egresados</label>
+                <label for="mujeres">Hombres</label>
                 <InputText
                   id="name"
-                  v-model.trim="product.egresados"
+                  v-model.trim="product.hombres"
+                  required="true"
+                />
+              </div>
+
+              <div class="p-field p-col-12 p-md-6">
+                <label for="mujeres">Mujeres</label>
+                <InputText
+                  id="name"
+                  v-model.trim="product.mujeres"
                   required="true"
                 />
               </div>

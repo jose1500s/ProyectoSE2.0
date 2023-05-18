@@ -13,16 +13,14 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('tb_transporte_solicitudes_seleccionados', function (Blueprint $table) {
+        Schema::create('tb_egresados_totales', function (Blueprint $table) {
             $table->id();
-            $table->integer('solicitudes');
+            $table->string('carrera');
             $table->integer('hombres');
             $table->integer('mujeres');
-            $table->integer('seleccionados');
-            $table->string('carrera',50);
-            $table->string('ruta',50);
-            $table->string('cuatrimestre',50);
-            $table->string('turno',50);
+            $table->integer('egresados');
+            $table->string('periodo');
+            $table->integer('anio');
             $table->timestamps();
         });
     }
@@ -34,6 +32,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tb_transporte_solicitudes_seleccionados');
+        Schema::dropIfExists('tb_egresados_totales');
     }
 };
