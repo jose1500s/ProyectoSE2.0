@@ -117,7 +117,7 @@ export default defineComponent({
     :showThumbnails="showThumbnails" :showItemNavigators="true" :showItemNavigatorsOnHover="true"
     :circular="true" :autoPlay="true" :transitionInterval="3000">
     <template #item="slotProps">
-        <img :src="slotProps.item.itemImageSrc" :alt="slotProps.item.alt" :style="[{'width': !fullScreen ? '100%' : '', 'display': !fullScreen ? 'block' : ''}]" />
+        <img :src="slotProps.item.itemImageSrc" :alt="slotProps.item.alt" :style="[{'width': !fullScreen ? '100%' : '','height': !fullScreen ? '100vh' : '', 'display': !fullScreen ? 'block' : ''}]" />
     </template>
     <template #thumbnail="slotProps">
         <div class="grid grid-nogutter justify-content-center">
@@ -133,28 +133,44 @@ export default defineComponent({
     ::v-deep(.custom-galleria).fullscreen {
         display: flex;
         flex-direction: column;
+        height: 100vh;
+        width: 100%;
+        align-items: center;
+        justify-content: center;
     }
     ::v-deep(.custom-galleria).fullscreen .p-galleria-content {
         flex-grow: 1;
         justify-content: center;
+        height: 100vh;
+        width: 100%;
     }
     ::v-deep(.custom-galleria) .p-galleria-content {
         position: relative;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        width: 100%;
     }
     ::v-deep(.custom-galleria) .p-galleria-thumbnail-wrapper {
         position: absolute;
         bottom: 0;
         left: 0;
         width: 100%;
+        height: 100vh;
     }
     ::v-deep(.custom-galleria) .p-galleria-thumbnail-items-container {
         width: 100%;
+        height: 100vh;
     }
     ::v-deep(.custom-galleria) .custom-galleria-footer {
         display: flex;
         align-items: center;
         background-color: rgba(0, 0, 0, .9);
         color: #fff;
+        width: 100%;
+        height: 100vh;
     }
     ::v-deep(.custom-galleria) .custom-galleria-footer > button {
         background-color: transparent;
