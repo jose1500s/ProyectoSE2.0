@@ -405,7 +405,7 @@ export default {
         <Column field="hombres" header="Hombres" :sortable="true"></Column>
         <Column field="mujeres" header="Mujeres" :sortable="true"></Column>
         <Column field="seleccionados" header="Seleccionados" :sortable="true"></Column>
-        <Column field="cuatrimestre" header="Cuatrimestre" :sortable="true"></Column>
+        <Column field="cuatrimestre" header="Periodo" :sortable="true"></Column>
         <Column field="turno" header="Turno" :sortable="true"></Column>
         <Column :exportable="false" style="min-width: 8rem" class="p-6">
           <template #body="slotProps">
