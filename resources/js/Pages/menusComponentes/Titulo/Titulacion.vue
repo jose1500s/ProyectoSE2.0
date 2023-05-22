@@ -140,6 +140,8 @@ export default {
         this.carrera == null ||
         this.generacion == null ||
         this.total == 0 ||
+        this.hombre == 0 ||
+        this.mujer == 0 ||
         this.cedula == 0 ||
         this.cuatrimestre_egreso == null ||
         this.fecha_titulacion == null
@@ -158,6 +160,8 @@ export default {
           carrera: this.carrera,
           generacion: this.generacion,
           total: this.total,
+          hombre: this.hombre,
+          mujer: this.mujer,
           cedula: this.cedula,
           cuatrimestre_egreso: this.cuatrimestre_egreso,
           fecha_titulacion: this.fecha_titulacion,
@@ -186,6 +190,8 @@ export default {
         this.product.carrera == null ||
         this.product.generacion == null ||
         this.product.total == 0 ||
+        this.product.hombre == 0 ||
+        this.product.mujer == 0 ||
         this.product.cedula == 0 ||
         this.product.cuatrimestre_egreso == null ||
         this.product.fecha_titulacion == null
@@ -204,6 +210,8 @@ export default {
           carrera: this.product.carrera,
           generacion: this.product.generacion,
           total: this.product.total,
+          hombre: this.product.hombre,
+          mujer: this.product.mujer,
           cedula: this.product.cedula,
 
           fecha_titulacion: this.product.fecha_titulacion,
@@ -388,6 +396,16 @@ export default {
         </div> -->
 
         <div class="field col-12 md:col-3">
+          <label for="minmax">Hombre</label>
+          <InputNumber inputId="minmax" v-model="hombre" mode="decimal" :min="0" :max="10000" :showButtons="true" />
+        </div>
+
+        <div class="field col-12 md:col-3">
+          <label for="minmax">Mujer</label>
+          <InputNumber inputId="minmax" v-model="mujer" mode="decimal" :min="0" :max="10000" :showButtons="true" />
+        </div>
+
+        <div class="field col-12 md:col-3">
           <label for="minmax">Cedula</label>
           <InputNumber inputId="minmax" v-model="cedula" mode="decimal" :min="0" :max="10000" :showButtons="true" />
         </div>
@@ -461,6 +479,8 @@ export default {
         <Column field="carrera" header="Carrera" :sortable="true"></Column>
         <Column field="generacion" header="Generacion" :sortable="true"></Column>
         <Column field="total" header="Total" :sortable="true"></Column>
+        <Column field="hombre" header="Hombre" :sortable="true"></Column>
+        <Column field="mujer" header="Mujer" :sortable="true"></Column>
         <Column field="cedula" header="Cedula" :sortable="true"></Column>
         <Column field="cuatrimestre_egreso" header="Cuatrimestre de egreso" :sortable="true"></Column>
         <Column field="fecha_titulacion" header="Fecha de titulacion" :sortable="true"></Column>
@@ -500,6 +520,16 @@ export default {
             <div class="field col-12 md:col-3">
               <label for="minmax">Total</label>
               <InputNumber inputId="minmax" v-model="total" mode="decimal" :min="0" :max="10000" :showButtons="true" />
+            </div>
+
+            <div class="field col-12 md:col-3">
+              <label for="minmax">Hombre</label>
+              <InputNumber inputId="minmax" v-model="hombre" mode="decimal" :min="0" :max="10000" :showButtons="true" />
+            </div>
+
+            <div class="field col-12 md:col-3">
+              <label for="minmax">Mujer</label>
+              <InputNumber inputId="minmax" v-model="mujer" mode="decimal" :min="0" :max="10000" :showButtons="true" />
             </div>
 
             <div class="field col-12 md:col-3">
