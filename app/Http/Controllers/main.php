@@ -168,6 +168,8 @@ class main extends Controller
       $generacion = $request->input('generacion');
       $carrera = $request->input('carrera');
       $total = $request->input('total');
+      $hombre = $request->input('hombre');
+      $mujer = $request->input('mujer');
       $cedula = $request->input('cedula');
       $cuatrimestre_egreso = $request->input('cuatrimestre_egreso');
       $fecha_titulacion = $request->input('fecha_titulacion');
@@ -177,6 +179,8 @@ class main extends Controller
       $titulacion->carrera = $carrera;
       $titulacion->generacion = $generacion;
       $titulacion->total = $total;
+      $titulacion->hombre = $hombre;
+      $titulacion->mujer = $mujer;
       $titulacion->cedula = $cedula;
       $titulacion->cuatrimestre_egreso = $cuatrimestre_egreso;
       $titulacion->fecha_titulacion = $fecha_titulacion;
@@ -194,6 +198,8 @@ class main extends Controller
       $carrera = $request->input('carrera');
       $generacion = $request->input('generacion');
       $total = $request->input('total');
+      $hombre = $request->input('hombre');
+      $mujer = $request->input('mujer');
       $cedula = $request->input('cedula');
       $cuatrimestre_egreso = $request->input('cuatrimestre_egreso');
       $fecha_titulacion = $request->input('fecha_titulacion');
@@ -203,6 +209,8 @@ class main extends Controller
       $titulacion->carrera = $carrera;
       $titulacion->generacion = $generacion;
       $titulacion->total = $total;
+      $titulacion->hombre = $hombre;
+      $titulacion->mujer = $mujer;
       $titulacion->cedula = $cedula;
       $titulacion->cuatrimestre_egreso = $cuatrimestre_egreso;
       $titulacion->fecha_titulacion = $fecha_titulacion;
