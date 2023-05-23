@@ -484,8 +484,7 @@ export default {
         <Column selectionMode="multiple" style="width: 3rem" :exportable="false"></Column>
 
         <Column field="id" header="ID" :sortable="true" hidden></Column>
-        <Column field="periodo" header="Periodo" :sortable="true"></Column>
-        <Column field="año" header="Año" :sortable="true"></Column>
+        <Column field="periodo_con_año" header="Periodo" :sortable="true"></Column>
         <Column field="carrera" header="Carrera" :sortable="true"></Column>
         <Column field="generacion" header="Generacion" :sortable="true"></Column>
         <Column field="hombre" header="Hombres" :sortable="true"></Column>

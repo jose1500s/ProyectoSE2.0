@@ -174,6 +174,7 @@ class main extends Controller
       $total = $hombre + $mujer;
       $periodo = $request->input('periodo');
       $año = $request->input('año');
+      $periodoconaño = $periodo . " " . strval($año);
 
       // crear un nuevo registro en la tabla tb_indicador_titulados
       $titulacion = new tb_indicador_titulados();
@@ -184,6 +185,7 @@ class main extends Controller
       $titulacion->mujer = $mujer;
       $titulacion->periodo = $periodo;
       $titulacion->año = $año;
+      $titulacion->periodo_con_año = $periodoconaño;
       $titulacion->save();
 
       // retornar a la vista ingreso
@@ -202,6 +204,7 @@ class main extends Controller
       $total = $hombre + $mujer;
       $periodo = $request->input('periodo');
       $año = $request->input('año');
+      $periodoconaño = $periodo . " " . strval($año);
    
       // actualizar el registro
       $titulacion = tb_indicador_titulados::find($id);
@@ -211,6 +214,7 @@ class main extends Controller
       $titulacion->mujer = $mujer;
       $titulacion->periodo = $periodo;
       $titulacion->año = $año;
+      $titulacion->periodo_con_año = $periodoconaño;
       $titulacion->save();
    
       // retornar a la vista ingreso
@@ -227,6 +231,74 @@ class main extends Controller
      function eliminarTitulaciones(Request $request) {
       $id = $request->id;
       $titulacion = tb_indicador_titulados::whereIn('id', $id);
+      $titulacion->delete();
+      return redirect()->route('usuario.titulados');
+     }
+
+     //------------------------ TITULADOS TOTALES ---------------------------
+
+     function registrarTitulacionTotal(Request $request) {
+      
+      $generacion = $request->input('generacion');
+      $hombre = $request->input('hombre');
+      $mujer = $request->input('mujer');
+      $total = $hombre + $mujer;
+      $periodo = $request->input('periodo');
+      $año = $request->input('año');
+      $periodoconaño = $periodo . " " . strval($año);
+
+      // crear un nuevo registro en la tabla tb_indicador_titulados
+      $titulacion = new tb_titulados_totales();
+      $titulacion->generacion = $generacion;
+      $titulacion->total = $total;
+      $titulacion->hombres = $hombre;
+      $titulacion->mujeres = $mujer;
+      $titulacion->periodo = $periodo;
+      $titulacion->año = $año;
+      $titulacion->periodo_con_año = $periodoconaño;
+      $titulacion->save();
+
+      // retornar a la vista ingreso
+      return redirect()->route('usuario.titulados');
+
+   }
+
+    // ruta para editar una admision
+    function editarTitulacionTotal(Request $request) {
+      // obtener los datos dle form y luego actualizar el registro
+      $id = $request->input('id');
+      $generacion = $request->input('generacion');
+      $hombre = $request->input('hombre');
+      $mujer = $request->input('mujer');
+      $total = $hombre + $mujer;
+      $periodo = $request->input('periodo');
+      $año = $request->input('año');
+      $periodoconaño = $periodo . " " . strval($año);
+   
+      // actualizar el registro
+      $titulacion = tb_titulados_totales::find($id);
+      $titulacion->generacion = $generacion;
+      $titulacion->hombres = $hombre;
+      $titulacion->mujeres = $mujer;
+      $titulacion->periodo = $periodo;
+      $titulacion->año = $año;
+      $titulacion->periodo_con_año = $periodoconaño;
+      $titulacion->save();
+   
+      // retornar a la vista ingreso
+      return redirect()->route('usuario.titulados');
+     }
+   
+     function eliminarTitulacionTotal(Request $request) {
+      $id = $request->input('id');
+      $titulacion = tb_titulados_totales::findOrFail($id);
+      $titulacion->delete(); 
+      return redirect()->route('usuario.titulados');
+     }
+   
+     function eliminarTitulacionesTotal(Request $request) {
+      $id = $request->id;
+      $titulacion = tb_titulados_totales::whereIn('id', $id);
       $titulacion->delete();
       return redirect()->route('usuario.titulados');
      }

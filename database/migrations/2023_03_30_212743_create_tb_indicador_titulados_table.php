@@ -22,6 +22,7 @@ return new class extends Migration
             $table->integer('mujer');
             $table->string('periodo');
             $table->integer('año');
+            $table->string('periodo_con_año');
             $table->timestamps();
         });
     }

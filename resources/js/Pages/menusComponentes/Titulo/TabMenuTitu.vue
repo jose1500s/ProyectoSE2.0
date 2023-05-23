@@ -22,13 +22,13 @@ export default {
 </script>
 
 <template>
-    <AppLayout title="Ingreso">
+    <AppLayout title="Titulados">
         <TabView ref="tabview1" class="p-3">
             <TabPanel header="Titulados">
                 <Titulados :titulados="titulados" />
             </TabPanel>
             <TabPanel header="Totales">
-                <Titulados :totales="totales" />
+                <Totales :totales="totales" />
             </TabPanel>
         </TabView>
     </AppLayout>

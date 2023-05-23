@@ -96,6 +96,20 @@ Route::middleware([
     // ruta del indicador TITULADOS, para ELIMINAR VARIAS admisiones que recibe como array los ids de las admisiones
     Route::post('/eliminar-Titulados', [main::class, 'eliminarTitulaciones']);
 
+    // ---------------- TAB TITULADOS TOTALES -------------------------
+
+    // ruta del indicador TITULADOS, para REGISTRAR una admision
+    Route::post('/registro-Titulado-Total', [main::class, 'registrarTitulacionTotal']);
+
+    // ruta del indicador TITULADOS, para EDITAR una admision que recibe el id de la admision
+    Route::post('/editar-Titulado-Total/{id}', [main::class, 'editarTitulacionTotal']);
+
+    // ruta del indicador TITULADOS, para ELIMINAR una admision que recibe el id de la admision
+    Route::post('/eliminar-Titulado-Total/{id}', [main::class, 'eliminarTitulacionTotal']);
+
+    // ruta del indicador TITULADOS, para ELIMINAR VARIAS admisiones que recibe como array los ids de las admisiones
+    Route::post('/eliminar-Titulados-Total', [main::class, 'eliminarTitulacionesTotal']);
+
     // ---------- FIN TAB TITULADOS ------------
 
     // ruta del indicador TITULADOS, para REGISTRAR una admision
