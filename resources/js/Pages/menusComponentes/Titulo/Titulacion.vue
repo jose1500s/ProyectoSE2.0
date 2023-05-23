@@ -61,20 +61,20 @@ export default {
       return carrera;
     },
     //filtrar las generaciones
-    filtrarGeneraciones() {
-      const generacion = [
-        "10",
-        "11",
-        "12",
-        "13",
-        "14",
-        "15",
-        "16",
-        "17",
-        "18",
-        "19",
+    
+    filtrarPeriodo(){
+      const periodos = [
+        "ENE - ABR",
+        "MAY - AGO",
+        "SEP - DIC",
       ];
-      return generacion;
+      return periodos;
+    },
+    filtrarAño(){
+      const años = [
+        2015,2016,2017,2018,2019,2020,2021,2022
+      ];
+      return años;
     },
     exportCSV() {
       this.$refs.dt.exportCSV();
@@ -82,9 +82,11 @@ export default {
     limpiarFiltros() {
       // limpia/eliminar los filtros realizados en la  tabla y volver a mostrar todos los datos
       this.filters.carrera.value = null;
-      this.filters.generacion.value = null;
+      this.filters.periodo.value = null;
+      this.filters.año.value = null;
       this.$refs.dt.filter(this.filters, "Carrera");
-      this.$refs.dt.filter(this.filters, "Generacion");
+      this.$refs.dt.filter(this.filters, "Periodo");
+      this.$refs.dt.filter(this.filters, "Año");
     },
     openResponsive() {
       this.displayResponsive = true;
@@ -137,14 +139,10 @@ export default {
     registrarTitulacion() {
       this.submitted = true;
       if (
-        this.carrera == null ||
-        this.generacion == null ||
-        this.total == 0 ||
-        this.hombre == 0 ||
-        this.mujer == 0 ||
-        this.cedula == 0 ||
-        this.cuatrimestre_egreso == null ||
-        this.fecha_titulacion == null
+        this.TITcarrera == null ||
+        this.TITgeneracion == 0 ||
+        this.TITperiodo == null ||
+        this.TITaño == 0
       ) {
         // si alguno de los campos esta vacio, no enviar el formulario y mostrar un mensaje de error
 
@@ -157,14 +155,12 @@ export default {
         return false;
       } else {
         const data = {
-          carrera: this.carrera,
-          generacion: this.generacion,
-          total: this.total,
-          hombre: this.hombre,
-          mujer: this.mujer,
-          cedula: this.cedula,
-          cuatrimestre_egreso: this.cuatrimestre_egreso,
-          fecha_titulacion: this.fecha_titulacion,
+          carrera: this.TITcarrera,
+          generacion: this.TITgeneracion,
+          hombre: this.TIThombre,
+          mujer: this.TITmujer,
+          periodo: this.TITperiodo,
+          año: this.TITaño
         };
         this.$inertia.post("/registro-Titulado", data, {
           preserveState: true,
@@ -179,6 +175,7 @@ export default {
             });
           },
         });
+        this.resetearVariables();
       }
     },
     editarTitulacion() {
@@ -186,15 +183,10 @@ export default {
       this.submitted = true; // esto es para que se muestre el mensaje de error en el formulario
       // validar los campos del formulario, que no esten vacios y si estan mandar un mensaje y no enviar el formulario, los campos son: carrerasModel, aspirantes, examinados, noAdmitidos y selectedPeriodo
       if (
-        this.product.id == 0 ||
-        this.product.carrera == null ||
-        this.product.generacion == null ||
-        this.product.total == 0 ||
-        this.product.hombre == 0 ||
-        this.product.mujer == 0 ||
-        this.product.cedula == 0 ||
-        this.product.cuatrimestre_egreso == null ||
-        this.product.fecha_titulacion == null
+        this.TITcarrera == null ||
+        this.TITgeneracion == 0 ||
+        this.TITperiodo == null ||
+        this.TITaño == 0
       ) {
         // si alguno de los campos esta vacio, no enviar el formulario y mostrar un mensaje de error
         this.$toast.add({
@@ -207,14 +199,12 @@ export default {
       } else {
         const data = {
           id: this.product.id,
-          carrera: this.product.carrera,
-          generacion: this.product.generacion,
-          total: this.product.total,
-          hombre: this.product.hombre,
-          mujer: this.product.mujer,
-          cedula: this.product.cedula,
-
-          fecha_titulacion: this.product.fecha_titulacion,
+          carrera: this.TITcarrera,
+          generacion: this.TITgeneracion,
+          hombre: this.TIThombre,
+          mujer: this.TITmujer,
+          año: this.TITaño,
+          periodo: this.TITperiodo
         };
         this.$inertia.post(`/editar-Titulado/${this.product.id}`, data, {
           preserveState: true,
@@ -229,10 +219,18 @@ export default {
             });
           },
         });
+        this.resetearVariables();
       }
     },
     editProduct(product) {
-      this.product = { ...product }; // esto es para que se muestre los datos del producto en el formulario
+      this.product = { ...product };
+      this.TITaño = this.product.año;
+      this.TITcarrera = this.product.carrera;
+      this.TITgeneracion = this.product.generacion;
+      this.TIThombre = this.product.hombre;
+      this.TITmujer = this.product.mujer;
+      this.TITperiodo = this.product.periodo;
+       // esto es para que se muestre los datos del producto en el formulario
       this.editDialog = true;
     },
     confirmDeleteProduct(product) {
@@ -280,39 +278,47 @@ export default {
     confirmDeleteSelected() {
       this.deleteProductsDialog = true;
     },
-    formatearFechaTitulacion() {
+    //formatearFechaTitulacion() {
       // Tomar el valor actual de fecha_titulacion y guardarlo en una variable fecha_titulacion_sin_formato
-      const fecha_titulacion_sin_formato = this.fecha_titulacion;
+      //const fecha_titulacion_sin_formato = this.TITfecha_titulacion;
 
       // Convertir la fecha sin formato en un objeto Date
-      const fecha = new Date(fecha_titulacion_sin_formato);
+      //const fecha = new Date(fecha_titulacion_sin_formato);
 
       // Obtener los componentes de la fecha (año, mes y día)
-      const year = fecha.getFullYear();
-      const month = fecha.getMonth() + 1; // Se suma 1 ya que los meses en JavaScript van de 0 a 11
-      const day = fecha.getDate();
+      //const year = fecha.getFullYear();
+      //const month = fecha.getMonth() + 1; // Se suma 1 ya que los meses en JavaScript van de 0 a 11
+      //const day = fecha.getDate();
 
       // Crear una cadena de texto con el formato deseado (yyyy-mm-dd)
-      const fecha_formateada = `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
+      //const fecha_formateada = `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
 
-      this.fecha_titulacion = fecha_formateada;
-    },
-    formatearFechaCEgreso() {
+      //this.TITfecha_titulacion = fecha_formateada;
+    //},
+    //formatearFechaCEgreso() {
       
-      const fecha_egreso_sin_formato = this.cuatrimestre_egreso;
+    //  const fecha_egreso_sin_formato = this.TITcuatrimestre_egreso;
 
       // Convertir la fecha sin formato en un objeto Date
-      const fecha = new Date(fecha_egreso_sin_formato);
+    //  const fecha = new Date(fecha_egreso_sin_formato);
 
       // Obtener los componentes de la fecha (año, mes y día)
-      const year = fecha.getFullYear();
-      const month = fecha.getMonth() + 1; // Se suma 1 ya que los meses en JavaScript van de 0 a 11
-      const day = fecha.getDate();
+     // const year = fecha.getFullYear();
+    //  const month = fecha.getMonth() + 1; // Se suma 1 ya que los meses en JavaScript van de 0 a 11
+    //  const day = fecha.getDate();
 
       // Crear una cadena de texto con el formato deseado (yyyy-mm-dd)
-      const fecha_egreso_formateada = `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
+    //  const fecha_egreso_formateada = `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
 
-      this.cuatrimestre_egreso = fecha_egreso_formateada;
+    //  this.TITcuatrimestre_egreso = fecha_egreso_formateada;
+   // },
+    resetearVariables(){
+      this.TITcarrera = null;
+      this.TITperiodo = null;
+      this.TITgeneracion = 0;
+      this.TIThombre = 0;
+      this.TITmujer = 0;
+      this.TITaño = 0;
     }
 
   },
@@ -320,8 +326,8 @@ export default {
     return {
       filters: {
         carrera: { value: null, matchMode: FilterMatchMode.IN },
-        generacion: { value: null, matchMode: FilterMatchMode.IN },
-        // periodo: { value: null, matchMode: FilterMatchMode.IN },
+        periodo: { value: null, matchMode: FilterMatchMode.IN },
+        año: { value: null, matchMode: FilterMatchMode.IN },
       },
       noDataMessage: "No se encontraron datos",
       displayResponsive: false,
@@ -334,23 +340,17 @@ export default {
         { name: "Sistemas", code: "Sistemas" },
         { name: "Telematica", code: "Telematica" },
       ],
-      generacionLista: [
-        { name: "10", code: "10" },
-        { name: "11", code: "11" },
-        { name: "12", code: "12" },
-        { name: "13", code: "13" },
-        { name: "14", code: "14" },
-        { name: "15", code: "15" },
-        { name: "16", code: "16" },
-        { name: "17", code: "17" },
-        { name: "18", code: "18" },
+      periodosLista: [
+        { name: "SEP - DIC", code: "SEP - DIC"},
+        { name: "ENE - ABR", code: "ENE - ABR"},
+        { name: "MAY - AGO", code: "MAY - AGO"},
       ],
-      carrera: null,
-      generacion: null,
-      total: 0,
-      cedula: 0,
-      cuatrimestre_egreso: null,
-      fecha_titulacion: null,
+      TITcarrera: null,
+      TITgeneracion: 0,
+      TIThombre: 0,
+      TITmujer: 0,
+      TITperiodo: null,
+      TITaño: 0,
       productDialog: false,
       editDialog: false,
       deleteProductDialog: false,
@@ -375,19 +375,29 @@ export default {
     <div class="field">
       <form @submit.prevent="registrarTitulacion">
         <!-- select con opciones -->
-        <label for="minmax">Carrera</label>
-        <Dropdown v-model="carrera" :options="carrerasLista" optionLabel="name" optionValue="code" :filter="true"
-          placeholder="Selecciona..." />
-
         <div class="field col-12 md:col-3">
-          <label for="minmax">Generacion</label>
-          <Dropdown v-model="generacion" :options="generacionLista" optionLabel="name" optionValue="code" :filter="true"
-            placeholder="Selecciona..." />
+              <Dropdown
+                v-model="TITperiodo"
+                :options="periodosLista"
+                optionLabel="name"
+                optionValue="code"
+                placeholder="Periodo"
+                class="!mt-3"
+              />
+            </div>
+
+            <div class="field col-12 md:col-3">
+          <label for="minmax">Año de egreso</label>
+          <InputNumber inputId="minmax" v-model="TITaño" mode="decimal" :min="0" :max="10000" :showButtons="true" />
         </div>
 
-        <div class="field col-12 md:col-3">
-          <label for="minmax">Total</label>
-          <InputNumber inputId="minmax" v-model="total" mode="decimal" :min="0" :max="10000" :showButtons="true" />
+        <label for="minmax">Carrera</label>
+        <Dropdown v-model="TITcarrera" :options="carrerasLista" optionLabel="name" optionValue="code" :filter="true"
+          placeholder="Carrera" />
+
+          <div class="field col-12 md:col-3">
+          <label for="minmax">Generación</label>
+          <InputNumber inputId="minmax" v-model="TITgeneracion" mode="decimal" :min="0" :max="10000" :showButtons="true" />
         </div>
 
         <!-- <div class="field col-12 md:col-3">
@@ -396,29 +406,24 @@ export default {
         </div> -->
 
         <div class="field col-12 md:col-3">
-          <label for="minmax">Hombre</label>
-          <InputNumber inputId="minmax" v-model="hombre" mode="decimal" :min="0" :max="10000" :showButtons="true" />
+          <label for="minmax">Hombres</label>
+          <InputNumber inputId="minmax" v-model="TIThombre" mode="decimal" :min="0" :max="10000" :showButtons="true" />
         </div>
 
         <div class="field col-12 md:col-3">
-          <label for="minmax">Mujer</label>
-          <InputNumber inputId="minmax" v-model="mujer" mode="decimal" :min="0" :max="10000" :showButtons="true" />
+          <label for="minmax">Mujeres</label>
+          <InputNumber inputId="minmax" v-model="TITmujer" mode="decimal" :min="0" :max="10000" :showButtons="true" />
         </div>
 
-        <div class="field col-12 md:col-3">
-          <label for="minmax">Cedula</label>
-          <InputNumber inputId="minmax" v-model="cedula" mode="decimal" :min="0" :max="10000" :showButtons="true" />
-        </div>
-
-        <div class="field col-12 md:col-3">
+        <!--<div class="field col-12 md:col-3">
           <label for="minmax">Cuatrimestre de egreso</label>
-          <Calendar v-model="cuatrimestre_egreso" dateFormat="yy/mm/dd" showIcon @date-select="formatearFechaCEgreso" />
+          <Calendar v-model="TITcuatrimestre_egreso" dateFormat="yy/mm/dd" showIcon @date-select="formatearFechaCEgreso" />
         </div>
 
         <div class="field col-12 md:col-3">
-          <label for="minmax">Fecha de titulacion</label>
-          <Calendar v-model="fecha_titulacion" dateFormat="yy/mm/dd" showIcon @date-select="formatearFechaTitulacion" />
-        </div>
+          <label for="minmax">Fecha de titulación</label>
+          <Calendar v-model="TITfecha_titulacion" dateFormat="yy/mm/dd" showIcon @date-select="formatearFechaTitulacion" />
+        </div>-->
 
         <Button type="submit" id="btnRegisrar"
           class="flex items-center justify-center space-x-2 rounded-md border-2 border-blue-500 px-4 py-2 font-medium text-blue-600 transition hover:bg-blue-500 hover:text-white">
@@ -463,7 +468,10 @@ export default {
           <MultiSelect v-model="filters.carrera.value" :options="filtrarCarreras()" placeholder="Carrera"
             display="chip" />
 
-          <MultiSelect v-model="filters.generacion.value" :options="filtrarGeneraciones()" placeholder="Generacion"
+          <MultiSelect v-model="filters.periodo.value" :options="filtrarPeriodo()" placeholder="Periodo"
+            display="chip" />
+
+            <MultiSelect v-model="filters.año.value" :options="filtrarAño()" placeholder="Año"
             display="chip" />
 
           <Button icon="pi pi-times" label="Limpiar" @click="limpiarFiltros()" />
@@ -476,14 +484,13 @@ export default {
         <Column selectionMode="multiple" style="width: 3rem" :exportable="false"></Column>
 
         <Column field="id" header="ID" :sortable="true" hidden></Column>
+        <Column field="periodo" header="Periodo" :sortable="true"></Column>
+        <Column field="año" header="Año" :sortable="true"></Column>
         <Column field="carrera" header="Carrera" :sortable="true"></Column>
         <Column field="generacion" header="Generacion" :sortable="true"></Column>
+        <Column field="hombre" header="Hombres" :sortable="true"></Column>
+        <Column field="mujer" header="Mujeres" :sortable="true"></Column>
         <Column field="total" header="Total" :sortable="true"></Column>
-        <Column field="hombre" header="Hombre" :sortable="true"></Column>
-        <Column field="mujer" header="Mujer" :sortable="true"></Column>
-        <Column field="cedula" header="Cedula" :sortable="true"></Column>
-        <Column field="cuatrimestre_egreso" header="Cuatrimestre de egreso" :sortable="true"></Column>
-        <Column field="fecha_titulacion" header="Fecha de titulacion" :sortable="true"></Column>
         <Column :exportable="false" style="min-width: 8rem" class="p-6">
           <template #body="slotProps">
             <Button icon="pi pi-pencil" class="p-button-rounded p-button-success !mr-2"
@@ -507,45 +514,37 @@ export default {
         <div class="p-fluid p-formgrid p-grid">
           <form @submit.prevent="editarTitulacion">
             <InputText id="id" v-model.trim="product.id" hidden />
-            <label for="minmax">Carrera</label>
-            <InputText  v-model="product.carrera" :options="carrerasLista" optionLabel="name" optionValue="code" :filter="true"
-              placeholder="Selecciona..." />
+            <div class="field col-12 md:col-3">
+              <label for="minmax">Periodo</label>
+              <Dropdown v-model="TITperiodo" :options="periodosLista" optionLabel="name" optionValue="code"
+                :filter="true" placeholder="Periodo" />
+            </div>
 
+            <div class="field col-12 md:col-3">
+              <label for="minmax">Año</label>
+              <InputNumber inputId="minmax" v-model="TITaño" mode="decimal" :min="0" :max="10000" :showButtons="true" />
+            </div>
+            <div class="field col-12 md:col-3">
+              <label for="minmax">Carrera</label>
+              <Dropdown v-model="TITcarrera" :options="carrerasLista" optionLabel="name" optionValue="code"
+                :filter="true" placeholder="Carrera" />
+            </div>
+            
             <div class="field col-12 md:col-3">
               <label for="minmax">Generacion</label>
-              <Dropdown v-model="generacion" :options="generacionLista" optionLabel="name" optionValue="code"
-                :filter="true" placeholder="Selecciona..." />
+              <InputNumber inputId="minmax" v-model="TITgeneracion" mode="decimal" :min="0" :max="10000" :showButtons="true" />
             </div>
 
             <div class="field col-12 md:col-3">
-              <label for="minmax">Total</label>
-              <InputNumber inputId="minmax" v-model="total" mode="decimal" :min="0" :max="10000" :showButtons="true" />
+              <label for="minmax">Hombres</label>
+              <InputNumber inputId="minmax" v-model="TIThombre" mode="decimal" :min="0" :max="10000" :showButtons="true" />
             </div>
 
             <div class="field col-12 md:col-3">
-              <label for="minmax">Hombre</label>
-              <InputNumber inputId="minmax" v-model="hombre" mode="decimal" :min="0" :max="10000" :showButtons="true" />
+              <label for="minmax">Mujeres</label>
+              <InputNumber inputId="minmax" v-model="TITmujer" mode="decimal" :min="0" :max="10000" :showButtons="true" />
             </div>
 
-            <div class="field col-12 md:col-3">
-              <label for="minmax">Mujer</label>
-              <InputNumber inputId="minmax" v-model="mujer" mode="decimal" :min="0" :max="10000" :showButtons="true" />
-            </div>
-
-            <div class="field col-12 md:col-3">
-              <label for="minmax">Cedula</label>
-              <InputNumber inputId="minmax" v-model="cedula" mode="decimal" :min="0" :max="10000" :showButtons="true" />
-            </div>
-
-            <div class="field col-12 md:col-3">
-              <label for="minmax">Cuatrimestre de egreso</label>
-              <InputText v-model="cuatrimestre_egreso" />
-            </div>
-
-            <div class="field col-12 md:col-3">
-              <label for="minmax">Fecha de titulacion</label>
-              <InputText v-model="fecha_titulacion" />
-            </div>
             <Button type="submit" label="Guardar" icon="pi pi-check" class="!mt-3" />
           </form>
         </div>
@@ -555,7 +554,7 @@ export default {
       <Dialog v-model:visible="deleteProductDialog" :style="{ width: '450px' }" header="Confirmar" :modal="true">
         <div class="confirmation-content flex justify-center items-center">
           <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem" />
-          <span v-if="product">¿Confirma eliminar el registro <b>{{ product.carrera }}</b>?</span>
+          <span v-if="product">¿Confirma eliminar el registro <b>{{ product.periodo + " " + product.carrera }}</b>?</span>
         </div>
         <template #footer>
           <Button label="No" icon="pi pi-times" class="p-button-text" @click="deleteProductDialog = false" />

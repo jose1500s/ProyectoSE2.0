@@ -599,6 +599,7 @@ class ComposerStaticInite696e33916a30e4c051086b264065ffc
         'App\\Models\\tb_maestria' => __DIR__ . '/../..' . '/app/Models/tb_maestria.php',
         'App\\Models\\tb_nuevo_ingreso' => __DIR__ . '/../..' . '/app/Models/tb_nuevo_ingreso.php',
         'App\\Models\\tb_re_ingreso' => __DIR__ . '/../..' . '/app/Models/tb_re_ingreso.php',
+        'App\\Models\\tb_titulados_totales' => __DIR__ . '/../..' . '/app/Models/tb_titulados_totales.php',
         'App\\Models\\tb_transporte' => __DIR__ . '/../..' . '/app/Models/tb_transporte.php',
         'App\\Models\\tb_transporte_lugares' => __DIR__ . '/../..' . '/app/Models/tb_transporte_lugares.php',
         'App\\Models\\tb_transporte_solicitudes_seleccionados' => __DIR__ . '/../..' . '/app/Models/tb_transporte_solicitudes_seleccionados.php',

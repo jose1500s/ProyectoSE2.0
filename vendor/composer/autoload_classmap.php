@@ -40,6 +40,7 @@ return array(
     'App\\Models\\tb_maestria' => $baseDir . '/app/Models/tb_maestria.php',
     'App\\Models\\tb_nuevo_ingreso' => $baseDir . '/app/Models/tb_nuevo_ingreso.php',
     'App\\Models\\tb_re_ingreso' => $baseDir . '/app/Models/tb_re_ingreso.php',
+    'App\\Models\\tb_titulados_totales' => $baseDir . '/app/Models/tb_titulados_totales.php',
     'App\\Models\\tb_transporte' => $baseDir . '/app/Models/tb_transporte.php',
     'App\\Models\\tb_transporte_lugares' => $baseDir . '/app/Models/tb_transporte_lugares.php',
     'App\\Models\\tb_transporte_solicitudes_seleccionados' => $baseDir . '/app/Models/tb_transporte_solicitudes_seleccionados.php',

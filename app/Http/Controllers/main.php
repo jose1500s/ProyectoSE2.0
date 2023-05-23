@@ -16,6 +16,7 @@ use App\Models\tb_transporte_lugares;
 use App\Models\tb_transporte_solicitudes_seleccionados;
 use App\Models\tb_egresados;
 use App\Models\tb_egresados_totales;
+use App\Models\tb_titulados_totales;
 
 class main extends Controller
 {
@@ -49,9 +50,10 @@ class main extends Controller
    public function titulados(){
       // traer de la tabla tb_indicador_titulados todos los registros
       $titulados = tb_indicador_titulados::all();
+      $titulados_totales = tb_titulados_totales::all();
 
       // retornar con Inertia a menusComponentes/TabMenu y pasarle los registros
-      return Inertia::render('menusComponentes/Titulo/TabMenuTitu', ['titulados' => $titulados]);
+      return Inertia::render('menusComponentes/Titulo/TabMenuTitu', ['titulados' => $titulados,'totales'=>$titulados_totales]);
    }
 
    public function becas(){
@@ -167,12 +169,11 @@ class main extends Controller
       
       $generacion = $request->input('generacion');
       $carrera = $request->input('carrera');
-      $total = $request->input('total');
       $hombre = $request->input('hombre');
       $mujer = $request->input('mujer');
-      $cedula = $request->input('cedula');
-      $cuatrimestre_egreso = $request->input('cuatrimestre_egreso');
-      $fecha_titulacion = $request->input('fecha_titulacion');
+      $total = $hombre + $mujer;
+      $periodo = $request->input('periodo');
+      $año = $request->input('año');
 
       // crear un nuevo registro en la tabla tb_indicador_titulados
       $titulacion = new tb_indicador_titulados();
@@ -181,9 +182,8 @@ class main extends Controller
       $titulacion->total = $total;
       $titulacion->hombre = $hombre;
       $titulacion->mujer = $mujer;
-      $titulacion->cedula = $cedula;
-      $titulacion->cuatrimestre_egreso = $cuatrimestre_egreso;
-      $titulacion->fecha_titulacion = $fecha_titulacion;
+      $titulacion->periodo = $periodo;
+      $titulacion->año = $año;
       $titulacion->save();
 
       // retornar a la vista ingreso
@@ -197,23 +197,20 @@ class main extends Controller
       $id = $request->input('id');
       $carrera = $request->input('carrera');
       $generacion = $request->input('generacion');
-      $total = $request->input('total');
       $hombre = $request->input('hombre');
       $mujer = $request->input('mujer');
-      $cedula = $request->input('cedula');
-      $cuatrimestre_egreso = $request->input('cuatrimestre_egreso');
-      $fecha_titulacion = $request->input('fecha_titulacion');
+      $total = $hombre + $mujer;
+      $periodo = $request->input('periodo');
+      $año = $request->input('año');
    
       // actualizar el registro
       $titulacion = tb_indicador_titulados::find($id);
       $titulacion->carrera = $carrera;
       $titulacion->generacion = $generacion;
-      $titulacion->total = $total;
       $titulacion->hombre = $hombre;
       $titulacion->mujer = $mujer;
-      $titulacion->cedula = $cedula;
-      $titulacion->cuatrimestre_egreso = $cuatrimestre_egreso;
-      $titulacion->fecha_titulacion = $fecha_titulacion;
+      $titulacion->periodo = $periodo;
+      $titulacion->año = $año;
       $titulacion->save();
    
       // retornar a la vista ingreso

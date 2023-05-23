@@ -13,15 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('tb_indicador_titulados', function (Blueprint $table) {
+        Schema::create('tb_titulados_totales', function (Blueprint $table) {
             $table->id();
-            $table->string('generacion', 50);
-            $table->string('carrera', 50);
+            $table->integer('generacion');
+            $table->integer('hombres');
+            $table->integer('mujeres');
             $table->integer('total');
-            $table->integer('hombre');
-            $table->integer('mujer');
             $table->string('periodo');
-            $table->integer('año');
             $table->timestamps();
         });
     }
@@ -33,6 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tb_indicador_titulados');
+        Schema::dropIfExists('tb_titulados_totales');
     }
 };
