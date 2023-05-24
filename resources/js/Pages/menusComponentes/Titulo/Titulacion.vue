@@ -70,12 +70,6 @@ export default {
       ];
       return periodos;
     },
-    filtrarAño(){
-      const años = [
-        2015,2016,2017,2018,2019,2020,2021,2022
-      ];
-      return años;
-    },
     exportCSV() {
       this.$refs.dt.exportCSV();
     },
@@ -84,9 +78,11 @@ export default {
       this.filters.carrera.value = null;
       this.filters.periodo.value = null;
       this.filters.año.value = null;
+      this.filters.generacion.value = null;
       this.$refs.dt.filter(this.filters, "Carrera");
       this.$refs.dt.filter(this.filters, "Periodo");
       this.$refs.dt.filter(this.filters, "Año");
+      this.$refs.dt.filter(this.filters, "Generación");
     },
     openResponsive() {
       this.displayResponsive = true;
@@ -327,7 +323,8 @@ export default {
       filters: {
         carrera: { value: null, matchMode: FilterMatchMode.IN },
         periodo: { value: null, matchMode: FilterMatchMode.IN },
-        año: { value: null, matchMode: FilterMatchMode.IN },
+        año: { value: null, matchMode: FilterMatchMode.CONTAINS },
+        generacion: { value: null, matchMode: FilterMatchMode.CONTAINS },
       },
       noDataMessage: "No se encontraron datos",
       displayResponsive: false,
@@ -367,6 +364,7 @@ export default {
       <Button label="Nuevo Registro" icon="pi pi-plus" class="p-button-success !mr-2" @click="openNew" />
       <Button label="Eliminar" icon="pi pi-trash" class="p-button-danger" @click="confirmDeleteSelected"
         :disabled="!selectedProducts || !selectedProducts.length" />
+        <Button icon="pi pi-external-link" label="Exportar Excel" @click="exportCSV($event)" />
     </template>
   </Toolbar>
 
@@ -462,17 +460,28 @@ export default {
             </template>
           </Dialog>
 
-          <Button icon="pi pi-external-link" label="Exportar Excel" @click="exportCSV($event)" />
-
           <!-- Filtros -->
-          <MultiSelect v-model="filters.carrera.value" :options="filtrarCarreras()" placeholder="Carrera"
-            display="chip" />
-
+          
           <MultiSelect v-model="filters.periodo.value" :options="filtrarPeriodo()" placeholder="Periodo"
-            display="chip" />
-
-            <MultiSelect v-model="filters.año.value" :options="filtrarAño()" placeholder="Año"
-            display="chip" />
+          display="chip" />
+          
+          <InputNumber
+          v-model="filters.año.value"
+                mode="decimal"
+                :min="0"
+                :max="10000"
+                placeholder="Año"
+                />
+                
+                <MultiSelect v-model="filters.carrera.value" :options="filtrarCarreras()" placeholder="Carrera"
+                  display="chip" />
+            <InputNumber
+                v-model="filters.generacion.value"
+                mode="decimal"
+                :min="0"
+                :max="100"
+                placeholder="Generación"
+                />
 
           <Button icon="pi pi-times" label="Limpiar" @click="limpiarFiltros()" />
         </div>

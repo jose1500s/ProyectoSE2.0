@@ -96,7 +96,7 @@ Route::middleware([
     // ruta del indicador TITULADOS, para ELIMINAR VARIAS admisiones que recibe como array los ids de las admisiones
     Route::post('/eliminar-Titulados', [main::class, 'eliminarTitulaciones']);
 
-    // ---------------- TAB TITULADOS TOTALES -------------------------
+    // ---------------- TAB TITULADOS TOTALES GENERACIONES -------------------------
 
     // ruta del indicador TITULADOS, para REGISTRAR una admision
     Route::post('/registro-Titulado-Total', [main::class, 'registrarTitulacionTotal']);
@@ -109,6 +109,20 @@ Route::middleware([
 
     // ruta del indicador TITULADOS, para ELIMINAR VARIAS admisiones que recibe como array los ids de las admisiones
     Route::post('/eliminar-Titulados-Total', [main::class, 'eliminarTitulacionesTotal']);
+
+    // ---------------- TAB TITULADOS TOTALES CARRERAS -------------------------
+
+    // ruta del indicador TITULADOS, para REGISTRAR una admision
+    Route::post('/registro-Titulado-Total-Carreras', [main::class, 'registrarTitulacionTotalCarreras']);
+
+    // ruta del indicador TITULADOS, para EDITAR una admision que recibe el id de la admision
+    Route::post('/editar-Titulado-Total-Carreras/{id}', [main::class, 'editarTitulacionTotalCarreras']);
+
+    // ruta del indicador TITULADOS, para ELIMINAR una admision que recibe el id de la admision
+    Route::post('/eliminar-Titulado-Total-Carreras/{id}', [main::class, 'eliminarTitulacionTotalCarreras']);
+
+    // ruta del indicador TITULADOS, para ELIMINAR VARIAS admisiones que recibe como array los ids de las admisiones
+    Route::post('/eliminar-Titulados-Total-Carreras', [main::class, 'eliminarTitulacionesTotalCarreras']);
 
     // ---------- FIN TAB TITULADOS ------------
 

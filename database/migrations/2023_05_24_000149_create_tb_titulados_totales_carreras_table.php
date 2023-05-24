@@ -15,6 +15,13 @@ return new class extends Migration
     {
         Schema::create('tb_titulados_totales_carreras', function (Blueprint $table) {
             $table->id();
+            $table->string('carrera');
+            $table->integer('hombres');
+            $table->integer('mujeres');
+            $table->integer('total');
+            $table->string('periodo');
+            $table->integer('año');
+            $table->string('periodo_con_año');
             $table->timestamps();
         });
     }
