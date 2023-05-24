@@ -20,8 +20,9 @@ export default {
     return {
       filters: {
         carrera: { value: null, matchMode: FilterMatchMode.IN },
-        generacion: { value: null, matchMode: FilterMatchMode.IN },
-        año_egreso: { value: null, matchMode: FilterMatchMode.IN },        
+        cuatrimestre: { value: null, matchMode: FilterMatchMode.IN },
+        año_egreso: { value: null, matchMode: FilterMatchMode.CONTAINS },        
+        generacion: { value: null, matchMode: FilterMatchMode.CONTAINS },        
       },
       carrerasLista: [
         { name: "Manufactura", code: "Manufactura" },
@@ -38,14 +39,14 @@ export default {
         { name: "ENE-ABR", code: "ENE-ABR" },
         { name: "MAY-AGO", code: "MAY-AGO" },
       ],
-      carrera: null,
-      generacion: null,
-      negresados: null,
-      año_egreso: null,
-      cuatrimestre: null,
-      hombres: 0,
-      mujeres: 0,
-      negresados: 0,
+      EGRcarrera: null,
+      EGRgeneracion: 0,
+      EGRaño_egreso: 0,
+      EGRcuatrimestre: null,
+      EGRhombres: 0,
+      EGRmujeres: 0,
+      EGRtitulados: 0,
+      FILgeneracion: null,
       productDialog: false,
       editDialog: false,
       deleteProductDialog: false,
@@ -56,6 +57,15 @@ export default {
   created() {},
   mounted() {},
   methods: {
+    resetearVariables(){
+      this.EGRcarrera = null;
+      this.EGRgeneracion = 0;
+      this.EGRaño_egreso = 0;
+      this.EGRcuatrimestre = null;
+      this.EGRhombres = 0;
+      this.EGRmujeres = 0;
+      this.EGRtitulados = 0;
+    },
     openNew() {
       this.product = {};
       this.submitted = false;
@@ -69,13 +79,10 @@ export default {
       this.submitted = true; // esto es para que se muestre el mensaje de error en el formulario
       // validar los campos del formulario, que no esten vacios y si estan mandar un mensaje y no enviar el formulario, los campos son: carrerasModel, aspirantes, examinados, noAdmitidos y selectedPeriodo
       if (
-        this.carrera == null ||
-        this.generacion == null ||
-        this.negresados == null ||
-        this.año_egreso == null ||
-        this.cuatrimestre == null ||
-        this.hombres == 0 ||
-        this.mujeres == 0
+        this.EGRcarrera == null ||
+        this.EGRgeneracion == 0 ||
+        this.EGRaño_egreso == 0 ||
+        this.EGRcuatrimestre == null
       ) {
         // si alguno de los campos esta vacio, no enviar el formulario y mostrar un mensaje de error
         this.$toast.add({
@@ -85,15 +92,25 @@ export default {
           life: 3000,
         });
         return false;
-      } else {
+      }
+      else if (this.EGRtitulados > (this.EGRhombres + this.EGRmujeres)) {
+        this.$toast.add({
+          severity: "error",
+          summary: "Error",
+          detail: "Datos erróneos",
+          life: 3000,
+        });
+        return false;
+      }
+      else {
         const data = {
-          carrera: this.carrera,
-          generacion: this.generacion,
-          negresados: this.negresados,
-          año_egreso: this.año_egreso,
-          cuatrimestre: this.cuatrimestre,
-          hombres: this.hombres,
-          mujeres: this.mujeres,
+          carrera: this.EGRcarrera,
+          generacion: this.EGRgeneracion,
+          año_egreso: this.EGRaño_egreso,
+          cuatrimestre: this.EGRcuatrimestre,
+          hombres: this.EGRhombres,
+          mujeres: this.EGRmujeres,
+          titulados: this.EGRtitulados
         };
         this.$inertia.post("/registro-Egreso", data, {
           preserveState: true,
@@ -109,6 +126,7 @@ export default {
           },
         });
       }
+      this.resetearVariables();
     },
     editarEgreso() {
       // editarl usando el dialog de editar producto
@@ -116,12 +134,10 @@ export default {
       // validar los campos del formulario, que no esten vacios y si estan mandar un mensaje y no enviar el formulario, los campos son: carrerasModel, aspirantes, examinados, noAdmitidos y selectedPeriodo
       if (
         this.product.id == 0 ||
-        this.product.carrera == null ||
-        this.product.generacion == null ||
-        this.product.año_egreso == null ||
-        this.product.cuatrimestre == null ||
-        this.product.hombres == 0 ||
-        this.product.mujeres == 0
+        this.EGRcarrera == null ||
+        this.EGRgeneracion == 0 ||
+        this.EGRaño_egreso == 0 ||
+        this.EGRcuatrimestre == null
       ) {
         // si alguno de los campos esta vacio, no enviar el formulario y mostrar un mensaje de error
         this.$toast.add({
@@ -131,15 +147,26 @@ export default {
           life: 3000,
         });
         return false;
-      } else {
+      }
+      else if (this.EGRtitulados > (this.EGRhombres + this.EGRmujeres)) {
+        this.$toast.add({
+          severity: "error",
+          summary: "Error",
+          detail: "Datos erróneos",
+          life: 3000,
+        });
+        return false;
+      } 
+      else {
         const data2 = {
           id: this.product.id,
-          carrera: this.product.carrera,
-          generacion: this.product.generacion,
-          año_egreso: this.product.año_egreso,
-          cuatrimestre: this.product.cuatrimestre,
-          hombres: this.product.hombres,
-          mujeres: this.product.mujeres,
+          carrera: this.EGRcarrera,
+          generacion: this.EGRgeneracion,
+          año_egreso: this.EGRaño_egreso,
+          cuatrimestre: this.EGRcuatrimestre,
+          hombres: this.EGRhombres,
+          mujeres: this.EGRmujeres,
+          titulados: this.EGRtitulados
         };
         this.$inertia.post(`/editar-Egreso/${this.product.id}`, data2, {
           preserveState: true,
@@ -155,6 +182,7 @@ export default {
           },
         });
       }
+      this.resetearVariables();
     },
     exportCSV() {
             this.$refs.dt.exportCSV();
@@ -162,6 +190,13 @@ export default {
 
     editProduct(product) {
       this.product = { ...product }; // esto es para que se muestre los datos del producto en el formulario
+      this.EGRaño_egreso = this.product.año_egreso;
+      this.EGRcarrera = this.product.carrera;
+      this.EGRcuatrimestre = this.product.cuatrimestre;
+      this.EGRgeneracion = this.product.generacion;
+      this.EGRhombres = this.product.hombres;
+      this.EGRmujeres = this.product.mujeres;
+      this.EGRtitulados = this.product.titulados;
       this.editDialog = true;
     },
     confirmDeleteProduct(product) {
@@ -225,61 +260,22 @@ export default {
       ];
       return carreras;
     },
-    filtrarAño() {
-      const año = [
-        "2014",
-        "2015",
-        "2016",
-        "2017",
-        "2018",
-        "2019",
-        "2020",
-        "2021",
-        "2022",
-        "2023",
-        "2024",
-        "2025",
-        "2026",
-        "2027",
-        "2028",
-        "2029",
-        "2030",
+    filtrarPeriodo(){
+      const periodo = [
+        "ENE-ABR","MAY-AGO","SEP-DIC"
       ];
-      return año;
-    },
-    filtrarGeneracion() {
-      const generacion = [
-        "1",
-        "2",
-        "3",
-        "4",
-        "5",
-        "6",
-        "7",
-        "8",
-        "9",
-        "10",
-        "11",
-        "12",
-        "13",
-        "14",
-        "15",
-        "16",
-        "17",
-        "18",
-        "19",
-        "20",
-      ];
-      return generacion;
+      return periodo;
     },
 
     limpiarFiltros() {
       // limpia/eliminar los filtros realizados en la  tabla y volver a mostrar todos los datos
       this.filters.carrera.value = null;
       this.filters.año_egreso.value = null;
+      this.filters.cuatrimestre.value = null;
       this.filters.generacion.value = null;
       this.$refs.dt.filter(this.filters, "carrera");
       this.$refs.dt.filter(this.filters, "año");
+      this.$refs.dt.filter(this.filters, "periodo");
       this.$refs.dt.filter(this.filters, "generacion");
     },
   },
@@ -325,6 +321,11 @@ export default {
           @click="confirmDeleteSelected"
           :disabled="!selectedProducts || !selectedProducts.length"
         />
+        <Button
+          icon="pi pi-external-link"
+          label="Exportar Excel"
+          @click="exportCSV($event)"
+        />
       </template>
     </Toolbar>
     <!-- formulario de nuevo registro-->
@@ -339,10 +340,27 @@ export default {
       <div class="field">
         <form @submit.prevent="registrarEgreso">
           <!-- select con opciones -->
+
+          <div class="field col-12 md:col-3 mt-3">
+          <label for="minmax">Periodo</label>
+          <Dropdown
+            v-model="EGRcuatrimestre"
+            :options="cuatriLista"
+            optionLabel="name"
+            optionValue="code"
+            placeholder="Seleccione"
+          />
+        </div>
+        <div class="field col-12 md:col-3">
+          <label for="minmax">Año</label>
+          <InputNumber inputId="minmax" v-model="EGRaño_egreso" mode="decimal" :min="0" :max="10000" :showButtons="true" />
+        </div>
+
+
           <div class="field col-12 md:col-3">
             <label for="minmax">Carrera</label>
             <Dropdown
-              v-model="carrera"
+              v-model="EGRcarrera"
               :options="carrerasLista"
               optionLabel="name"
               optionValue="code"
@@ -352,61 +370,24 @@ export default {
           </div>
 
           <div class="field col-12 md:col-3">
-            <label for="minmax">Generación</label>
-            <InputText
-              inputId="minmax"
-              v-model="generacion"
-              mode="decimal"
-              :min="1"
-              :max="20"
-              :showButtons="true"
-            />
-          </div>
+          <label for="minmax">Generación</label>
+          <InputNumber inputId="minmax" v-model="EGRgeneracion" mode="decimal" :min="0" :max="10000" :showButtons="true" />
+        </div>
 
-          <div class="field col-12 md:col-3">
-            <label for="minmax">Hombres</label>
-            <InputText
-              inputId="minmax"
-              v-model="hombres"
-              mode="decimal"
-              :min="0"
-              :max="10000"
-              :showButtons="true"
-            />
-          </div>
+        <div class="field col-12 md:col-3">
+          <label for="minmax">Hombres</label>
+          <InputNumber inputId="minmax" v-model="EGRhombres" mode="decimal" :min="0" :max="10000" :showButtons="true" />
+        </div>
 
-          <div class="field col-12 md:col-3">
-            <label for="minmax">Mujeres</label>
-            <InputText
-              inputId="minmax"
-              v-model="mujeres"
-              mode="decimal"
-              :min="0"
-              :max="10000"
-              :showButtons="true"
-            />
-          </div>
+        <div class="field col-12 md:col-3">
+          <label for="minmax">Mujeres</label>
+          <InputNumber inputId="minmax" v-model="EGRmujeres" mode="decimal" :min="0" :max="10000" :showButtons="true" />
+        </div>
 
-          <div class="field col-12 md:col-3">
-            <label for="minmax">Año de egreso</label>
-            <InputText
-              inputId="minmax"
-              v-model="año_egreso"
-              mode="decimal"
-              :showButtons="true"
-            />
-          </div>
-
-          <div class="field col-12 md:col-3 mt-3">
-            <label for="minmax">Cuatrimestre</label>
-            <Dropdown
-              v-model="cuatrimestre"
-              :options="cuatriLista"
-              optionLabel="name"
-              optionValue="code"
-              placeholder="Seleccione"
-            />
-          </div>
+        <div class="field col-12 md:col-3">
+          <label for="minmax">Titulados</label>
+          <InputNumber inputId="minmax" v-model="EGRtitulados" mode="decimal" :min="0" :max="10000" :showButtons="true" />
+        </div>
 
           <div class="field col-12 md:col-3 mt-3">
           <Button
@@ -444,32 +425,35 @@ export default {
             </div>
 
             <!-- Filtros -->
-            <Button
-                    icon="pi pi-external-link"
-                    label="Exportar Excel"
-                    @click="exportCSV($event)"
+                
+            <MultiSelect
+            v-model="filters.cuatrimestre.value"
+            :options="filtrarPeriodo()"
+              placeholder="Periodo"
+              display="chip"
+            />
+            
+            <InputNumber
+                v-model="filters.año_egreso.value"
+                mode="decimal"
+                :min="0"
+                :max="10000"
+                placeholder="Año"
                 />
-            <MultiSelect
-              v-model="filters.carrera.value"
-              :options="filtrarCarreras()"
-              placeholder="Carrera"
-              display="chip"
-            />
-
-            <MultiSelect
-              v-model="filters.generacion.value"
-              :options="filtrarGeneracion()"
-              placeholder="Generacion"
-              display="chip"
-            />
-
-            <MultiSelect
-              v-model="filters.año_egreso.value"
-              :options="filtrarAño()"
-              placeholder="Año"
-              display="chip"
-            />
-
+              
+              <MultiSelect
+                v-model="filters.carrera.value"
+                :options="filtrarCarreras()"
+                placeholder="Carrera"
+                display="chip"
+              />
+              <InputNumber
+                v-model="filters.generacion.value"
+                mode="decimal"
+                :min="0"
+                :max="100"
+                placeholder="Generación"
+                />
             <Button
               icon="pi pi-times"
               label="Limpiar"
@@ -498,13 +482,14 @@ export default {
           ></Column>
 
           <Column field="id" header="ID" :sortable="true" hidden ></Column>
+          <Column field="periodo_con_año" header="Periodo" :sortable="true"></Column>
           <Column field="carrera" header="Carrera" :sortable="true"></Column>
-          <Column field="generacion" header="Generacion" :sortable="true"></Column>
+          <Column field="generacion" header="Generación" :sortable="true"></Column>
           <Column field="hombres" header="Hombres" :sortable="true"></Column>
           <Column field="mujeres" header="Mujeres" :sortable="true"></Column>
           <Column field="egresados" header="Egresados" :sortable="true" ></Column>
-          <Column field="año_egreso" header="Año de egreso" :sortable="true"></Column>
-          <Column field="cuatrimestre" header="Cuatrimestre" :sortable="true"></Column>
+          <Column field="titulados" header="Titulados" :sortable="true" ></Column>
+          <Column field="no_titulados" header="No Titulados" :sortable="true" ></Column>
           
           <Column :exportable="false" style="min-width: 8rem" class="p-6">
             <template #body="slotProps">
@@ -543,54 +528,53 @@ export default {
             <form @submit.prevent="editarEgreso">
               <InputText id="id" v-model.trim="product.id" required="true" hidden/>
 
-              <div class="p-field p-col-12 p-md-6">
-                <label for="carrera">Carrera</label>
-                <InputText id="name" v-model.trim="product.carrera" />
-                <!-- <Dropdown v-model="carrera" :options="carrerasLista" optionLabel="name" optionValue="code" :filter="true" -->
-                <!--  placeholder="Carrera..." v-model.trim="product.carrera"/> -->
-              </div>
-              <div class="p-field p-col-12 p-md-6">
-                <label for="generacion">Generación</label>
-                <InputText
-                  id="name"
-                  v-model.trim="product.generacion"
-                  required="true"
-                />
-              </div>
+              <div class="field col-12 md:col-3 mt-3">
+          <label for="minmax">Periodo</label>
+          <Dropdown
+            v-model="EGRcuatrimestre"
+            :options="cuatriLista"
+            optionLabel="name"
+            optionValue="code"
+            placeholder="Seleccione"
+          />
+        </div>
+        <div class="field col-12 md:col-3">
+          <label for="minmax">Año</label>
+          <InputNumber inputId="minmax" v-model="EGRaño_egreso" mode="decimal" :min="0" :max="10000" :showButtons="true" />
+        </div>
 
-              <div class="p-field p-col-12 p-md-6">
-                <label for="mujeres">Hombres</label>
-                <InputText
-                  id="name"
-                  v-model.trim="product.hombres"
-                  required="true"
-                />
-              </div>
 
-              <div class="p-field p-col-12 p-md-6">
-                <label for="mujeres">Mujeres</label>
-                <InputText
-                  id="name"
-                  v-model.trim="product.mujeres"
-                  required="true"
-                />
-              </div>
-              <div class="p-field p-col-12 p-md-6">
-                <label for="año">Año de egreso</label>
-                <InputText
-                  id="name"
-                  v-model.trim="product.año_egreso"
-                  required="true"
-                />
-              </div>
-              <div class="p-field p-col-12 p-md-6">
-                <label for="cuatrimestre">Cuatrimestre</label>
-                <InputText
-                  id="name"
-                  v-model.trim="product.cuatrimestre"
-                  required="true"
-                />
-              </div>
+          <div class="field col-12 md:col-3">
+            <label for="minmax">Carrera</label>
+            <Dropdown
+              v-model="EGRcarrera"
+              :options="carrerasLista"
+              optionLabel="name"
+              optionValue="code"
+              :filter="true"
+              placeholder="Seleccione"
+            />
+          </div>
+
+          <div class="field col-12 md:col-3">
+          <label for="minmax">Generación</label>
+          <InputNumber inputId="minmax" v-model="EGRgeneracion" mode="decimal" :min="0" :max="10000" :showButtons="true" />
+        </div>
+
+        <div class="field col-12 md:col-3">
+          <label for="minmax">Hombres</label>
+          <InputNumber inputId="minmax" v-model="EGRhombres" mode="decimal" :min="0" :max="10000" :showButtons="true" />
+        </div>
+
+        <div class="field col-12 md:col-3">
+          <label for="minmax">Mujeres</label>
+          <InputNumber inputId="minmax" v-model="EGRmujeres" mode="decimal" :min="0" :max="10000" :showButtons="true" />
+        </div>
+
+        <div class="field col-12 md:col-3">
+          <label for="minmax">Titulados</label>
+          <InputNumber inputId="minmax" v-model="EGRtitulados" mode="decimal" :min="0" :max="10000" :showButtons="true" />
+        </div>
               <Button
                 type="submit"
                 label="Guardar"

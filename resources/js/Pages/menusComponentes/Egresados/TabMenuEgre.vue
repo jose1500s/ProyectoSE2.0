@@ -2,6 +2,7 @@
 import AppLayout from "@/Layouts/AppLayout.vue";
 import Egresados from "@/Pages/menusComponentes/Egresados/Egresados.vue";
 import Totales from "@/Pages/menusComponentes/Egresados/Totales.vue";
+import TotalesGene from "@/Pages/menusComponentes/Egresados/TotalesGene.vue";
 import TabView from 'primevue/tabview';
 import TabPanel from 'primevue/tabpanel';
 
@@ -12,10 +13,12 @@ export default {
         AppLayout,
         Egresados,
         Totales,
+        TotalesGene
     },
     props: {
         egresados: Array,
         totales: Array,
+        totalesgene: Array
     },
 }
 </script>
@@ -26,8 +29,11 @@ export default {
             <TabPanel header="Egresados">
                 <Egresados :egresados="egresados" />
             </TabPanel>
-            <TabPanel header="Totales">
+            <TabPanel header="Carreras">
                 <Totales :totales="totales" />
+            </TabPanel>
+            <TabPanel header="Generaciones">
+                <TotalesGene :totalesgene="totalesgene" />
             </TabPanel>
         </TabView>
     </AppLayout>
