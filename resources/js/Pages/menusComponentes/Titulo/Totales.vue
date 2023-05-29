@@ -1,5 +1,6 @@
 <script>
 import AppLayout from "@/Layouts/AppLayout.vue";
+import GraficaTituladosTotales from "@/Pages/menusComponentes/Titulo/GraficaTituladosTotales.vue";
 import DataTable from "primevue/datatable";
 import Column from "primevue/column";
 import InputText from "primevue/inputtext";
@@ -33,6 +34,7 @@ export default {
         Toolbar,
         Dropdown,
         InputNumber,
+        GraficaTituladosTotales,
     },
     props: {
         totales: Array,
@@ -297,6 +299,9 @@ export default {
       });
 
     },
+    checarDataGrafica(){
+      console.log(this.selectedProducts);
+    },
 
     },
     data(){
@@ -376,7 +381,20 @@ export default {
                 <div>
                     <Toast />
                 </div>
-
+                <Button label="Gráfica" icon="pi pi-chart-bar" @click="openResponsive" />
+                <Button label="Checar" icon="pi pi-chart-bar" @click="checarDataGrafica()" />
+          <Dialog header="Gráfica dinámica" v-model:visible="displayResponsive"
+        :breakpoints="{ '960px': '75vw', '75vw': '90vw' }" :style="{ width: '70vw' }">
+        <!-- contenido del dialog/model desde aqui... -->
+        <div class="w-full" id="contenedorGrafica">
+          <GraficaTituladosTotales :data="selectedProducts" />
+        </div>
+        <template #footer>
+          <Button label="Cerrar" icon="pi pi-check" @click="closeResponsive" autofocus />
+          <!-- boton para guardar la grafica como img -->
+          <Button label="Guardar" icon="pi pi-save" @click="saveImage" />
+        </template>
+      </Dialog>
                 
                 <MultiSelect
                 v-model="filters.periodo.value"
