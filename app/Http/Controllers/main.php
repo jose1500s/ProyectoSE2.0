@@ -239,6 +239,26 @@ class main extends Controller
       return redirect()->route('usuario.titulados');
      }
 
+     public function importarDataExcelTitulados(Request $request) {
+      $datosExcel = $request->input('datos');
+  
+      foreach ($datosExcel as $fila) {
+         $periodoconaño = $fila['periodo'] . " " . strval($fila['año']);
+         $titulacion = new tb_indicador_titulados();
+         $titulacion->carrera = $fila['carrera'];
+         $titulacion->generacion = $fila['generacion'];
+         $titulacion->total = $fila['total'];
+         $titulacion->periodo = $fila['periodo'];
+         $titulacion->año = $fila['año'];
+         $titulacion->hombre = $fila['hombres'];
+         $titulacion->mujer = $fila['mujeres'];
+         $titulacion->periodo_con_año = $periodoconaño;
+         $titulacion->save();
+      }
+  
+        return redirect()->route('usuario.titulados');
+  }
+
      //------------------------ TITULADOS TOTALES GENERACIONES ---------------------------
 
      function registrarTitulacionTotal(Request $request) {
@@ -308,6 +328,25 @@ class main extends Controller
       return redirect()->route('usuario.titulados');
      }
 
+     public function importarDataExcelTituladosGeneraciones(Request $request) {
+      $datosExcel = $request->input('datos');
+  
+      foreach ($datosExcel as $fila) {
+         $periodoconaño = $fila['periodo'] . " " . strval($fila['año']);
+         $titulacion = new tb_titulados_totales();
+         $titulacion->generacion = $fila['generacion'];
+         $titulacion->total = $fila['total'];
+         $titulacion->periodo = $fila['periodo'];
+         $titulacion->año = $fila['año'];
+         $titulacion->hombres = $fila['hombres'];
+         $titulacion->mujeres = $fila['mujeres'];
+         $titulacion->periodo_con_año = $periodoconaño;
+         $titulacion->save();
+      }
+  
+        return redirect()->route('usuario.titulados');
+  }
+
      //------------------------ TITULADOS TOTALES CARRERAS ---------------------------
 
      function registrarTitulacionTotalCarreras(Request $request) {
@@ -376,6 +415,25 @@ class main extends Controller
       $titulacion->delete();
       return redirect()->route('usuario.titulados');
      }
+
+     public function importarDataExcelTituladosCarreras(Request $request) {
+      $datosExcel = $request->input('datos');
+  
+      foreach ($datosExcel as $fila) {
+         $periodoconaño = $fila['periodo'] . " " . strval($fila['año']);
+         $titulacion = new tb_titulados_totales_carreras();
+         $titulacion->carrera = $fila['carrera'];
+         $titulacion->total = $fila['total'];
+         $titulacion->periodo = $fila['periodo'];
+         $titulacion->año = $fila['año'];
+         $titulacion->hombres = $fila['hombres'];
+         $titulacion->mujeres = $fila['mujeres'];
+         $titulacion->periodo_con_año = $periodoconaño;
+         $titulacion->save();
+      }
+  
+        return redirect()->route('usuario.titulados');
+  }
 
   // ---------------------- FIN TAB TITULADOS ----------------------
 
@@ -850,6 +908,28 @@ function eliminarEquivalencias(Request $request) {
       return redirect()->route('usuario.egresados');
       }
 
+      public function importarDataExcelEgresados(Request $request) {
+         $datosExcel = $request->input('datos');
+     
+         foreach ($datosExcel as $fila) {
+            $periodoconaño = $fila['periodo'] . " " . strval($fila['año']);
+            $egresado = new tb_egresados();
+            $egresado->carrera = $fila['carrera'];
+            $egresado->generacion = $fila['generacion'];
+            $egresado->egresados = $fila['egresados'];
+            $egresado->titulados = $fila['titulados'];
+            $egresado->cuatrimestre = $fila['periodo'];
+            $egresado->no_titulados = $fila['no_titulados'];
+            $egresado->año_egreso = $fila['año'];
+            $egresado->hombres = $fila['hombres'];
+            $egresado->mujeres = $fila['mujeres'];
+            $egresado->periodo_con_año = $periodoconaño;
+            $egresado->save();
+         }
+     
+           return redirect()->route('usuario.egresados');
+     }
+
 //-------------------------------- EGRESADOS TOTALES CARRERAS ------------------------------------
 
       function registrarEgresadosTotales(Request $request){
@@ -920,6 +1000,27 @@ function eliminarEquivalencias(Request $request) {
          return redirect()->route('usuario.egresados');
       }
 
+      public function importarDataExcelEgresadosTotales(Request $request) {
+         $datosExcel = $request->input('datos');
+     
+         foreach ($datosExcel as $fila) {
+            $periodoconaño = $fila['periodo'] . " " . strval($fila['año']);
+            $egresado = new tb_egresados_totales();
+            $egresado->carrera = $fila['carrera'];
+            $egresado->egresados = $fila['egresados'];
+            $egresado->titulados = $fila['titulados'];
+            $egresado->periodo = $fila['periodo'];
+            $egresado->no_titulados = $fila['no_titulados'];
+            $egresado->año = $fila['año'];
+            $egresado->hombres = $fila['hombres'];
+            $egresado->mujeres = $fila['mujeres'];
+            $egresado->periodo_con_año = $periodoconaño;
+            $egresado->save();
+         }
+     
+           return redirect()->route('usuario.egresados');
+     }
+
       //-------------------------------- EGRESADOS TOTALES GENERACIONES ------------------------------------
 
       function registrarEgresadosTotalesGeneracion(Request $request){
@@ -989,6 +1090,27 @@ function eliminarEquivalencias(Request $request) {
       // retornar a la vista ingreso
          return redirect()->route('usuario.egresados');
       }
+
+      public function importarDataExcelEgresadosGeneracion(Request $request) {
+         $datosExcel = $request->input('datos');
+     
+         foreach ($datosExcel as $fila) {
+            $periodoconaño = $fila['periodo'] . " " . strval($fila['año']);
+            $egresado = new tb_egresados_totales_generacion();
+            $egresado->generacion = $fila['generacion'];
+            $egresado->egresados = $fila['egresados'];
+            $egresado->titulados = $fila['titulados'];
+            $egresado->periodo = $fila['periodo'];
+            $egresado->no_titulados = $fila['no_titulados'];
+            $egresado->año = $fila['año'];
+            $egresado->hombres = $fila['hombres'];
+            $egresado->mujeres = $fila['mujeres'];
+            $egresado->periodo_con_año = $periodoconaño;
+            $egresado->save();
+         }
+     
+           return redirect()->route('usuario.egresados');
+     }
 
 // ------------------------------ FIN EGRESADOS ----------------------------
 

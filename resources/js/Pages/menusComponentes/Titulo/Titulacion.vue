@@ -19,6 +19,8 @@ import Dropdown from "primevue/dropdown";
 import InputNumber from "primevue/inputnumber";
 import GraficaIngresoVue from "../Ingreso/GraficaIngreso.vue";
 import Calendar from 'primevue/calendar';
+import axios from "axios";
+import readXlsxFile from "read-excel-file";
 
 
 export default {
@@ -64,9 +66,9 @@ export default {
     
     filtrarPeriodo(){
       const periodos = [
-        "ENE - ABR",
-        "MAY - AGO",
-        "SEP - DIC",
+        "ENE-ABR",
+        "MAY-AGO",
+        "SEP-DIC",
       ];
       return periodos;
     },
@@ -315,7 +317,90 @@ export default {
       this.TIThombre = 0;
       this.TITmujer = 0;
       this.TITaño = 0;
-    }
+    },
+    openImportExcel() {
+      this.importExcelDialog = true;
+      // cada que se abra se resetea el valor del array de datosExcel para que no se repitan los datos
+      this.datosExcel = [];
+    },
+    subirExcel() {
+      const input = document.getElementById("inputExcel");
+
+      // si el archivo no es .xlsx no se sube y mandar un mensaje de error
+      if (input.files[0].type != "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet") {
+        this.$toast.add({
+          severity: "error",
+          summary: "Error",
+          detail: "El archivo debe ser .xlsx",
+          life: 6000,
+        });
+        return false;
+      } else {
+        readXlsxFile(input.files[0]).then((rows) => {
+          //mandar a datosExcel los datos apartir de la psicion 1 del array
+          this.datosExcel = rows.slice(1);
+          // mandar a columnasExcel las columnas del archivo
+          this.columnasExcel = rows[0];
+          console.log(this.datosExcel)
+          console.log(this.columnasExcel)
+          // si el archivo no tiene las columnas 'carrera', 'aspirantes', 'examinados', 'no admitidos' y 'periodo' no se sube y mandar un mensaje de error
+          if (
+            this.columnasExcel[1] != "Periodo" ||
+            this.columnasExcel[2] != "Año" ||
+            this.columnasExcel[3] != "Carrera" ||
+            this.columnasExcel[4] != "Generación" ||
+            this.columnasExcel[5] != "Hombres" ||
+            this.columnasExcel[6] != "Mujeres" ||
+            this.columnasExcel[7] != "Total"
+          ) {
+            this.wrongFormatExcel = true;
+            this.$toast.add({
+              severity: "error",
+              summary: "Error",
+              detail: "Formato de archivo incorrecto",
+              life: 5000,
+            });
+            return false;
+          } else {
+            this.wrongFormatExcel = false;
+          }
+
+        });
+      }
+    },
+    importarExcel() {
+      const datosInsertar = []
+      for (let i = 0; i < this.datosExcel.length; i++) {
+        datosInsertar.push({
+          periodo: this.datosExcel[i][1],
+          año: this.datosExcel[i][2],
+          carrera: this.datosExcel[i][3],
+          generacion: this.datosExcel[i][4],
+          hombres: this.datosExcel[i][5],
+          mujeres: this.datosExcel[i][6],
+          total: this.datosExcel[i][7],
+        })
+      }
+
+      const data = {
+        datos: datosInsertar,
+      };
+
+      this.$inertia.post("/importar-excel-titulados", data, {
+        preserveState: true,
+        preserveScroll: true,
+        onSuccess: () => {
+          this.importExcelDialog = false;
+          this.$toast.add({
+            severity: "success",
+            summary: "Exito",
+            detail: "Importado exitosamente",
+            life: 3000,
+          });
+        },
+      });
+
+    },
 
   },
   data() {
@@ -338,10 +423,23 @@ export default {
         { name: "Telematica", code: "Telematica" },
       ],
       periodosLista: [
-        { name: "SEP - DIC", code: "SEP - DIC"},
-        { name: "ENE - ABR", code: "ENE - ABR"},
-        { name: "MAY - AGO", code: "MAY - AGO"},
+        { name: "SEP-DIC", code: "SEP-DIC"},
+        { name: "ENE-ABR", code: "ENE-ABR"},
+        { name: "MAY-AGO", code: "MAY-AGO"},
       ],
+      columnasPreviewExcel: [
+        { name: "ID", code: "0"},
+        { name: "Periodo", code: "1"},
+        { name: "Año", code: "2"},
+        { name: "Carrera", code: "3"},
+        { name: "Generación", code: "4"},
+        { name: "Hombres", code: "5"},
+        { name: "Mujeres", code: "6"},
+        { name: "Total", code: "7"},
+      ],
+      datosFiltrados: [],
+      datosExcel: [],
+      columnasExcel: [],
       TITcarrera: null,
       TITgeneracion: 0,
       TIThombre: 0,
@@ -353,6 +451,11 @@ export default {
       deleteProductDialog: false,
       selectedProducts: null,
       deleteProductsDialog: false,
+      importExcelDialog: false,
+      wrongFormatExcel: false,
+      file: null,
+      fileContent: null,
+      selectedProductsForChart: null,
     };
   },
 };
@@ -364,9 +467,42 @@ export default {
       <Button label="Nuevo Registro" icon="pi pi-plus" class="p-button-success !mr-2" @click="openNew" />
       <Button label="Eliminar" icon="pi pi-trash" class="p-button-danger" @click="confirmDeleteSelected"
         :disabled="!selectedProducts || !selectedProducts.length" />
-        <Button icon="pi pi-external-link" label="Exportar Excel" @click="exportCSV($event)" />
+        <Button class="!ml-2" icon="pi pi-external-link" label="Exportar Excel" @click="exportCSV($event)" />
+        <Button label="Importar Excel" icon="pi pi-upload" class="!ml-2" @click="openImportExcel" />
     </template>
   </Toolbar>
+
+  <Dialog v-model:visible="importExcelDialog" :breakpoints="{ '1260px': '75vw', '640px': '85vw' }"
+    :style="{ width: '45vw' }" header="Importar Excel" :modal="true" class="p-fluid">
+
+
+    <!-- aqui selecciona el archivo de excel -->
+    <div class="border border-dashed border-gray-500 relative">
+      <input type="file" id="inputExcel" @change="subirExcel" multiple
+        class="cursor-pointer relative block opacity-0 w-full h-full p-20 z-50">
+      <div class="text-center p-10 absolute top-0 right-0 left-0 m-auto">
+        <h4>
+          Arrastra y suelta el archivo aquí
+          <br />ó
+        </h4>
+        <p class="">
+          Selecciona un archivo de excel
+        </p>
+      </div>
+    </div>
+
+    <!-- preview del documento subido en el array datosExcel -->
+    <DataTable v-if="datosExcel.length > 0" :value="datosExcel">
+      <Column v-for="columna in columnasPreviewExcel" :key="columna.code" :field="columna.code" :header="columna.name" />
+    </DataTable>
+
+    <div class="max-w-[50%] m-auto p-7">
+      <Button label="Importar" @click="importarExcel" id="btnImportarExcel"
+        :disabled="datosExcel.length == 0 || wrongFormatExcel" />
+    </div>
+
+
+  </Dialog>
 
   <Dialog v-model:visible="productDialog" :breakpoints="{ '960px': '75vw', '640px': '85vw' }" :style="{ width: '25vw' }"
     header="Nuevo Registro" :modal="true" class="p-fluid">
@@ -495,7 +631,7 @@ export default {
         <Column field="id" header="ID" :sortable="true" hidden></Column>
         <Column field="periodo_con_año" header="Periodo" :sortable="true"></Column>
         <Column field="carrera" header="Carrera" :sortable="true"></Column>
-        <Column field="generacion" header="Generacion" :sortable="true"></Column>
+        <Column field="generacion" header="Generación" :sortable="true"></Column>
         <Column field="hombre" header="Hombres" :sortable="true"></Column>
         <Column field="mujer" header="Mujeres" :sortable="true"></Column>
         <Column field="total" header="Total" :sortable="true"></Column>

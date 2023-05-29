@@ -96,8 +96,9 @@ Route::middleware([
     // ruta del indicador TITULADOS, para ELIMINAR VARIAS admisiones que recibe como array los ids de las admisiones
     Route::post('/eliminar-Titulados', [main::class, 'eliminarTitulaciones']);
 
-    // ---------------- TAB TITULADOS TOTALES GENERACIONES -------------------------
+    Route::post('/importar-excel-titulados',[main::class,'importarDataExcelTitulados']);
 
+    // ---------------- TAB TITULADOS TOTALES GENERACIONES -------------------------
     // ruta del indicador TITULADOS, para REGISTRAR una admision
     Route::post('/registro-Titulado-Total', [main::class, 'registrarTitulacionTotal']);
 
@@ -109,6 +110,8 @@ Route::middleware([
 
     // ruta del indicador TITULADOS, para ELIMINAR VARIAS admisiones que recibe como array los ids de las admisiones
     Route::post('/eliminar-Titulados-Total', [main::class, 'eliminarTitulacionesTotal']);
+
+    Route::post('/importar-excel-titulados-generaciones', [main::class, 'importarDataExcelTituladosGeneraciones']);
 
     // ---------------- TAB TITULADOS TOTALES CARRERAS -------------------------
 
@@ -123,6 +126,8 @@ Route::middleware([
 
     // ruta del indicador TITULADOS, para ELIMINAR VARIAS admisiones que recibe como array los ids de las admisiones
     Route::post('/eliminar-Titulados-Total-Carreras', [main::class, 'eliminarTitulacionesTotalCarreras']);
+
+    Route::post('/importar-excel-titulados-carreras', [main::class, 'importarDataExcelTituladosCarreras']);
 
     // ---------- FIN TAB TITULADOS ------------
 
@@ -206,6 +211,8 @@ Route::middleware([
     route::post('/eliminar-Egreso/{id}', [main::class, 'eliminarEgreso']);
 
     route::post('/editar-Egreso/{id}', [main::class, 'editarEgreso']);
+
+    Route::post('/importar-excel-egresados', [main::class, 'importarDataExcelEgresados']);
     
     //-------------------------------- EGRESADOS TOTALES CARRERAS -------------------------------
 
@@ -216,6 +223,8 @@ Route::middleware([
     Route::post('/eliminar-Egresos-Totales', [main::class, 'eliminarEgresosTotales']);
 
     Route::post('/editar-Egreso-Totales/{id}', [main::class, 'editarEgresoTotales']);
+
+    Route::post('/importar-excel-egresados-Totales', [main::class, 'importarDataExcelEgresadosTotales']);
     //--------------------------------- EGRESADOS TOTALES GENERACIONES ----------------------------------
 
     Route::post('/registrar-Egreso-Totales-Generacion', [main::class, 'registrarEgresadosTotalesGeneracion']);
@@ -225,6 +234,8 @@ Route::middleware([
     Route::post('/eliminar-Egresos-Totales-Generacion', [main::class, 'eliminarEgresosTotalesGeneracion']);
 
     Route::post('/editar-Egreso-Totales-Generacion/{id}', [main::class, 'editarEgresoTotalesGeneracion']);
+
+    Route::post('/importar-excel-egresados-Totales-Generacion', [main::class, 'importarDataExcelEgresadosGeneracion']);
     // ---------- rutas para GRAFICAS -------------
     Route::post('/obtener-filtro-carreras-admision', [admisionGraficasController::class, 'filtrarDatosCarreras']);
     // ruta para importar excels
