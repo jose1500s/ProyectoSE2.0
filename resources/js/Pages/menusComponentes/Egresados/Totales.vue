@@ -1,5 +1,6 @@
 <script>
 import AppLayout from "@/Layouts/AppLayout.vue";
+import GraficaEgresadosTotales from "./GraficaEgresadosTotales.vue";
 import DataTable from "primevue/datatable";
 import Column from "primevue/column";
 import InputText from "primevue/inputtext";
@@ -33,6 +34,7 @@ export default {
         Toolbar,
         Dropdown,
         InputNumber,
+        GraficaEgresadosTotales
     },
     props: {
         totales: Array,
@@ -68,6 +70,16 @@ export default {
         closeResponsive() {
             this.displayResponsive = false;
         },
+        saveImage() {
+      // guardar la grafica como imagen en el escritorio
+      const contenedorGrafica = document.getElementById("contenedorGrafica");
+      const grafica = contenedorGrafica.getElementsByTagName("canvas")[0];
+      const imagen = grafica.toDataURL("image/png");
+      const link = document.createElement("a");
+      link.download = "Gráfica Egresados Carreras.png";
+      link.href = imagen;
+      link.click();
+    },
         openNew() {
             this.product = {};
             this.submitted = false;
@@ -440,6 +452,20 @@ export default {
                 <div>
                     <Toast />
                 </div>
+                <!-- model para abrir grafica -->
+          <Button label="Gráfica" icon="pi pi-chart-bar" @click="openResponsive" />
+          <Dialog header="Gráfica dinámica" v-model:visible="displayResponsive"
+        :breakpoints="{ '960px': '75vw', '75vw': '90vw' }" :style="{ width: '70vw' }">
+        <!-- contenido del dialog/model desde aqui... -->
+        <div class="w-full" id="contenedorGrafica">
+          <GraficaEgresadosTotales :data="selectedProducts" />
+        </div>
+        <template #footer>
+          <Button label="Cerrar" icon="pi pi-check" @click="closeResponsive" autofocus />
+          <!-- boton para guardar la grafica como img -->
+          <Button label="Guardar" icon="pi pi-save" @click="saveImage" />
+        </template>
+      </Dialog>
                 
                 <MultiSelect
                     v-model="filters.periodo.value"

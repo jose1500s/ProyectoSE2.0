@@ -1,5 +1,6 @@
 <script>
 import AppLayout from "@/Layouts/AppLayout.vue";
+import GraficaEgresados from "./GraficaEgresados.vue";
 // PrimeVue
 import DataTable from "primevue/datatable";
 import Column from "primevue/column";
@@ -73,6 +74,7 @@ export default {
       file: null,
       fileContent: null,
       selectedProductsForChart: null,
+      displayResponsive: false,
     };
   },
   created() {},
@@ -95,6 +97,23 @@ export default {
     hideDialog() {
       this.productDialog = false;
       this.submitted = false;
+    },
+    openResponsive() {
+      console.log()
+      this.displayResponsive = true;
+    },
+    closeResponsive() {
+      this.displayResponsive = false;
+    },
+    saveImage() {
+      // guardar la grafica como imagen en el escritorio
+      const contenedorGrafica = document.getElementById("contenedorGrafica");
+      const grafica = contenedorGrafica.getElementsByTagName("canvas")[0];
+      const imagen = grafica.toDataURL("image/png");
+      const link = document.createElement("a");
+      link.download = "Gráfica Egresados.png";
+      link.href = imagen;
+      link.click();
     },
     registrarEgreso() {
       this.submitted = true; // esto es para que se muestre el mensaje de error en el formulario
@@ -403,6 +422,7 @@ export default {
     Toolbar,
     Dropdown,
     InputNumber,
+    GraficaEgresados,
   },
   props: {
     egresados: Array,
@@ -569,6 +589,20 @@ export default {
             <div>
               <Toast />
             </div>
+            <!-- model para abrir grafica -->
+          <Button label="Gráfica" icon="pi pi-chart-bar" @click="openResponsive" />
+          <Dialog header="Gráfica dinámica" v-model:visible="displayResponsive"
+        :breakpoints="{ '960px': '75vw', '75vw': '90vw' }" :style="{ width: '70vw' }">
+        <!-- contenido del dialog/model desde aqui... -->
+        <div class="w-full" id="contenedorGrafica">
+          <GraficaEgresados :data="selectedProducts" />
+        </div>
+        <template #footer>
+          <Button label="Cerrar" icon="pi pi-check" @click="closeResponsive" autofocus />
+          <!-- boton para guardar la grafica como img -->
+          <Button label="Guardar" icon="pi pi-save" @click="saveImage" />
+        </template>
+      </Dialog>
 
             <!-- Filtros -->
                 

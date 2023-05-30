@@ -27,22 +27,32 @@ export default {
     methods: {
         setChartData() {
             return {
-                labels: this.data.map((item) => item.periodo_con_año + '-' + item.carrera + '-Generación ' + item.generacion),
+                labels: this.data.map((item) => item.periodo_con_año + '-Generación ' + item.generacion),
                 datasets: [
                     {
                         label: 'Hombres',
                         backgroundColor: '#7DC0FF',
-                        data: this.data.map((item) => item.hombre)
+                        data: this.data.map((item) => item.hombres)
                     },
                     {
                         label: 'Mujeres',
                         backgroundColor: '#FF66F7',
-                        data: this.data.map((item) => item.mujer)
+                        data: this.data.map((item) => item.mujeres)
                     },
                     {
-                        label: 'Total',
+                        label: 'Egresados',
                         backgroundColor: '#FFB84C',
-                        data: this.data.map((item) => item.total)
+                        data: this.data.map((item) => item.egresados)
+                    },
+                    {
+                        label: 'Titulados',
+                        backgroundColor: '#32A850',
+                        data: this.data.map((item) => item.titulados)
+                    },
+                    {
+                        label: 'No Titulados',
+                        backgroundColor: '#B50000',
+                        data: this.data.map((item) => item.no_titulados)
                     },
                 ]
             }
