@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 // importar el componente Register.vue de la carpeta Auth dentro de pages
 use resources\js\pages\Auth\Login;
 use App\Http\Controllers\main;
+use App\Http\Controllers\BajasController;
 use App\Http\Controllers\Ingreso\admisionGraficasController;
 
 
@@ -50,7 +51,7 @@ Route::middleware([
     Route::get('/ingreso', [main::class, 'ingreso'])->name('usuario.ingreso');
 
     // ruta para abrir el menu de bajas
-    Route::get('/bajas', [main::class, 'bajas'])->name('usuario.bajas');
+    Route::get('/bajas', [BajasController::class, 'bajas'])->name('usuario.bajas');
     
     // Ruta para abrir el menu de matricula
     Route::get('/matricula', [main::class, 'matricula'])->name('usuario.matricula');
@@ -243,6 +244,52 @@ Route::middleware([
     Route::post('/editar-Egreso-Totales-Generacion/{id}', [main::class, 'editarEgresoTotalesGeneracion']);
 
     Route::post('/importar-excel-egresados-Totales-Generacion', [main::class, 'importarDataExcelEgresadosGeneracion']);
+
+    // --------------------------------------------- BAJAS ---------------------------------------------------
+
+    Route::post('/importar-excel-bajas', [BajasController::class, 'importarDataExcelBajas']);
+    
+    // ------------------------------------------- TEMPORALES -------------------------------------------------
+
+    Route::post('/registro-baja-temporal', [BajasController::class, 'registrarTemporal']);
+
+    Route::post('/editar-baja-temporal/{id}', [BajasController::class, 'editarTemporal']);
+    
+    Route::post('/eliminar-bajas-temporales', [BajasController::class, 'eliminarTemporales']);
+
+    Route::post('/eliminar-baja-temporal/{id}', [BajasController::class, 'eliminarTemporal']);
+
+    // ----------------------------------------- VOLUNTARIAS --------------------------------------------------
+
+    Route::post('/registro-baja-voluntaria', [BajasController::class, 'registrarVoluntaria']);
+
+    Route::post('/editar-baja-voluntaria/{id}', [BajasController::class, 'editarVoluntaria']);
+    
+    Route::post('/eliminar-bajas-voluntarias', [BajasController::class, 'eliminarVoluntarias']);
+
+    Route::post('/eliminar-baja-voluntaria/{id}', [BajasController::class, 'eliminarVoluntaria']);
+
+    // ------------------------------------------ ACADEMICAS -----------------------------------------------
+
+    Route::post('/registro-baja-academica', [BajasController::class, 'registrarAcademica']);
+
+    Route::post('/editar-baja-academica/{id}', [BajasController::class, 'editarAcademica']);
+    
+    Route::post('/eliminar-bajas-academicas', [BajasController::class, 'eliminarAcademicas']);
+
+    Route::post('/eliminar-baja-academica/{id}', [BajasController::class, 'eliminarAcademica']);
+
+    // --------------------------------------------- ADMINISTRATIVAS -----------------------------------------
+
+    Route::post('/registro-baja-administrativa', [BajasController::class, 'registrarAdministrativa']);
+
+    Route::post('/editar-baja-administrativa/{id}', [BajasController::class, 'editarAdministrativa']);
+    
+    Route::post('/eliminar-bajas-administrativas', [BajasController::class, 'eliminarAdministrativas']);
+
+    Route::post('/eliminar-baja-administrativa/{id}', [BajasController::class, 'eliminarAdministrativa']);
+
+    //------------------------------------------------- FIN BAJAS ---------------------------------------------
     // ---------- rutas para GRAFICAS -------------
     Route::post('/obtener-filtro-carreras-admision', [admisionGraficasController::class, 'filtrarDatosCarreras']);
     // ruta para importar excels
