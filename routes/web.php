@@ -96,6 +96,39 @@ Route::middleware([
     // ruta del indicador TITULADOS, para ELIMINAR VARIAS admisiones que recibe como array los ids de las admisiones
     Route::post('/eliminar-Titulados', [main::class, 'eliminarTitulaciones']);
 
+    Route::post('/importar-excel-titulados',[main::class,'importarDataExcelTitulados']);
+
+    // ---------------- TAB TITULADOS TOTALES GENERACIONES -------------------------
+    // ruta del indicador TITULADOS, para REGISTRAR una admision
+    Route::post('/registro-Titulado-Total', [main::class, 'registrarTitulacionTotal']);
+
+    // ruta del indicador TITULADOS, para EDITAR una admision que recibe el id de la admision
+    Route::post('/editar-Titulado-Total/{id}', [main::class, 'editarTitulacionTotal']);
+
+    // ruta del indicador TITULADOS, para ELIMINAR una admision que recibe el id de la admision
+    Route::post('/eliminar-Titulado-Total/{id}', [main::class, 'eliminarTitulacionTotal']);
+
+    // ruta del indicador TITULADOS, para ELIMINAR VARIAS admisiones que recibe como array los ids de las admisiones
+    Route::post('/eliminar-Titulados-Total', [main::class, 'eliminarTitulacionesTotal']);
+
+    Route::post('/importar-excel-titulados-generaciones', [main::class, 'importarDataExcelTituladosGeneraciones']);
+
+    // ---------------- TAB TITULADOS TOTALES CARRERAS -------------------------
+
+    // ruta del indicador TITULADOS, para REGISTRAR una admision
+    Route::post('/registro-Titulado-Total-Carreras', [main::class, 'registrarTitulacionTotalCarreras']);
+
+    // ruta del indicador TITULADOS, para EDITAR una admision que recibe el id de la admision
+    Route::post('/editar-Titulado-Total-Carreras/{id}', [main::class, 'editarTitulacionTotalCarreras']);
+
+    // ruta del indicador TITULADOS, para ELIMINAR una admision que recibe el id de la admision
+    Route::post('/eliminar-Titulado-Total-Carreras/{id}', [main::class, 'eliminarTitulacionTotalCarreras']);
+
+    // ruta del indicador TITULADOS, para ELIMINAR VARIAS admisiones que recibe como array los ids de las admisiones
+    Route::post('/eliminar-Titulados-Total-Carreras', [main::class, 'eliminarTitulacionesTotalCarreras']);
+
+    Route::post('/importar-excel-titulados-carreras', [main::class, 'importarDataExcelTituladosCarreras']);
+
     // ---------- FIN TAB TITULADOS ------------
 
     // ruta del indicador TITULADOS, para REGISTRAR una admision
@@ -178,8 +211,10 @@ Route::middleware([
     route::post('/eliminar-Egreso/{id}', [main::class, 'eliminarEgreso']);
 
     route::post('/editar-Egreso/{id}', [main::class, 'editarEgreso']);
+
+    Route::post('/importar-excel-egresados', [main::class, 'importarDataExcelEgresados']);
     
-    //--------------------------------EGRESADOS TOTALES-------------------------------
+    //-------------------------------- EGRESADOS TOTALES CARRERAS -------------------------------
 
     Route::post('/registrar-Egreso-Totales', [main::class, 'registrarEgresadosTotales']);
 
@@ -188,6 +223,19 @@ Route::middleware([
     Route::post('/eliminar-Egresos-Totales', [main::class, 'eliminarEgresosTotales']);
 
     Route::post('/editar-Egreso-Totales/{id}', [main::class, 'editarEgresoTotales']);
+
+    Route::post('/importar-excel-egresados-Totales', [main::class, 'importarDataExcelEgresadosTotales']);
+    //--------------------------------- EGRESADOS TOTALES GENERACIONES ----------------------------------
+
+    Route::post('/registrar-Egreso-Totales-Generacion', [main::class, 'registrarEgresadosTotalesGeneracion']);
+
+    Route::post('/eliminar-Egreso-Totales-Generacion/{id}', [main::class, 'eliminarEgresoTotalesGeneracion']);
+
+    Route::post('/eliminar-Egresos-Totales-Generacion', [main::class, 'eliminarEgresosTotalesGeneracion']);
+
+    Route::post('/editar-Egreso-Totales-Generacion/{id}', [main::class, 'editarEgresoTotalesGeneracion']);
+
+    Route::post('/importar-excel-egresados-Totales-Generacion', [main::class, 'importarDataExcelEgresadosGeneracion']);
     // ---------- rutas para GRAFICAS -------------
     Route::post('/obtener-filtro-carreras-admision', [admisionGraficasController::class, 'filtrarDatosCarreras']);
     // ruta para importar excels

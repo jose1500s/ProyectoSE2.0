@@ -1,6 +1,6 @@
 <script>
 import AppLayout from "@/Layouts/AppLayout.vue";
-import GraficaEgresadosTotales from "./GraficaEgresadosTotales.vue";
+import GraficaTituladosTotalesCarreras from '@/Pages/menusComponentes/Titulo/GraficaTituladosTotalesCarreras.vue';
 import DataTable from "primevue/datatable";
 import Column from "primevue/column";
 import InputText from "primevue/inputtext";
@@ -34,25 +34,13 @@ export default {
         Toolbar,
         Dropdown,
         InputNumber,
-        GraficaEgresadosTotales
+        GraficaTituladosTotalesCarreras,
     },
     props: {
-        totales: Array,
+        totalescarreras: Array,
     },
     setup() {},
     methods: {
-        filtrarCarreras(){
-            const carreras=[
-                "Negocios",
-                "Administración",
-                "Sistemas",
-                "Automotriz",
-                "Mecatrónica",
-                "Manufactura",
-                "Telemática",
-            ];
-            return carreras;
-        },
         filtrarCuatri(){
             const cuatris=[
                 "SEP-DIC",
@@ -61,6 +49,18 @@ export default {
             ];
             return cuatris;
         },
+        filtrarCarreras() {
+      const carrera = [
+        "Negocios",
+        "Administracion",
+        "Sistemas",
+        "Automotriz",
+        "Mecatronica",
+        "Manufactura",
+        "Telematica",
+      ];
+      return carrera;
+    },
         exportCSV() {
             this.$refs.dt.exportCSV();
         },
@@ -70,16 +70,6 @@ export default {
         closeResponsive() {
             this.displayResponsive = false;
         },
-        saveImage() {
-      // guardar la grafica como imagen en el escritorio
-      const contenedorGrafica = document.getElementById("contenedorGrafica");
-      const grafica = contenedorGrafica.getElementsByTagName("canvas")[0];
-      const imagen = grafica.toDataURL("image/png");
-      const link = document.createElement("a");
-      link.download = "Gráfica Egresados Carreras.png";
-      link.href = imagen;
-      link.click();
-    },
         openNew() {
             this.product = {};
             this.submitted = false;
@@ -92,8 +82,8 @@ export default {
       this.submitted = true;
       if (
         this.TOTaño == 0 ||
-        this.TOTcarrera == null ||
-        this.TOTcuatri == null
+        this.TOTcarrera == 0 ||
+        this.TOTperiodo == null
       ) {
         // si alguno de los campos esta vacio, no enviar el formulario y mostrar un mensaje de error
         this.$toast.add({
@@ -103,26 +93,15 @@ export default {
           life: 3000,
         });
         return false;
-      }
-      else if (this.TOTtitulados > (this.TOThombres + this.TOTmujeres)) {
-        this.$toast.add({
-          severity: "error",
-          summary: "Error",
-          detail: "Datos erróneos",
-          life: 3000,
-        });
-        return false;
-      }  
-      else {
+      } else {
         const data = {
           carrera: this.TOTcarrera,
-          hombres: this.TOThombres,
-          mujeres: this.TOTmujeres,
-          cuatrimestre: this.TOTcuatri,
-          anio: this.TOTaño,
-          titulados: this.TOTtitulados
+          hombre: this.TOThombres,
+          mujer: this.TOTmujeres,
+          periodo: this.TOTperiodo,
+          año: this.TOTaño
         };
-        this.$inertia.post("/registrar-Egreso-Totales", data, {
+        this.$inertia.post("/registro-Titulado-Total-Carreras", data, {
           preserveState: true,
           preserveScroll: true,
           onSuccess: () => {
@@ -143,8 +122,8 @@ export default {
       if (
         this.product.id == null ||
         this.TOTaño == 0 ||
-        this.TOTcarrera == null ||
-        this.TOTcuatri == null
+        this.TOTcarrera == 0 ||
+        this.TOTperiodo == null
       ) {
         // si alguno de los campos esta vacio, no enviar el formulario y mostrar un mensaje de error
         this.$toast.add({
@@ -154,27 +133,16 @@ export default {
           life: 3000,
         });
         return false;
-      }
-      else if (this.TOTtitulados > (this.TOThombres + this.TOTmujeres)) {
-        this.$toast.add({
-          severity: "error",
-          summary: "Error",
-          detail: "Datos erróneos",
-          life: 3000,
-        });
-        return false;
-      }   
-      else {
+      } else {
        const data = {
           id: this.product.id,
           carrera: this.TOTcarrera,
-          hombres: this.TOThombres,
-          mujeres: this.TOTmujeres,
-          cuatrimestre: this.TOTcuatri,
-          anio: this.TOTaño,
-          titulados: this.TOTtitulados
+          hombre: this.TOThombres,
+          mujer: this.TOTmujeres,
+          periodo: this.TOTperiodo,
+          año: this.TOTaño
         };
-        this.$inertia.post(`/editar-Egreso-Totales/${this.product.id}`, data, {
+        this.$inertia.post(`/editar-Titulado-Total-Carreras/${this.product.id}`, data, {
           preserveState: true,
           preserveScroll: true,
           onSuccess: () => {
@@ -194,20 +162,19 @@ export default {
       this.product = { ...product }; // esto es para que se muestre los datos del producto en el formulario
       this.TOTaño = this.product.año;
       this.TOTcarrera = this.product.carrera;
-      this.TOTcuatri = this.product.periodo;
       this.TOThombres = this.product.hombres;
       this.TOTmujeres = this.product.mujeres;
-      this.TOTtitulados = this.product.titulados;
+      this.TOTperiodo = this.product.periodo;
       this.editDialog = true;
     },
     limpiarFiltros() {
             // limpia/eliminar los filtros realizados en la  tabla y volver a mostrar todos los datos
-            this.filters.carrera.value = null;
-            this.filters.cuatrimestre.value = null;
+            this.filters.periodo.value = null;
             this.filters.año.value = null;
-            this.$refs.dt.filter(this.filters, "carrera");
-            this.$refs.dt.filter(this.filters, "cuatrimestre");
+            this.filters.carrera.value = null;
+            this.$refs.dt.filter(this.filters, "periodo");
             this.$refs.dt.filter(this.filters, "año");
+            this.$refs.dt.filter(this.filters, "carrera");
     },
     confirmDeleteProduct(product) {
       this.product = product;
@@ -217,7 +184,7 @@ export default {
       const data = {
         id: this.product.id,
       };
-      this.$inertia.post(`/eliminar-Egreso-Totales/${this.product.id}`, data, {
+      this.$inertia.post(`/eliminar-Titulado-Total-Carreras/${this.product.id}`, data, {
         preserveState: true,
         preserveScroll: true,
         onSuccess: () => {
@@ -236,7 +203,7 @@ export default {
       const data = {
         id: this.selectedProducts.map((item) => item.id),
       };
-      this.$inertia.post("/eliminar-Egresos-Totales", data, {
+      this.$inertia.post("/eliminar-Titulados-Total-Carreras", data, {
         preserveState: true,
         preserveScroll: true,
 
@@ -257,12 +224,11 @@ export default {
       this.deleteProductsDialog = true;
     },
     resetearVariables(){
-      this.TOTcuatri = null;
       this.TOTaño = 0;
-      this.TOTcarrera = null;
+      this.TOTperiodo = null;
+      this.TOTcarrera = 0;
       this.TOThombres = 0;
       this.TOTmujeres = 0;
-      this.TOTtitulados = 0;
     },
     subirExcel() {
       const input = document.getElementById("inputExcel");
@@ -282,8 +248,8 @@ export default {
           this.datosExcel = rows.slice(1);
           // mandar a columnasExcel las columnas del archivo
           this.columnasExcel = rows[0];
-          console.log(this.datosExcel);
-          console.log(this.columnasExcel);
+          console.log(this.datosExcel)
+          console.log(this.columnasExcel)
           // si el archivo no tiene las columnas 'carrera', 'aspirantes', 'examinados', 'no admitidos' y 'periodo' no se sube y mandar un mensaje de error
           if (
             this.columnasExcel[1] != "Periodo" ||
@@ -291,9 +257,7 @@ export default {
             this.columnasExcel[3] != "Carrera" ||
             this.columnasExcel[4] != "Hombres" ||
             this.columnasExcel[5] != "Mujeres" ||
-            this.columnasExcel[6] != "Egresados" ||
-            this.columnasExcel[7] != "Titulados" ||
-            this.columnasExcel[8] != "No Titulados"
+            this.columnasExcel[6] != "Total"
           ) {
             this.wrongFormatExcel = true;
             this.$toast.add({
@@ -319,9 +283,7 @@ export default {
           carrera: this.datosExcel[i][3],
           hombres: this.datosExcel[i][4],
           mujeres: this.datosExcel[i][5],
-          egresados: this.datosExcel[i][6],
-          titulados: this.datosExcel[i][7],
-          no_titulados: this.datosExcel[i][8],
+          total: this.datosExcel[i][6],
         })
       }
 
@@ -329,7 +291,7 @@ export default {
         datos: datosInsertar,
       };
 
-      this.$inertia.post("/importar-excel-egresados-Totales", data, {
+      this.$inertia.post("/importar-excel-titulados-carreras", data, {
         preserveState: true,
         preserveScroll: true,
         onSuccess: () => {
@@ -350,50 +312,41 @@ export default {
       this.datosExcel = [];
     },
 
+
     },
     data(){
         return{
             filters: {
-                carrera: {  value: null,matchMode: FilterMatchMode.IN},
                 periodo: {  value: null,matchMode: FilterMatchMode.IN},
-                año: {  value: null,matchMode: FilterMatchMode.CONTAINS}
+                año: { value: null, matchMode: FilterMatchMode.CONTAINS },
+                carrera: { value: null, matchMode: FilterMatchMode.IN },
             },
-            carrerasLista: [
-                { name: "Manufactura", code: "Manufactura" },
-                { name: "Mecatronica", code: "Mecatronica" },
-                { name: "Negocios", code: "Negocios" },
-                { name: "Procesos", code: "Procesos" },
-                { name: "Pymes", code: "Pymes" },
-                { name: "Sistemas", code: "Sistemas" },
-                { name: "Redes", code: "Redes" }
-            ],
-            aniosLista: [
-                { name: "2014", code: "2014" },
-                { name: "2015", code: "2015" },
-                { name: "2016", code: "2016" },
-                { name: "2017", code: "2017" },
-                { name: "2018", code: "2018" },
-                { name: "2019", code: "2019" },
-                { name: "2020", code: "2020" },
-                { name: "2021", code: "2021" },
-                { name: "2022", code: "2022" }
-            ],
-            cuatrisLista: [
+            periodosLista: [
                 { name: "SEP-DIC", code: "SEP-DIC" },
                 { name: "ENE-ABR", code: "ENE-ABR" },
                 { name: "MAY-AGO", code: "MAY-AGO" },
             ],
-            columnasPreviewExcel: [
+            carrerasLista: [
+        { name: "Manufactura", code: "Manufactura" },
+        { name: "Mecatronica", code: "Mecatronica" },
+        { name: "Negocios", code: "Negocios" },
+        { name: "Procesos", code: "Procesos" },
+        { name: "Pymes", code: "Pymes" },
+        { name: "Sistemas", code: "Sistemas" },
+        { name: "Telematica", code: "Telematica" },
+      ],
+      columnasPreviewExcel: [
         { name: "ID", code: "0"},
         { name: "Periodo", code: "1"},
         { name: "Año", code: "2"},
         { name: "Carrera", code: "3"},
         { name: "Hombres", code: "4"},
         { name: "Mujeres", code: "5"},
-        { name: "Egresados", code: "6"},
-        { name: "Titulados", code: "7"},
-        { name: "No Titulados", code: "8"},
+        { name: "Total", code: "6"},
       ],
+      datosFiltrados: [],
+      datosExcel: [],
+      columnasExcel: [],
             noDataMessage: "No se encontraron datos",
             displayResponsive: false,
             productDialog: false,
@@ -401,20 +354,16 @@ export default {
             deleteProductDialog: false,
             selectedProducts: null,
             deleteProductsDialog: false,
-            TOTcuatri: null,
+            TOTperiodo: null,
             TOTcarrera: null,
             TOTaño: 0,
             TOThombres: 0,
             TOTmujeres: 0,
-            TOTtitulados: 0,
             importExcelDialog: false,
-            wrongFormatExcel: false,
-            file: null,
-            fileContent: null,
-            selectedProductsForChart: null,
-            datosFiltrados: [],
-            datosExcel: [],
-            columnasExcel: [],
+      wrongFormatExcel: false,
+      file: null,
+      fileContent: null,
+      selectedProductsForChart: null,
         }
     }
 }
@@ -436,13 +385,12 @@ export default {
           @click="confirmDeleteSelected"
           :disabled="!selectedProducts || !selectedProducts.length"
         />
-        <Button
+        <Button class="!ml-2"
                     icon="pi pi-external-link"
                     label="Exportar Excel"
-                    class="!ml-2"
                     @click="exportCSV($event)"
                 />
-                <Button label="Importar Excel" icon="pi pi-upload" class="!ml-2" @click="openImportExcel" />        
+                <Button label="Importar Excel" icon="pi pi-upload" class="!ml-2" @click="openImportExcel" />
       </template>
     </Toolbar>
     <section class="bg-white" id="tablaIngreso">
@@ -452,13 +400,12 @@ export default {
                 <div>
                     <Toast />
                 </div>
-                <!-- model para abrir grafica -->
-          <Button label="Gráfica" icon="pi pi-chart-bar" @click="openResponsive" />
+                <Button label="Gráfica" icon="pi pi-chart-bar" @click="openResponsive" />
           <Dialog header="Gráfica dinámica" v-model:visible="displayResponsive"
         :breakpoints="{ '960px': '75vw', '75vw': '90vw' }" :style="{ width: '70vw' }">
         <!-- contenido del dialog/model desde aqui... -->
         <div class="w-full" id="contenedorGrafica">
-          <GraficaEgresadosTotales :data="selectedProducts" />
+          <GraficaTituladosTotalesCarreras :data="selectedProducts" />
         </div>
         <template #footer>
           <Button label="Cerrar" icon="pi pi-check" @click="closeResponsive" autofocus />
@@ -468,25 +415,21 @@ export default {
       </Dialog>
                 
                 <MultiSelect
-                    v-model="filters.periodo.value"
-                    :options="filtrarCuatri()"
+                v-model="filters.periodo.value"
+                :options="filtrarCuatri()"
                     placeholder="Periodo"
                     display="chip"
                 />
                 <InputNumber
-                v-model="filters.año.value"
+          v-model="filters.año.value"
                 mode="decimal"
                 :min="0"
                 :max="10000"
                 placeholder="Año"
                 />
-                <MultiSelect
-                    v-model="filters.carrera.value"
-                    :options="filtrarCarreras()"
-                    placeholder="Carrera"
-                    display="chip"
-                />
-
+                <MultiSelect v-model="filters.carrera.value" :options="filtrarCarreras()" placeholder="Carrera"
+                  display="chip" />
+                
                 <Button
                     icon="pi pi-times"
                     label="Limpiar"
@@ -496,7 +439,7 @@ export default {
         </div>
     </div>
     <DataTable
-        :value="totales"
+        :value="totalescarreras"
         :paginator="true"
         class="p-datatable-costumers"
         :rows="7"
@@ -518,9 +461,7 @@ export default {
         <Column field="carrera" header="Carrera" :sortable="true"></Column>
         <Column field="hombres" header="Hombres" :sortable="true"></Column>
         <Column field="mujeres" header="Mujeres" :sortable="true"></Column>
-        <Column field="egresados" header="Egresados" :sortable="true"></Column>
-        <Column field="titulados" header="Titulados" :sortable="true"></Column>
-        <Column field="no_titulados" header="No Titulados" :sortable="true"></Column>
+        <Column field="total" header="Total" :sortable="true"></Column>
         <Column :exportable="false" style="min-width: 8rem" class="p-6">
           <template #body="slotProps">
             <Button icon="pi pi-pencil" class="p-button-rounded p-button-success !mr-2"
@@ -535,8 +476,7 @@ export default {
           </div>
         </template>    
     </DataTable>
-    <!-- Dialog para importar excel -->
-  <Dialog v-model:visible="importExcelDialog" :breakpoints="{ '1260px': '75vw', '640px': '85vw' }"
+    <Dialog v-model:visible="importExcelDialog" :breakpoints="{ '1260px': '75vw', '640px': '85vw' }"
     :style="{ width: '45vw' }" header="Importar Excel" :modal="true" class="p-fluid">
 
 
@@ -579,9 +519,9 @@ export default {
           <form @submit.prevent="registrarTotal">
             <!-- select con opciones -->
             <div class="field col-12 md:col-3">
-              <Dropdown
-                v-model="TOTcuatri"
-                :options="cuatrisLista"
+            <Dropdown
+                v-model="TOTperiodo"
+                :options="periodosLista"
                 optionLabel="name"
                 optionValue="code"
                 placeholder="Periodo"
@@ -590,26 +530,14 @@ export default {
             </div>
 
             <div class="field col-12 md:col-3">
-              <label for="minmax">Año</label>
-              <InputNumber
-                inputId="minmax"
-                v-model="TOTaño"
-                mode="decimal"
-                :min="0"
-                :max="10000"
-                :showButtons="true"
-              />
-            </div>
+          <label for="minmax">Año de egreso</label>
+          <InputNumber inputId="minmax" v-model="TOTaño" mode="decimal" :min="0" :max="10000" :showButtons="true" />
+        </div>
 
-            <Dropdown
-              v-model="TOTcarrera"
-              :options="carrerasLista"
-              optionLabel="name"
-              optionValue="code"
-              :filter="true"
-              placeholder="Carrera"
-              class="!mt-3"
-            />
+        <label for="minmax">Carrera</label>
+        <Dropdown v-model="TOTcarrera" :options="carrerasLista" optionLabel="name" optionValue="code" :filter="true"
+          placeholder="Carrera" />
+
 
             <div class="field col-12 md:col-3">
               <label for="minmax">Hombres</label>
@@ -628,18 +556,6 @@ export default {
               <InputNumber
                 inputId="minmax"
                 v-model="TOTmujeres"
-                mode="decimal"
-                :min="0"
-                :max="10000"
-                :showButtons="true"
-              />
-            </div>
-
-            <div class="field col-12 md:col-3">
-              <label for="minmax">Titulados</label>
-              <InputNumber
-                inputId="minmax"
-                v-model="TOTtitulados"
                 mode="decimal"
                 :min="0"
                 :max="10000"
@@ -676,11 +592,11 @@ export default {
           <form @submit.prevent="editarTotal">
 
             <InputText id="id" v-model="product.id" hidden />
-        
+
             <div class="field col-12 md:col-3">
-              <Dropdown
-                v-model="TOTcuatri"
-                :options="cuatrisLista"
+            <Dropdown
+                v-model="TOTperiodo"
+                :options="periodosLista"
                 optionLabel="name"
                 optionValue="code"
                 placeholder="Periodo"
@@ -688,62 +604,23 @@ export default {
               />
             </div>
 
-            <div class="field col-12 md:col-3">
-              <label for="minmax">Año</label>
-              <InputNumber
-                inputId="minmax"
-                v-model="TOTaño"
-                mode="decimal"
-                :min="0"
-                :max="10000"
-                :showButtons="true"
-              />
+            <div class="p-field p-col-12 p-md-12">
+              <label for="total_ingresos">Año</label>
+              <InputNumber id="total_ingresos" v-model="TOTaño"  />
             </div>
 
-            <Dropdown
-              v-model="TOTcarrera"
-              :options="carrerasLista"
-              optionLabel="name"
-              optionValue="code"
-              :filter="true"
-              placeholder="Carrera"
-              class="!mt-3"
-            />
+            <label for="minmax">Carrera</label>
+        <Dropdown v-model="TOTcarrera" :options="carrerasLista" optionLabel="name" optionValue="code" :filter="true"
+          placeholder="Carrera" />
 
-            <div class="field col-12 md:col-3">
-              <label for="minmax">Hombres</label>
-              <InputNumber
-                inputId="minmax"
-                v-model="TOThombres"
-                mode="decimal"
-                :min="0"
-                :max="10000"
-                :showButtons="true"
-              />
+            <div class="p-field p-col-12 p-md-12">
+              <label for="total_ingresos">Hombres</label>
+              <inputNumber id="total_ingresos" v-model="this.TOThombres"  />
             </div>
 
-            <div class="field col-12 md:col-3">
-              <label for="minmax">Mujeres</label>
-              <InputNumber
-                inputId="minmax"
-                v-model="TOTmujeres"
-                mode="decimal"
-                :min="0"
-                :max="10000"
-                :showButtons="true"
-              />
-            </div>
-
-            <div class="field col-12 md:col-3">
-              <label for="minmax">Titulados</label>
-              <InputNumber
-                inputId="minmax"
-                v-model="TOTtitulados"
-                mode="decimal"
-                :min="0"
-                :max="10000"
-                :showButtons="true"
-              />
+            <div class="p-field p-col-12 p-md-12">
+              <label for="total_ingresos">Mujeres</label>
+              <inputNumber id="total_ingresos" v-model="this.TOTmujeres"  />
             </div>
             
             <Button type="submit" label="Guardar" icon="pi pi-check" class="!mt-3" />

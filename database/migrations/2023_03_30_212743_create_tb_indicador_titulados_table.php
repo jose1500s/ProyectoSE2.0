@@ -20,9 +20,9 @@ return new class extends Migration
             $table->integer('total');
             $table->integer('hombre');
             $table->integer('mujer');
-            $table->integer('cedula');
-            $table->date('cuatrimestre_egreso');
-            $table->date('fecha_titulacion');
+            $table->string('periodo');
+            $table->integer('año');
+            $table->string('periodo_con_año');
             $table->timestamps();
         });
     }

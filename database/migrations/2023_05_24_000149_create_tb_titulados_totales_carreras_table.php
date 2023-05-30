@@ -13,20 +13,16 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('tb_egresados', function (Blueprint $table) {
+        Schema::create('tb_titulados_totales_carreras', function (Blueprint $table) {
             $table->id();
-            $table->string('carrera', 50);
-            $table->integer('generacion');
-            $table->integer('egresados');
-            $table->integer('titulados');
-            $table->integer('no_titulados');
-            $table->integer('año_egreso');
-            $table->string('cuatrimestre');
+            $table->string('carrera');
             $table->integer('hombres');
             $table->integer('mujeres');
+            $table->integer('total');
+            $table->string('periodo');
+            $table->integer('año');
             $table->string('periodo_con_año');
             $table->timestamps();
-             
         });
     }
 
@@ -37,6 +33,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tb_egresados');
+        Schema::dropIfExists('tb_titulados_totales_carreras');
     }
 };
