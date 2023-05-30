@@ -16,6 +16,8 @@ return new class extends Migration
         Schema::create('tb_re_ingresos', function (Blueprint $table) {
             $table->id();
             $table->string('carrera', 50);
+            $table->integer('hombres');
+            $table->integer('mujeres');
             $table->integer('cuatrimestre');
             $table->integer('generacion');
             $table->string('tipo_baja',50);

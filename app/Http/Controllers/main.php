@@ -83,6 +83,9 @@ class main extends Controller
       $admision->carrera = $fila['carrera'];
       $admision->aspirantes = $fila['aspirantes'];
       $admision->examinados = $fila['examinados'];
+      $admision->hombres = $fila['hombres'];
+      $admision->mujeres = $fila['mujeres'];
+      $admision->admitidos = $fila['admitidos'];
       $admision->no_admitidos = $fila['no_admitidos'];
       $admision->periodo = $fila['periodo'];
       $admision->save();
@@ -92,12 +95,38 @@ class main extends Controller
 }
 
 
+   public function importarDataExcelNIngresos(Request $request){
+      $datosExcel = $request->input('datos');
+
+      foreach ($datosExcel as $fila) {
+         $ningreso = new tb_nuevo_ingreso();
+         $ningreso->carrera = $fila['carrera'];
+         $ningreso->total_ingresos = $fila['total_ingresos'];
+         $ningreso->generacion = $fila['generacion'];
+         $ningreso->hombres = $fila['hombres'];
+         $ningreso->mujeres = $fila['mujeres'];
+         $ningreso->admitidos = $fila['admitidos'];
+         $ningreso->inscritos = $fila['inscritos'];
+         $ningreso->proceso = $fila['proceso'];
+         $ningreso->periodo = $fila['periodo'];
+         $ningreso->save();
+
+         
+      }
+
+      return redirect()->route('usuario.ingreso');
+   }
+
+
 
    // ruta para guardar una nueva admision del indicador ingreso en la admision
    function registrarAdmision(Request $request) {
       $carrera = $request->input('carreras');
       $aspirantes = $request->input('aspirantes');
       $examinados = $request->input('examinados');
+      $hombres = $request->input('hombres');
+      $mujeres = $request->input('mujeres');
+      $admitidos = $hombres + $mujeres;
       $no_admitidos = $request->input('noAdmitidos');
       $periodo = $request->input('periodos');
 
@@ -106,6 +135,9 @@ class main extends Controller
       $admision->carrera = $carrera;
       $admision->aspirantes = $aspirantes;
       $admision->examinados = $examinados;
+      $admision->hombres = $hombres;
+      $admision->mujeres = $mujeres;
+      $admision->admitidos = $admitidos;
       $admision->no_admitidos = $no_admitidos;
       $admision->periodo = $periodo;
       $admision->save();
@@ -130,6 +162,9 @@ class main extends Controller
    $carrera = $request->input('carrera');
    $aspirantes = $request->input('aspirantes');
    $examinados = $request->input('examinados');
+   $hombres = $request->input('hombres');
+   $mujeres = $request->input('mujeres');
+   $admitidos = $hombres + $mujeres;
    $no_admitidos = $request->input('no_admitidos');
    $periodo = $request->input('periodo');
 
@@ -138,6 +173,9 @@ class main extends Controller
    $admision->carrera = $carrera;
    $admision->aspirantes = $aspirantes;
    $admision->examinados = $examinados;
+   $admision->hombres = $hombres;
+   $admision->mujeres = $mujeres;
+   $admision->admitidos = $admitidos;
    $admision->no_admitidos = $no_admitidos;
    $admision->periodo = $periodo;
    $admision->save();
@@ -437,19 +475,21 @@ class main extends Controller
   function registrarNIngreso(Request $request) {
    $carrera = $request->input('carrera');
    $total_ingresos = $request->input('totalIngresos');
-   $sexo = $request->input('sexo');
    $generacion = $request->input('generacion');
-   $admitidos = $request->input('admitidos');
+   $hombres = $request->input('hombres');
+   $mujeres = $request->input('mujeres');
+   $admitidos = $hombres + $mujeres;
    $inscritos = $request->input('inscritos');
    $proceso = $request->input('procesos');
-   $periodo = $request->input('periodos');
+   $periodo = "SEP-DIC ". date("Y"); 
 
    // crear un nuevo registro en la tabla tb_nuevo_ingreso
    $nuevo_ingreso = new tb_nuevo_ingreso();
    $nuevo_ingreso->carrera = $carrera;
    $nuevo_ingreso->total_ingresos = $total_ingresos;
-   $nuevo_ingreso->sexo = $sexo;
    $nuevo_ingreso->generacion = $generacion;
+   $nuevo_ingreso->hombres = $hombres;
+   $nuevo_ingreso->mujeres = $mujeres;
    $nuevo_ingreso->admitidos = $admitidos;
    $nuevo_ingreso->inscritos = $inscritos;
    $nuevo_ingreso->proceso = $proceso;
@@ -480,23 +520,23 @@ class main extends Controller
       $id = $request->input('id');
       $carrera = $request->input('carrera');
       $total_ingresos = $request->input('totalIngresos');
-      $sexo = $request->input('sexo');
       $generacion = $request->input('generacion');
-      $admitidos = $request->input('admitidos');
+      $hombres = $request->input('hombres');
+      $mujeres = $request->input('mujeres');
+      $admitidos = $hombres + $mujeres;
       $inscritos = $request->input('inscritos');
       $proceso = $request->input('procesos');
-      $periodo = $request->input('periodos');
 
       // actualizar el registro
       $nuevo_ingreso = tb_nuevo_ingreso::find($id);
       $nuevo_ingreso->carrera = $carrera;
       $nuevo_ingreso->total_ingresos = $total_ingresos;
-      $nuevo_ingreso->sexo = $sexo;
       $nuevo_ingreso->generacion = $generacion;
+      $nuevo_ingreso->hombres = $hombres;
+      $nuevo_ingreso->mujeres = $mujeres;
       $nuevo_ingreso->admitidos = $admitidos;
       $nuevo_ingreso->inscritos = $inscritos;
       $nuevo_ingreso->proceso = $proceso;
-      $nuevo_ingreso->periodo = $periodo;
       $nuevo_ingreso->save();
 
       // retornar a la vista ingreso
