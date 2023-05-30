@@ -77,6 +77,34 @@ class BajasController extends Controller
         $temporal->delete();
         return redirect()->route('usuario.bajas');
      }
+     public function importarDataExcelBajas(Request $request){
+      $excel = $request->input('datos');
+      foreach($excel as $fila){
+         $periodoconaño = $fila['periodo'] . " " . strval($fila['año']);
+         $total = $fila['hombres'] + $fila['mujeres'];
+         if ($fila['tipo_baja'] == "temporal"){
+            $baja = new tb_bajas_temporales();
+         }
+         elseif ($fila['tipo_baja'] == "voluntaria"){
+            $baja = new tb_bajas_voluntarias();
+         }
+         elseif ($fila['tipo_baja'] == "academica"){
+            $baja = new tb_bajas_academicas();
+         }
+         elseif ($fila['tipo_baja'] == "administrativa"){
+            $baja = new tb_bajas_administrativas();
+         }
+         $baja->periodo = $fila['periodo'];
+         $baja->año = $fila['año'];
+         $baja->periodo_con_año = $periodoconaño;
+         $baja->carrera = $fila['carrera'];
+         $baja->hombres = $fila['hombres'];
+         $baja->mujeres = $fila['mujeres'];
+         $baja->total = $total;
+         $baja->save();
+      }
+      return redirect()->route('usuario.bajas');
+     }
 
      public function registrarVoluntaria(Request $request){
         $periodo = $request->input('periodo');

@@ -239,6 +239,9 @@ Route::middleware([
     Route::post('/importar-excel-egresados-Totales-Generacion', [main::class, 'importarDataExcelEgresadosGeneracion']);
 
     // --------------------------------------------- BAJAS ---------------------------------------------------
+
+    Route::post('/importar-excel-bajas', [BajasController::class, 'importarDataExcelBajas']);
+    
     // ------------------------------------------- TEMPORALES -------------------------------------------------
 
     Route::post('/registro-baja-temporal', [BajasController::class, 'registrarTemporal']);

@@ -1,5 +1,6 @@
 <script>
 import AppLayout from "@/Layouts/AppLayout.vue";
+import GraficaBajas from "./GraficaBajas.vue";
 // PrimeVue
 import DataTable from "primevue/datatable";
 import Column from "primevue/column";
@@ -30,7 +31,7 @@ export default {
       columnasExcel: [],
       carrerasLista: [
         { name: "Manufactura", code: "Manufactura" },
-        { name: "Mecatronica", code: "Mecatronica" },
+        { name: "Mecatrónica", code: "Mecatronica" },
         { name: "Negocios", code: "Negocios" },
         { name: "Procesos", code: "Procesos" },
         { name: "Pymes", code: "Pymes" },
@@ -48,12 +49,8 @@ export default {
         { name: "Periodo", code: "1"},
         { name: "Año", code: "2"},
         { name: "Carrera", code: "3"},
-        { name: "Generación", code: "4"},
-        { name: "Hombres", code: "5"},
-        { name: "Mujeres", code: "6"},
-        { name: "Egresados", code: "7"},
-        { name: "Titulados", code: "8"},
-        { name: "No Titulados", code: "9"},
+        { name: "Hombres", code: "4"},
+        { name: "Mujeres", code: "5"},
       ],
       productDialog: false,
       editDialog: false,
@@ -301,6 +298,7 @@ export default {
         readXlsxFile(input.files[0]).then((rows) => {
           //mandar a datosExcel los datos apartir de la psicion 1 del array
           this.datosExcel = rows.slice(1);
+          for (let i = 0; i < this.datosExcel.length; i++) { this.datosExcel[i][6] = "temporal"}
           // mandar a columnasExcel las columnas del archivo
           this.columnasExcel = rows[0];
           console.log(this.datosExcel)
@@ -310,12 +308,8 @@ export default {
             this.columnasExcel[1] != "Periodo" ||
             this.columnasExcel[2] != "Año" ||
             this.columnasExcel[3] != "Carrera" ||
-            this.columnasExcel[4] != "Generación" ||
-            this.columnasExcel[5] != "Hombres" ||
-            this.columnasExcel[6] != "Mujeres" ||
-            this.columnasExcel[7] != "Egresados" ||
-            this.columnasExcel[8] != "Titulados" ||
-            this.columnasExcel[9] != "No Titulados"
+            this.columnasExcel[4] != "Hombres" ||
+            this.columnasExcel[5] != "Mujeres"
           ) {
             this.wrongFormatExcel = true;
             this.$toast.add({
@@ -339,12 +333,9 @@ export default {
           periodo: this.datosExcel[i][1],
           año: this.datosExcel[i][2],
           carrera: this.datosExcel[i][3],
-          generacion: this.datosExcel[i][4],
-          hombres: this.datosExcel[i][5],
-          mujeres: this.datosExcel[i][6],
-          egresados: this.datosExcel[i][7],
-          titulados: this.datosExcel[i][8],
-          no_titulados: this.datosExcel[i][9],
+          hombres: this.datosExcel[i][4],
+          mujeres: this.datosExcel[i][5],
+          tipo_baja: this.datosExcel[i][6]
         })
       }
 
@@ -352,7 +343,7 @@ export default {
         datos: datosInsertar,
       };
 
-      this.$inertia.post("/importar-excel-egresados", data, {
+      this.$inertia.post("/importar-excel-bajas", data, {
         preserveState: true,
         preserveScroll: true,
         onSuccess: () => {
@@ -388,6 +379,7 @@ export default {
     Toolbar,
     Dropdown,
     InputNumber,
+    GraficaBajas,
   },
   props: {
     temporal: Array,
@@ -544,6 +536,20 @@ export default {
             <div>
               <Toast />
             </div>
+            <!-- model para abrir grafica -->
+          <Button label="Gráfica" icon="pi pi-chart-bar" @click="openResponsive" />
+          <Dialog header="Gráfica dinámica" v-model:visible="displayResponsive"
+        :breakpoints="{ '960px': '75vw', '75vw': '90vw' }" :style="{ width: '70vw' }">
+        <!-- contenido del dialog/model desde aqui... -->
+        <div class="w-full" id="contenedorGrafica">
+          <GraficaBajas :data="selectedProducts" />
+        </div>
+        <template #footer>
+          <Button label="Cerrar" icon="pi pi-check" @click="closeResponsive" autofocus />
+          <!-- boton para guardar la grafica como img -->
+          <Button label="Guardar" icon="pi pi-save" @click="saveImage" />
+        </template>
+      </Dialog>
 
             <!-- Filtros -->
                 
@@ -627,7 +633,7 @@ export default {
 
         <!-- Dialog para editar el producto toma los valores del producto seleccionado -->
         <Dialog
-          header="Editar Egreso"
+          header="Editar Baja"
           v-model:visible="editDialog"
           :breakpoints="{ '960px': '75vw', '75vw': '85vw' }"
           :style="{ width: '25vw' }"
