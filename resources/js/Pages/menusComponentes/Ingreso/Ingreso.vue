@@ -79,6 +79,7 @@ export default {
     limpiarFiltros() {
       // limpia/eliminar los filtros realizados en la  tabla y volver a mostrar todos los datos
       this.filters.carrera.value = null;
+      this.filters.periodo.value = null;
       this.filters.Proceso.value = null;
       this.filters.fecha.value = null;
       this.$refs.dt.filter(this.filters, "carrera");
@@ -135,11 +136,13 @@ export default {
     },
     registrarAdmision() {
       this.submitted = true; // esto es para que se muestre el mensaje de error en el formulario
-      // validar los campos del formulario, que no esten vacios y si estan mandar un mensaje y no enviar el formulario, los campos son: carrerasModel, aspirantes, examinados, noAdmitidos y selectedPeriodo
+      // validar los campos del formulario, que no esten vacios y si estan mandar un mensaje y no enviar el formulario, los campos son: carrerasModel, aspirantes, examinados, hombres, mujeres, noAdmitidos y selectedPeriodo
       if (
         this.carreras == null ||
         this.aspirantes == 0 ||
         this.examinados == 0 ||
+        this.hombres == 0 ||
+        this.mujeres == 0 ||
         this.noAdmitidos == 0 ||
         this.periodos == null
       ) {
@@ -156,6 +159,8 @@ export default {
           carreras: this.carreras,
           aspirantes: this.aspirantes,
           examinados: this.examinados,
+          hombres: this.hombres,
+          mujeres: this.mujeres,
           noAdmitidos: this.noAdmitidos,
           periodos: this.periodos,
         };
@@ -177,12 +182,14 @@ export default {
     editarAdmision() {
       // editarl usando el dialog de editar producto
       this.submitted = true; // esto es para que se muestre el mensaje de error en el formulario
-      // validar los campos del formulario, que no esten vacios y si estan mandar un mensaje y no enviar el formulario, los campos son: carrerasModel, aspirantes, examinados, noAdmitidos y selectedPeriodo
+      // validar los campos del formulario, que no esten vacios y si estan mandar un mensaje y no enviar el formulario, los campos son: carrerasModel, aspirantes, examinados, hombres, mujeres, noAdmitidos y selectedPeriodo
       if (
         this.product.id == 0 ||
         this.product.carrera == null ||
         this.product.aspirantes == 0 ||
         this.product.examinados == 0 ||
+        this.product.hombres == 0 ||
+        this.product.mujeres == 0 ||
         this.product.no_admitidos == 0 ||
         this.product.periodo == null
       ) {
@@ -200,6 +207,8 @@ export default {
           carrera: this.product.carrera,
           aspirantes: this.product.aspirantes,
           examinados: this.product.examinados,
+          hombres: this.product.hombres,
+          mujeres: this.product.mujeres,
           no_admitidos: this.product.no_admitidos,
           periodo: this.product.periodo,
         };
@@ -307,13 +316,16 @@ export default {
           this.columnasExcel = rows[0];
           console.log(this.datosExcel)
           console.log(this.columnasExcel)
-          // si el archivo no tiene las columnas 'carrera', 'aspirantes', 'examinados', 'no admitidos' y 'periodo' no se sube y mandar un mensaje de error
+          // si el archivo no tiene las columnas 'carrera', 'aspirantes', 'examinados', 'hombres', 'mujeres', 'admitidos', 'no admitidos' y 'periodo' no se sube y mandar un mensaje de error
           if (
             this.columnasExcel[1] != "Carrera" ||
             this.columnasExcel[2] != "Aspirantes" ||
             this.columnasExcel[3] != "Examinados" ||
-            this.columnasExcel[4] != "No Admitidos" ||
-            this.columnasExcel[5] != "Periodo"
+            this.columnasExcel[4] != "Hombres" ||
+            this.columnasExcel[5] != "Mujeres" ||
+            this.columnasExcel[6] != "Admitidos" ||
+            this.columnasExcel[7] != "No Admitidos" ||
+            this.columnasExcel[8] != "Periodo"
           ) {
             this.wrongFormatExcel = true;
             this.$toast.add({
@@ -337,9 +349,12 @@ export default {
           carrera: this.datosExcel[i][1],
           aspirantes: this.datosExcel[i][2],
           examinados: this.datosExcel[i][3],
-          no_admitidos: this.datosExcel[i][4],
-          periodo: this.datosExcel[i][5],
-        })
+          hombres: this.datosExcel[i][4],
+          mujeres: this.datosExcel[i][5],
+          admitidos: this.datosExcel[i][6],
+          no_admitidos: this.datosExcel[i][7],
+          periodo: this.datosExcel[i][8],
+        });
       }
 
       const data = {
@@ -389,22 +404,26 @@ export default {
 
       periodosLista: [
         { name: "SEP-DIC " + new Date().getFullYear(), code: "SEP-DIC" + new Date().getFullYear() },
-        { name: "ENE-MAR " + new Date().getFullYear(), code: "ENE-MAR" + new Date().getFullYear() },
-        { name: "ABR-JUN " + new Date().getFullYear(), code: "ABR-JUN" + new Date().getFullYear() },
-        { name: "JUL-SEP " + new Date().getFullYear(), code: "JUL-SEP" + new Date().getFullYear() },
+        { name: "ENE-ABR " + new Date().getFullYear(), code: "ENE-MAR" + new Date().getFullYear() },
+        { name: "MAY-AGO " + new Date().getFullYear(), code: "ABR-JUN" + new Date().getFullYear() },
       ],
       columnasPreviewExcel: [
         { name: "ID", code: "0" },
         { name: "Carrera", code: "1" },
         { name: "Aspirantes", code: "2" },
         { name: "Examinados", code: "3" },
-        { name: "No Admitidos", code: "4" },
-        { name: "Periodo", code: "5" },
+        { name: "Hombres", code: "4" },
+        { name: "Mujeres", code: "5" },
+        { name: "Admitidos", code: "6" },
+        { name: "No Admitidos", code: "7" },
+        { name: "Periodo", code: "8" },
       ],
       carreras: null,
       periodos: null,
       aspirantes: 0,
       examinados: 0,
+      hombres: 0,
+      mujeres: 0,
       noAdmitidos: 0,
       productDialog: false,
       editDialog: false,
@@ -489,6 +508,16 @@ export default {
         </div>
 
         <div class="field col-12 md:col-3">
+          <label for="minmax">Hombres</label>
+          <InputNumber inputId="minmax" v-model="hombres" mode="decimal" :min="0" :max="10000" :showButtons="true" />
+        </div>
+
+        <div class="field col-12 md:col-3">
+          <label for="minmax">Mujeres</label>
+          <InputNumber inputId="minmax" v-model="mujeres" mode="decimal" :min="0" :max="10000" :showButtons="true" />
+        </div>
+
+        <div class="field col-12 md:col-3">
           <label for="minmax">No Admitidos</label>
           <InputNumber inputId="minmax" v-model="noAdmitidos" mode="decimal" :min="0" :max="10000" :showButtons="true" />
         </div>
@@ -532,11 +561,10 @@ export default {
           <Button icon="pi pi-times" label="Limpiar" @click="limpiarFiltros()" />
         </div>
       </div>
-   
-      <DataTable exportFilename="Admisiones" :value="ingresos" :paginator="true"  class="p-datatable-customers" :rows="7"
+
+      <DataTable exportFilename="Admisiones" :value="ingresos" :paginator="true" class="p-datatable-customers" :rows="7"
         ref="dt" v-model:filters="filters" v-model:selection="selectedProducts" :emptyMessage="noDataMessage" stripedRows
-        sortMode="multiple" removableSort 
-        >
+        sortMode="multiple" removableSort>
 
         <Column selectionMode="multiple" style="width: 3rem" :exportable="false"></Column>
 
@@ -544,6 +572,9 @@ export default {
         <Column field="carrera" header="Carrera" :sortable="true"></Column>
         <Column field="aspirantes" header="Aspirantes" :sortable="true"></Column>
         <Column field="examinados" header="Examinados" :sortable="true"></Column>
+        <Column field="hombres" header="Hombres" :sortable="true"></Column>
+        <Column field="mujeres" header="Mujeres" :sortable="true"></Column>
+        <Column field="admitidos" header="Admitidos" :sortable="true"></Column>
         <Column field="no_admitidos" header="No Admitidos" :sortable="true"></Column>
         <Column field="periodo" header="Periodo" :sortable="true"></Column>
         <Column :exportable="false" style="min-width: 8rem" class="p-6">
@@ -598,6 +629,19 @@ export default {
               <InputText inputId="minmax" v-model.trim="product.examinados" mode="decimal" :min="0" :max="10000"
                 :showButtons="true" />
             </div>
+
+            <div class="p-field p-col-12 p-md-6">
+              <label for="hombres">Hombres</label>
+              <InputText inputId="minmax" v-model.trim="product.hombres" mode="decimal" :min="0" :max="10000"
+                :showButtons="true" />
+            </div>
+
+            <div class="p-field p-col-12 p-md-6">
+              <label for="mujeres">Mujeres</label>
+              <InputText inputId="minmax" v-model.trim="product.mujeres" mode="decimal" :min="0" :max="10000"
+                :showButtons="true" />
+            </div>
+
             <div class="p-field p-col-12 p-md-6">
               <label for="no_admitidos">No Admitidos</label>
               <InputText inputId="minmax" v-model.trim="product.no_admitidos" mode="decimal" :min="0" :max="10000"
@@ -605,8 +649,9 @@ export default {
             </div>
             <div class="p-field p-col-12 p-md-6">
               <label for="periodo">Periodo</label>
-              <InputText id="name" v-model.trim="product.periodo" required="true" />
+              <InputText id="name" v-model.trim="product.periodo" required="true"/>
             </div>
+            
             <Button type="submit" label="Guardar" icon="pi pi-check" class="!mt-3" />
           </form>
         </div>
