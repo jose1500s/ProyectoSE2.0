@@ -22,12 +22,19 @@ use App\Http\Controllers\Ingreso\admisionGraficasController;
 */
 
 Route::get('/', function () {
-    return Inertia::render('Auth/Login', [
+    //si esta autenticado redirigir a dashboard
+    if(Auth::check()){
+        return redirect('/dashboard');
+    //si no esta autenticado redirigir a login
+    }else{
+        return Inertia::render('Auth/Login', [
         'canResetPassword' => Route::has('password.request'),
         'canRegister' => Route::has('register'),
         'laravelVersion' => Application::VERSION,
         'phpVersion' => PHP_VERSION,
     ]);
+    }
+    
 });
 
 Route::middleware([
@@ -239,5 +246,7 @@ Route::middleware([
     // ---------- rutas para GRAFICAS -------------
     Route::post('/obtener-filtro-carreras-admision', [admisionGraficasController::class, 'filtrarDatosCarreras']);
     // ruta para importar excels
-     Route::post('/importar-excel-admisiones', [main::class, 'importarDataExcelAdmisiones']);
+    Route::post('/importar-excel-admisiones', [main::class, 'importarDataExcelAdmisiones']);
+
+    Route::post('/importar-excel-ningresos', [main::class, 'importarDataExcelNIngresos']);
 });
