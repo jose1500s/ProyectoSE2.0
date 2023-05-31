@@ -10,6 +10,7 @@ use App\Http\Controllers\main;
 use App\Http\Controllers\BajasController;
 use App\Http\Controllers\IngresoController;
 use App\Http\Controllers\EgresadosController;
+use App\Http\Controllers\TituladosController;
 use App\Http\Controllers\Ingreso\admisionGraficasController;
 
 
@@ -62,7 +63,7 @@ Route::middleware([
     Route::get('/egresados', [EgresadosController::class, 'egresados'])->name('usuario.egresados');
 
     // Ruta para abrir el menu de titulados
-    Route::get('/titulados', [main::class, 'titulados'])->name('usuario.titulados');
+    Route::get('/titulados', [TituladosController::class, 'titulados'])->name('usuario.titulados');
 
     // Ruta para abrir el menu de becas
     Route::get('/becas', [main::class, 'becas'])->name('usuario.becas');
@@ -95,49 +96,49 @@ Route::middleware([
     // ---------- TAB TITULADOS ------------
 
     // ruta del indicador TITULADOS, para REGISTRAR una admision
-    Route::post('/registro-Titulado', [main::class, 'registrarTitulacion']);
+    Route::post('/registro-Titulado', [TituladosController::class, 'registrarTitulacion']);
 
     // ruta del indicador TITULADOS, para EDITAR una admision que recibe el id de la admision
-    Route::post('/editar-Titulado/{id}', [main::class, 'editarTitulacion']);
+    Route::post('/editar-Titulado/{id}', [TituladosController::class, 'editarTitulacion']);
 
     // ruta del indicador TITULADOS, para ELIMINAR una admision que recibe el id de la admision
-    Route::post('/eliminar-Titulado/{id}', [main::class, 'eliminarTitulacion']);
+    Route::post('/eliminar-Titulado/{id}', [TituladosController::class, 'eliminarTitulacion']);
 
     // ruta del indicador TITULADOS, para ELIMINAR VARIAS admisiones que recibe como array los ids de las admisiones
-    Route::post('/eliminar-Titulados', [main::class, 'eliminarTitulaciones']);
+    Route::post('/eliminar-Titulados', [TituladosController::class, 'eliminarTitulaciones']);
 
-    Route::post('/importar-excel-titulados',[main::class,'importarDataExcelTitulados']);
+    Route::post('/importar-excel-titulados',[TituladosController::class,'importarDataExcelTitulados']);
 
     // ---------------- TAB TITULADOS TOTALES GENERACIONES -------------------------
     // ruta del indicador TITULADOS, para REGISTRAR una admision
-    Route::post('/registro-Titulado-Total', [main::class, 'registrarTitulacionTotal']);
+    Route::post('/registro-Titulado-Total', [TituladosController::class, 'registrarTitulacionTotal']);
 
     // ruta del indicador TITULADOS, para EDITAR una admision que recibe el id de la admision
-    Route::post('/editar-Titulado-Total/{id}', [main::class, 'editarTitulacionTotal']);
+    Route::post('/editar-Titulado-Total/{id}', [TituladosController::class, 'editarTitulacionTotal']);
 
     // ruta del indicador TITULADOS, para ELIMINAR una admision que recibe el id de la admision
-    Route::post('/eliminar-Titulado-Total/{id}', [main::class, 'eliminarTitulacionTotal']);
+    Route::post('/eliminar-Titulado-Total/{id}', [TituladosController::class, 'eliminarTitulacionTotal']);
 
     // ruta del indicador TITULADOS, para ELIMINAR VARIAS admisiones que recibe como array los ids de las admisiones
-    Route::post('/eliminar-Titulados-Total', [main::class, 'eliminarTitulacionesTotal']);
+    Route::post('/eliminar-Titulados-Total', [TituladosController::class, 'eliminarTitulacionesTotal']);
 
-    Route::post('/importar-excel-titulados-generaciones', [main::class, 'importarDataExcelTituladosGeneraciones']);
+    Route::post('/importar-excel-titulados-generaciones', [TituladosController::class, 'importarDataExcelTituladosGeneraciones']);
 
     // ---------------- TAB TITULADOS TOTALES CARRERAS -------------------------
 
     // ruta del indicador TITULADOS, para REGISTRAR una admision
-    Route::post('/registro-Titulado-Total-Carreras', [main::class, 'registrarTitulacionTotalCarreras']);
+    Route::post('/registro-Titulado-Total-Carreras', [TituladosController::class, 'registrarTitulacionTotalCarreras']);
 
     // ruta del indicador TITULADOS, para EDITAR una admision que recibe el id de la admision
-    Route::post('/editar-Titulado-Total-Carreras/{id}', [main::class, 'editarTitulacionTotalCarreras']);
+    Route::post('/editar-Titulado-Total-Carreras/{id}', [TituladosController::class, 'editarTitulacionTotalCarreras']);
 
     // ruta del indicador TITULADOS, para ELIMINAR una admision que recibe el id de la admision
-    Route::post('/eliminar-Titulado-Total-Carreras/{id}', [main::class, 'eliminarTitulacionTotalCarreras']);
+    Route::post('/eliminar-Titulado-Total-Carreras/{id}', [TituladosController::class, 'eliminarTitulacionTotalCarreras']);
 
     // ruta del indicador TITULADOS, para ELIMINAR VARIAS admisiones que recibe como array los ids de las admisiones
-    Route::post('/eliminar-Titulados-Total-Carreras', [main::class, 'eliminarTitulacionesTotalCarreras']);
+    Route::post('/eliminar-Titulados-Total-Carreras', [TituladosController::class, 'eliminarTitulacionesTotalCarreras']);
 
-    Route::post('/importar-excel-titulados-carreras', [main::class, 'importarDataExcelTituladosCarreras']);
+    Route::post('/importar-excel-titulados-carreras', [TituladosController::class, 'importarDataExcelTituladosCarreras']);
 
     // ---------- FIN TAB TITULADOS ------------
 
