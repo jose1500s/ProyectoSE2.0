@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use resources\js\pages\Auth\Login;
 use App\Http\Controllers\main;
 use App\Http\Controllers\BajasController;
+use App\Http\Controllers\IngresoController;
 use App\Http\Controllers\Ingreso\admisionGraficasController;
 
 
@@ -48,7 +49,7 @@ Route::middleware([
     })->name('dashboard');
 
     // ruta para abrir el perfil del usuario
-    Route::get('/ingreso', [main::class, 'ingreso'])->name('usuario.ingreso');
+    Route::get('/ingreso', [IngresoController::class, 'ingreso'])->name('usuario.ingreso');
 
     // ruta para abrir el menu de bajas
     Route::get('/bajas', [BajasController::class, 'bajas'])->name('usuario.bajas');
@@ -77,16 +78,16 @@ Route::middleware([
     // ---------- TAB ADMISIONES ------------
     
     // ruta del indicador INGRESO/ADMISION, para REGISTRAR una admision
-    Route::post('/registro-Admision', [main::class, 'registrarAdmision']);
+    Route::post('/registro-Admision', [IngresoController::class, 'registrarAdmision']);
 
     // ruta del indicador INGRESO/ADMISION, para EDITAR una admision que recibe el id de la admision
-    Route::post('/editar-Admision/{id}', [main::class, 'editarAdmision']);
+    Route::post('/editar-Admision/{id}', [IngresoController::class, 'editarAdmision']);
 
     // ruta del indicador INGRESO/ADMISION, para ELIMINAR una admision que recibe el id de la admision
-    Route::post('/eliminar-Admision/{id}', [main::class, 'eliminarAdmision']);
+    Route::post('/eliminar-Admision/{id}', [IngresoController::class, 'eliminarAdmision']);
 
     // ruta del indicador INGRESO/ADMISION, para ELIMINAR VARIAS admisiones que recibe como array los ids de las admisiones
-    Route::post('/eliminar-Admisiones', [main::class, 'eliminarAdmisiones']);
+    Route::post('/eliminar-Admisiones', [IngresoController::class, 'eliminarAdmisiones']);
 
     // ---------- FIN TAB ADMISIONES ------------
 
@@ -144,46 +145,46 @@ Route::middleware([
 
 
     // ---------- TAB NUEVO INGRESO -------------
-    Route::post('/registro-NIngreso', [main::class, 'registrarNIngreso']);
+    Route::post('/registro-NIngreso', [IngresoController::class, 'registrarNIngreso']);
 
-    Route::post('/eliminar-NIngresos', [main::class, 'eliminarNIngresos']);
+    Route::post('/eliminar-NIngresos', [IngresoController::class, 'eliminarNIngresos']);
 
-    Route::post('/eliminar-NIngreso', [main::class, 'eliminarNIngreso']);
+    Route::post('/eliminar-NIngreso', [IngresoController::class, 'eliminarNIngreso']);
 
-    Route::post('/editar-NIngreso/{id}', [main::class, 'editarNIngreso']);
+    Route::post('/editar-NIngreso/{id}', [IngresoController::class, 'editarNIngreso']);
    
     // ---------- FIN TAB RE INGRESOS -------------
-    Route::post('/registrar-RIngresos', [main::class, 'registrarRIngreso']);
+    Route::post('/registrar-RIngresos', [IngresoController::class, 'registrarRIngreso']);
 
-    Route::post('/editar-RIngresos/{id}', [main::class, 'editarRIngresos']);
+    Route::post('/editar-RIngresos/{id}', [IngresoController::class, 'editarRIngresos']);
 
-    Route::post('/eliminar-RIngreso/{id}', [main::class, 'eliminarRIngreso']);
+    Route::post('/eliminar-RIngreso/{id}', [IngresoController::class, 'eliminarRIngreso']);
 
-    Route::post('/eliminar-RIngresos/{id}', [main::class, 'eliminarRIngresos']);
+    Route::post('/eliminar-RIngresos/{id}', [IngresoController::class, 'eliminarRIngresos']);
 
     // ---------- FIN TAB RE INGRESOS -------------
 
     // ---------- TAB EQUIVALENCIAS -------------
     
     // ruta del indicador INGRESO/EQUIVALENCIA, para REGISTRAR una equivalencia
-    Route::post('/registro-Equivalencia', [main::class, 'registrarEquivalencia']);
+    Route::post('/registro-Equivalencia', [IngresoController::class, 'registrarEquivalencia']);
 
-    Route::post('/editar-Equivalencia/{id}', [main::class, 'editarEquivalencia']);
+    Route::post('/editar-Equivalencia/{id}', [IngresoController::class, 'editarEquivalencia']);
 
-    Route::post('/eliminar-Equivalencia/{id}', [main::class, 'eliminarEquivalencia']);
+    Route::post('/eliminar-Equivalencia/{id}', [IngresoController::class, 'eliminarEquivalencia']);
 
-    Route::post('/eliminar-Equivalencias/{id}', [main::class, 'eliminarEquivalencias']);
+    Route::post('/eliminar-Equivalencias/{id}', [IngresoController::class, 'eliminarEquivalencias']);
 
     // ---------- FIN TAB Equivalencia -------------
 
     // ---------- TAB Maestrias -------------
-    Route::post('/registro-Maestria', [main::class, 'registrarMaestria']);
+    Route::post('/registro-Maestria', [IngresoController::class, 'registrarMaestria']);
 
-    Route::post('/editar-Maestria/{id}', [main::class, 'editarMaestria']);
+    Route::post('/editar-Maestria/{id}', [IngresoController::class, 'editarMaestria']);
 
-    Route::post('/eliminar-Maestria/{id}', [main::class, 'eliminarMaestria']);
+    Route::post('/eliminar-Maestria/{id}', [IngresoController::class, 'eliminarMaestria']);
 
-    Route::post('/eliminar-Maestrias/{id}', [main::class, 'eliminarMaestrias']);
+    Route::post('/eliminar-Maestrias/{id}', [IngresoController::class, 'eliminarMaestrias']);
 
     // ---------- FIN TAB Maestrias -------------
 
