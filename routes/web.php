@@ -11,6 +11,8 @@ use App\Http\Controllers\BajasController;
 use App\Http\Controllers\IngresoController;
 use App\Http\Controllers\EgresadosController;
 use App\Http\Controllers\TituladosController;
+use App\Http\Controllers\TransporteController;
+use App\Http\Controllers\BecasController;
 use App\Http\Controllers\Ingreso\admisionGraficasController;
 
 
@@ -66,10 +68,10 @@ Route::middleware([
     Route::get('/titulados', [TituladosController::class, 'titulados'])->name('usuario.titulados');
 
     // Ruta para abrir el menu de becas
-    Route::get('/becas', [main::class, 'becas'])->name('usuario.becas');
+    Route::get('/becas', [BecasController::class, 'becas'])->name('usuario.becas');
 
     // Ruta para abrir el menu de transporte
-    Route::get('/transporte', [main::class, 'transporte'])->name('usuario.transporte');
+    Route::get('/transporte', [TransporteController::class, 'transporte'])->name('usuario.transporte');
 
     // Ruta para abrir el menu de cambio de carrera
     Route::get('/cambio-de-carrera', [main::class, 'cambioDeCarrera'])->name('usuario.cambio_de_carrera');
@@ -193,21 +195,21 @@ Route::middleware([
 
     // --------------------------- TRANSPORTE -----------------------
 
-    Route::post('/registro-solicitudes', [main::class, 'registrarTranspSolicitudes']);
+    Route::post('/registro-solicitudes', [TransporteController::class, 'registrarTranspSolicitudes']);
 
-    Route::post('/eliminar-solicitudes', [main::class, 'eliminarTranspSolicitudes']);
+    Route::post('/eliminar-solicitudes', [TransporteController::class, 'eliminarTranspSolicitudes']);
 
-    Route::post('eliminar-solicitud', [main::class, 'eliminarTranspSolicitud']);
+    Route::post('eliminar-solicitud', [TransporteController::class, 'eliminarTranspSolicitud']);
     
-    Route::post('/editar-solicitudes/{id}', [main::class, 'editarTranspSolicitudes']);
+    Route::post('/editar-solicitudes/{id}', [TransporteController::class, 'editarTranspSolicitudes']);
     
-    Route::post('/registro-rutas', [main::class, 'registrarTranspRutas']);
+    Route::post('/registro-rutas', [TransporteController::class, 'registrarTranspRutas']);
 
-    Route::post('/eliminar-rutas', [main::class, 'eliminarTranspRutas']);
+    Route::post('/eliminar-rutas', [TransporteController::class, 'eliminarTranspRutas']);
     
-    Route::post('/editar-rutas/{id}', [main::class, 'editarTranspRutas']);
+    Route::post('/editar-rutas/{id}', [TransporteController::class, 'editarTranspRutas']);
 
-    Route::post('eliminar-ruta', [main::class, 'eliminarTranspRuta']);
+    Route::post('eliminar-ruta', [TransporteController::class, 'eliminarTranspRuta']);
 
     // --------------------------- FIN TRANSPORTE -----------------------
 
