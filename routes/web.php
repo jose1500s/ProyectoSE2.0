@@ -8,6 +8,11 @@ use Illuminate\Support\Facades\Auth;
 use resources\js\pages\Auth\Login;
 use App\Http\Controllers\main;
 use App\Http\Controllers\BajasController;
+use App\Http\Controllers\IngresoController;
+use App\Http\Controllers\EgresadosController;
+use App\Http\Controllers\TituladosController;
+use App\Http\Controllers\TransporteController;
+use App\Http\Controllers\BecasController;
 use App\Http\Controllers\Ingreso\admisionGraficasController;
 
 
@@ -48,7 +53,7 @@ Route::middleware([
     })->name('dashboard');
 
     // ruta para abrir el perfil del usuario
-    Route::get('/ingreso', [main::class, 'ingreso'])->name('usuario.ingreso');
+    Route::get('/ingreso', [IngresoController::class, 'ingreso'])->name('usuario.ingreso');
 
     // ruta para abrir el menu de bajas
     Route::get('/bajas', [BajasController::class, 'bajas'])->name('usuario.bajas');
@@ -57,16 +62,16 @@ Route::middleware([
     Route::get('/matricula', [main::class, 'matricula'])->name('usuario.matricula');
     
     // Ruta para abrir el menu de egresados
-    Route::get('/egresados', [main::class, 'egresados'])->name('usuario.egresados');
+    Route::get('/egresados', [EgresadosController::class, 'egresados'])->name('usuario.egresados');
 
     // Ruta para abrir el menu de titulados
-    Route::get('/titulados', [main::class, 'titulados'])->name('usuario.titulados');
+    Route::get('/titulados', [TituladosController::class, 'titulados'])->name('usuario.titulados');
 
     // Ruta para abrir el menu de becas
-    Route::get('/becas', [main::class, 'becas'])->name('usuario.becas');
+    Route::get('/becas', [BecasController::class, 'becas'])->name('usuario.becas');
 
     // Ruta para abrir el menu de transporte
-    Route::get('/transporte', [main::class, 'transporte'])->name('usuario.transporte');
+    Route::get('/transporte', [TransporteController::class, 'transporte'])->name('usuario.transporte');
 
     // Ruta para abrir el menu de cambio de carrera
     Route::get('/cambio-de-carrera', [main::class, 'cambioDeCarrera'])->name('usuario.cambio_de_carrera');
@@ -77,65 +82,65 @@ Route::middleware([
     // ---------- TAB ADMISIONES ------------
     
     // ruta del indicador INGRESO/ADMISION, para REGISTRAR una admision
-    Route::post('/registro-Admision', [main::class, 'registrarAdmision']);
+    Route::post('/registro-Admision', [IngresoController::class, 'registrarAdmision']);
 
     // ruta del indicador INGRESO/ADMISION, para EDITAR una admision que recibe el id de la admision
-    Route::post('/editar-Admision/{id}', [main::class, 'editarAdmision']);
+    Route::post('/editar-Admision/{id}', [IngresoController::class, 'editarAdmision']);
 
     // ruta del indicador INGRESO/ADMISION, para ELIMINAR una admision que recibe el id de la admision
-    Route::post('/eliminar-Admision/{id}', [main::class, 'eliminarAdmision']);
+    Route::post('/eliminar-Admision/{id}', [IngresoController::class, 'eliminarAdmision']);
 
     // ruta del indicador INGRESO/ADMISION, para ELIMINAR VARIAS admisiones que recibe como array los ids de las admisiones
-    Route::post('/eliminar-Admisiones', [main::class, 'eliminarAdmisiones']);
+    Route::post('/eliminar-Admisiones', [IngresoController::class, 'eliminarAdmisiones']);
 
     // ---------- FIN TAB ADMISIONES ------------
 
     // ---------- TAB TITULADOS ------------
 
     // ruta del indicador TITULADOS, para REGISTRAR una admision
-    Route::post('/registro-Titulado', [main::class, 'registrarTitulacion']);
+    Route::post('/registro-Titulado', [TituladosController::class, 'registrarTitulacion']);
 
     // ruta del indicador TITULADOS, para EDITAR una admision que recibe el id de la admision
-    Route::post('/editar-Titulado/{id}', [main::class, 'editarTitulacion']);
+    Route::post('/editar-Titulado/{id}', [TituladosController::class, 'editarTitulacion']);
 
     // ruta del indicador TITULADOS, para ELIMINAR una admision que recibe el id de la admision
-    Route::post('/eliminar-Titulado/{id}', [main::class, 'eliminarTitulacion']);
+    Route::post('/eliminar-Titulado/{id}', [TituladosController::class, 'eliminarTitulacion']);
 
     // ruta del indicador TITULADOS, para ELIMINAR VARIAS admisiones que recibe como array los ids de las admisiones
-    Route::post('/eliminar-Titulados', [main::class, 'eliminarTitulaciones']);
+    Route::post('/eliminar-Titulados', [TituladosController::class, 'eliminarTitulaciones']);
 
-    Route::post('/importar-excel-titulados',[main::class,'importarDataExcelTitulados']);
+    Route::post('/importar-excel-titulados',[TituladosController::class,'importarDataExcelTitulados']);
 
     // ---------------- TAB TITULADOS TOTALES GENERACIONES -------------------------
     // ruta del indicador TITULADOS, para REGISTRAR una admision
-    Route::post('/registro-Titulado-Total', [main::class, 'registrarTitulacionTotal']);
+    Route::post('/registro-Titulado-Total', [TituladosController::class, 'registrarTitulacionTotal']);
 
     // ruta del indicador TITULADOS, para EDITAR una admision que recibe el id de la admision
-    Route::post('/editar-Titulado-Total/{id}', [main::class, 'editarTitulacionTotal']);
+    Route::post('/editar-Titulado-Total/{id}', [TituladosController::class, 'editarTitulacionTotal']);
 
     // ruta del indicador TITULADOS, para ELIMINAR una admision que recibe el id de la admision
-    Route::post('/eliminar-Titulado-Total/{id}', [main::class, 'eliminarTitulacionTotal']);
+    Route::post('/eliminar-Titulado-Total/{id}', [TituladosController::class, 'eliminarTitulacionTotal']);
 
     // ruta del indicador TITULADOS, para ELIMINAR VARIAS admisiones que recibe como array los ids de las admisiones
-    Route::post('/eliminar-Titulados-Total', [main::class, 'eliminarTitulacionesTotal']);
+    Route::post('/eliminar-Titulados-Total', [TituladosController::class, 'eliminarTitulacionesTotal']);
 
-    Route::post('/importar-excel-titulados-generaciones', [main::class, 'importarDataExcelTituladosGeneraciones']);
+    Route::post('/importar-excel-titulados-generaciones', [TituladosController::class, 'importarDataExcelTituladosGeneraciones']);
 
     // ---------------- TAB TITULADOS TOTALES CARRERAS -------------------------
 
     // ruta del indicador TITULADOS, para REGISTRAR una admision
-    Route::post('/registro-Titulado-Total-Carreras', [main::class, 'registrarTitulacionTotalCarreras']);
+    Route::post('/registro-Titulado-Total-Carreras', [TituladosController::class, 'registrarTitulacionTotalCarreras']);
 
     // ruta del indicador TITULADOS, para EDITAR una admision que recibe el id de la admision
-    Route::post('/editar-Titulado-Total-Carreras/{id}', [main::class, 'editarTitulacionTotalCarreras']);
+    Route::post('/editar-Titulado-Total-Carreras/{id}', [TituladosController::class, 'editarTitulacionTotalCarreras']);
 
     // ruta del indicador TITULADOS, para ELIMINAR una admision que recibe el id de la admision
-    Route::post('/eliminar-Titulado-Total-Carreras/{id}', [main::class, 'eliminarTitulacionTotalCarreras']);
+    Route::post('/eliminar-Titulado-Total-Carreras/{id}', [TituladosController::class, 'eliminarTitulacionTotalCarreras']);
 
     // ruta del indicador TITULADOS, para ELIMINAR VARIAS admisiones que recibe como array los ids de las admisiones
-    Route::post('/eliminar-Titulados-Total-Carreras', [main::class, 'eliminarTitulacionesTotalCarreras']);
+    Route::post('/eliminar-Titulados-Total-Carreras', [TituladosController::class, 'eliminarTitulacionesTotalCarreras']);
 
-    Route::post('/importar-excel-titulados-carreras', [main::class, 'importarDataExcelTituladosCarreras']);
+    Route::post('/importar-excel-titulados-carreras', [TituladosController::class, 'importarDataExcelTituladosCarreras']);
 
     // ---------- FIN TAB TITULADOS ------------
 
@@ -144,67 +149,67 @@ Route::middleware([
 
 
     // ---------- TAB NUEVO INGRESO -------------
-    Route::post('/registro-NIngreso', [main::class, 'registrarNIngreso']);
+    Route::post('/registro-NIngreso', [IngresoController::class, 'registrarNIngreso']);
 
-    Route::post('/eliminar-NIngresos', [main::class, 'eliminarNIngresos']);
+    Route::post('/eliminar-NIngresos', [IngresoController::class, 'eliminarNIngresos']);
 
-    Route::post('/eliminar-NIngreso', [main::class, 'eliminarNIngreso']);
+    Route::post('/eliminar-NIngreso', [IngresoController::class, 'eliminarNIngreso']);
 
-    Route::post('/editar-NIngreso/{id}', [main::class, 'editarNIngreso']);
+    Route::post('/editar-NIngreso/{id}', [IngresoController::class, 'editarNIngreso']);
    
     // ---------- FIN TAB RE INGRESOS -------------
-    Route::post('/registrar-RIngresos', [main::class, 'registrarRIngreso']);
+    Route::post('/registrar-RIngresos', [IngresoController::class, 'registrarRIngreso']);
 
-    Route::post('/editar-RIngresos/{id}', [main::class, 'editarRIngresos']);
+    Route::post('/editar-RIngresos/{id}', [IngresoController::class, 'editarRIngresos']);
 
-    Route::post('/eliminar-RIngreso/{id}', [main::class, 'eliminarRIngreso']);
+    Route::post('/eliminar-RIngreso/{id}', [IngresoController::class, 'eliminarRIngreso']);
 
-    Route::post('/eliminar-RIngresos/{id}', [main::class, 'eliminarRIngresos']);
+    Route::post('/eliminar-RIngresos/{id}', [IngresoController::class, 'eliminarRIngresos']);
 
     // ---------- FIN TAB RE INGRESOS -------------
 
     // ---------- TAB EQUIVALENCIAS -------------
     
     // ruta del indicador INGRESO/EQUIVALENCIA, para REGISTRAR una equivalencia
-    Route::post('/registro-Equivalencia', [main::class, 'registrarEquivalencia']);
+    Route::post('/registro-Equivalencia', [IngresoController::class, 'registrarEquivalencia']);
 
-    Route::post('/editar-Equivalencia/{id}', [main::class, 'editarEquivalencia']);
+    Route::post('/editar-Equivalencia/{id}', [IngresoController::class, 'editarEquivalencia']);
 
-    Route::post('/eliminar-Equivalencia/{id}', [main::class, 'eliminarEquivalencia']);
+    Route::post('/eliminar-Equivalencia/{id}', [IngresoController::class, 'eliminarEquivalencia']);
 
-    Route::post('/eliminar-Equivalencias/{id}', [main::class, 'eliminarEquivalencias']);
+    Route::post('/eliminar-Equivalencias/{id}', [IngresoController::class, 'eliminarEquivalencias']);
 
     // ---------- FIN TAB Equivalencia -------------
 
     // ---------- TAB Maestrias -------------
-    Route::post('/registro-Maestria', [main::class, 'registrarMaestria']);
+    Route::post('/registro-Maestria', [IngresoController::class, 'registrarMaestria']);
 
-    Route::post('/editar-Maestria/{id}', [main::class, 'editarMaestria']);
+    Route::post('/editar-Maestria/{id}', [IngresoController::class, 'editarMaestria']);
 
-    Route::post('/eliminar-Maestria/{id}', [main::class, 'eliminarMaestria']);
+    Route::post('/eliminar-Maestria/{id}', [IngresoController::class, 'eliminarMaestria']);
 
-    Route::post('/eliminar-Maestrias/{id}', [main::class, 'eliminarMaestrias']);
+    Route::post('/eliminar-Maestrias/{id}', [IngresoController::class, 'eliminarMaestrias']);
 
     // ---------- FIN TAB Maestrias -------------
 
 
     // --------------------------- TRANSPORTE -----------------------
 
-    Route::post('/registro-solicitudes', [main::class, 'registrarTranspSolicitudes']);
+    Route::post('/registro-solicitudes', [TransporteController::class, 'registrarTranspSolicitudes']);
 
-    Route::post('/eliminar-solicitudes', [main::class, 'eliminarTranspSolicitudes']);
+    Route::post('/eliminar-solicitudes', [TransporteController::class, 'eliminarTranspSolicitudes']);
 
-    Route::post('eliminar-solicitud', [main::class, 'eliminarTranspSolicitud']);
+    Route::post('eliminar-solicitud', [TransporteController::class, 'eliminarTranspSolicitud']);
     
-    Route::post('/editar-solicitudes/{id}', [main::class, 'editarTranspSolicitudes']);
+    Route::post('/editar-solicitudes/{id}', [TransporteController::class, 'editarTranspSolicitudes']);
     
-    Route::post('/registro-rutas', [main::class, 'registrarTranspRutas']);
+    Route::post('/registro-rutas', [TransporteController::class, 'registrarTranspRutas']);
 
-    Route::post('/eliminar-rutas', [main::class, 'eliminarTranspRutas']);
+    Route::post('/eliminar-rutas', [TransporteController::class, 'eliminarTranspRutas']);
     
-    Route::post('/editar-rutas/{id}', [main::class, 'editarTranspRutas']);
+    Route::post('/editar-rutas/{id}', [TransporteController::class, 'editarTranspRutas']);
 
-    Route::post('eliminar-ruta', [main::class, 'eliminarTranspRuta']);
+    Route::post('eliminar-ruta', [TransporteController::class, 'eliminarTranspRuta']);
 
     // --------------------------- FIN TRANSPORTE -----------------------
 
@@ -212,38 +217,38 @@ Route::middleware([
 
     // --------------------------- EGRESADOS -----------------------
 
-    Route::post('/registro-Egreso', [main::class, 'registrarEgresados']);
+    Route::post('/registro-Egreso', [EgresadosController::class, 'registrarEgresados']);
 
-    route::post('/eliminar-Egresos', [main::class, 'eliminarEgresados']);
+    route::post('/eliminar-Egresos', [EgresadosController::class, 'eliminarEgresados']);
 
-    route::post('/eliminar-Egreso/{id}', [main::class, 'eliminarEgreso']);
+    route::post('/eliminar-Egreso/{id}', [EgresadosController::class, 'eliminarEgreso']);
 
-    route::post('/editar-Egreso/{id}', [main::class, 'editarEgreso']);
+    route::post('/editar-Egreso/{id}', [EgresadosController::class, 'editarEgreso']);
 
-    Route::post('/importar-excel-egresados', [main::class, 'importarDataExcelEgresados']);
+    Route::post('/importar-excel-egresados', [EgresadosController::class, 'importarDataExcelEgresados']);
     
     //-------------------------------- EGRESADOS TOTALES CARRERAS -------------------------------
 
-    Route::post('/registrar-Egreso-Totales', [main::class, 'registrarEgresadosTotales']);
+    Route::post('/registrar-Egreso-Totales', [EgresadosController::class, 'registrarEgresadosTotales']);
 
-    Route::post('/eliminar-Egreso-Totales/{id}', [main::class, 'eliminarEgresoTotales']);
+    Route::post('/eliminar-Egreso-Totales/{id}', [EgresadosController::class, 'eliminarEgresoTotales']);
 
-    Route::post('/eliminar-Egresos-Totales', [main::class, 'eliminarEgresosTotales']);
+    Route::post('/eliminar-Egresos-Totales', [EgresadosController::class, 'eliminarEgresosTotales']);
 
-    Route::post('/editar-Egreso-Totales/{id}', [main::class, 'editarEgresoTotales']);
+    Route::post('/editar-Egreso-Totales/{id}', [EgresadosController::class, 'editarEgresoTotales']);
 
-    Route::post('/importar-excel-egresados-Totales', [main::class, 'importarDataExcelEgresadosTotales']);
+    Route::post('/importar-excel-egresados-Totales', [EgresadosController::class, 'importarDataExcelEgresadosTotales']);
     //--------------------------------- EGRESADOS TOTALES GENERACIONES ----------------------------------
 
-    Route::post('/registrar-Egreso-Totales-Generacion', [main::class, 'registrarEgresadosTotalesGeneracion']);
+    Route::post('/registrar-Egreso-Totales-Generacion', [EgresadosController::class, 'registrarEgresadosTotalesGeneracion']);
 
-    Route::post('/eliminar-Egreso-Totales-Generacion/{id}', [main::class, 'eliminarEgresoTotalesGeneracion']);
+    Route::post('/eliminar-Egreso-Totales-Generacion/{id}', [EgresadosController::class, 'eliminarEgresoTotalesGeneracion']);
 
-    Route::post('/eliminar-Egresos-Totales-Generacion', [main::class, 'eliminarEgresosTotalesGeneracion']);
+    Route::post('/eliminar-Egresos-Totales-Generacion', [EgresadosController::class, 'eliminarEgresosTotalesGeneracion']);
 
-    Route::post('/editar-Egreso-Totales-Generacion/{id}', [main::class, 'editarEgresoTotalesGeneracion']);
+    Route::post('/editar-Egreso-Totales-Generacion/{id}', [EgresadosController::class, 'editarEgresoTotalesGeneracion']);
 
-    Route::post('/importar-excel-egresados-Totales-Generacion', [main::class, 'importarDataExcelEgresadosGeneracion']);
+    Route::post('/importar-excel-egresados-Totales-Generacion', [EgresadosController::class, 'importarDataExcelEgresadosGeneracion']);
 
     // --------------------------------------------- BAJAS ---------------------------------------------------
 
