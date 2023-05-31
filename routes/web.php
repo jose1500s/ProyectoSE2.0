@@ -9,6 +9,7 @@ use resources\js\pages\Auth\Login;
 use App\Http\Controllers\main;
 use App\Http\Controllers\BajasController;
 use App\Http\Controllers\IngresoController;
+use App\Http\Controllers\EgresadosController;
 use App\Http\Controllers\Ingreso\admisionGraficasController;
 
 
@@ -58,7 +59,7 @@ Route::middleware([
     Route::get('/matricula', [main::class, 'matricula'])->name('usuario.matricula');
     
     // Ruta para abrir el menu de egresados
-    Route::get('/egresados', [main::class, 'egresados'])->name('usuario.egresados');
+    Route::get('/egresados', [EgresadosController::class, 'egresados'])->name('usuario.egresados');
 
     // Ruta para abrir el menu de titulados
     Route::get('/titulados', [main::class, 'titulados'])->name('usuario.titulados');
@@ -213,38 +214,38 @@ Route::middleware([
 
     // --------------------------- EGRESADOS -----------------------
 
-    Route::post('/registro-Egreso', [main::class, 'registrarEgresados']);
+    Route::post('/registro-Egreso', [EgresadosController::class, 'registrarEgresados']);
 
-    route::post('/eliminar-Egresos', [main::class, 'eliminarEgresados']);
+    route::post('/eliminar-Egresos', [EgresadosController::class, 'eliminarEgresados']);
 
-    route::post('/eliminar-Egreso/{id}', [main::class, 'eliminarEgreso']);
+    route::post('/eliminar-Egreso/{id}', [EgresadosController::class, 'eliminarEgreso']);
 
-    route::post('/editar-Egreso/{id}', [main::class, 'editarEgreso']);
+    route::post('/editar-Egreso/{id}', [EgresadosController::class, 'editarEgreso']);
 
-    Route::post('/importar-excel-egresados', [main::class, 'importarDataExcelEgresados']);
+    Route::post('/importar-excel-egresados', [EgresadosController::class, 'importarDataExcelEgresados']);
     
     //-------------------------------- EGRESADOS TOTALES CARRERAS -------------------------------
 
-    Route::post('/registrar-Egreso-Totales', [main::class, 'registrarEgresadosTotales']);
+    Route::post('/registrar-Egreso-Totales', [EgresadosController::class, 'registrarEgresadosTotales']);
 
-    Route::post('/eliminar-Egreso-Totales/{id}', [main::class, 'eliminarEgresoTotales']);
+    Route::post('/eliminar-Egreso-Totales/{id}', [EgresadosController::class, 'eliminarEgresoTotales']);
 
-    Route::post('/eliminar-Egresos-Totales', [main::class, 'eliminarEgresosTotales']);
+    Route::post('/eliminar-Egresos-Totales', [EgresadosController::class, 'eliminarEgresosTotales']);
 
-    Route::post('/editar-Egreso-Totales/{id}', [main::class, 'editarEgresoTotales']);
+    Route::post('/editar-Egreso-Totales/{id}', [EgresadosController::class, 'editarEgresoTotales']);
 
-    Route::post('/importar-excel-egresados-Totales', [main::class, 'importarDataExcelEgresadosTotales']);
+    Route::post('/importar-excel-egresados-Totales', [EgresadosController::class, 'importarDataExcelEgresadosTotales']);
     //--------------------------------- EGRESADOS TOTALES GENERACIONES ----------------------------------
 
-    Route::post('/registrar-Egreso-Totales-Generacion', [main::class, 'registrarEgresadosTotalesGeneracion']);
+    Route::post('/registrar-Egreso-Totales-Generacion', [EgresadosController::class, 'registrarEgresadosTotalesGeneracion']);
 
-    Route::post('/eliminar-Egreso-Totales-Generacion/{id}', [main::class, 'eliminarEgresoTotalesGeneracion']);
+    Route::post('/eliminar-Egreso-Totales-Generacion/{id}', [EgresadosController::class, 'eliminarEgresoTotalesGeneracion']);
 
-    Route::post('/eliminar-Egresos-Totales-Generacion', [main::class, 'eliminarEgresosTotalesGeneracion']);
+    Route::post('/eliminar-Egresos-Totales-Generacion', [EgresadosController::class, 'eliminarEgresosTotalesGeneracion']);
 
-    Route::post('/editar-Egreso-Totales-Generacion/{id}', [main::class, 'editarEgresoTotalesGeneracion']);
+    Route::post('/editar-Egreso-Totales-Generacion/{id}', [EgresadosController::class, 'editarEgresoTotalesGeneracion']);
 
-    Route::post('/importar-excel-egresados-Totales-Generacion', [main::class, 'importarDataExcelEgresadosGeneracion']);
+    Route::post('/importar-excel-egresados-Totales-Generacion', [EgresadosController::class, 'importarDataExcelEgresadosGeneracion']);
 
     // --------------------------------------------- BAJAS ---------------------------------------------------
 
