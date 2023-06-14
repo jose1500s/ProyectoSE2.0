@@ -1,7 +1,7 @@
 <script>
 // componentes
 import AppLayout from "@/Layouts/AppLayout.vue";
-import GraficaIngreso from "@/Pages/menusComponentes/Ingreso/GraficaIngreso.vue";
+import GraficaIngreso from "./GraficaIngreso.vue";;
 // PrimeVue
 import DataTable from "primevue/datatable";
 import Column from "primevue/column";
@@ -95,7 +95,7 @@ export default {
       const grafica = contenedorGrafica.getElementsByTagName("canvas")[0];
       const imagen = grafica.toDataURL("image/png");
       const link = document.createElement("a");
-      link.download = "GraficaIngreso.png";
+      link.download = "GraficaEquivalencia.png";
       link.href = imagen;
       link.click();
     },
@@ -529,19 +529,6 @@ export default {
           </div>
           <!-- model para abrir grafica -->
           <Button label="Grafica" icon="pi pi-chart-bar" @click="openResponsive" />
-          <Dialog header="Grafica" v-model:visible="displayResponsive" :breakpoints="{ '960px': '75vw', '75vw': '90vw' }"
-            :style="{ width: '70vw' }">
-            <!-- contenido del dialog/model desde aqui... -->
-            <div class="w-full" id="contenedorGrafica">
-              <GraficaIngreso :ingresos="equivalencias" />
-            </div>
-            <template #footer>
-              <Button label="Cerrar" icon="pi pi-check" @click="closeResponsive" autofocus />
-              <!-- boton para guardar la grafica como img -->
-              <Button label="Guardar" icon="pi pi-save" @click="saveImage" />
-            </template>
-          </Dialog>
-
 
           <!-- Filtros -->
           <MultiSelect v-model="filters.carrera.value" :options="carrerasLista" optionLabel="name" optionValue="code"
@@ -584,6 +571,19 @@ export default {
           </div>
         </template>
       </DataTable>
+
+      <Dialog header="Gráfica dinámica" v-model:visible="displayResponsive"
+        :breakpoints="{ '960px': '75vw', '75vw': '90vw' }" :style="{ width: '70vw' }">
+        <!-- contenido del dialog/model desde aqui... -->
+        <div class="w-full" id="contenedorGrafica">
+          <GraficaIngreso :data="selectedProducts" />
+        </div>
+        <template #footer>
+          <Button label="Cerrar" icon="pi pi-check" @click="closeResponsive" autofocus />
+          <!-- boton para guardar la grafica como img -->
+          <Button label="Guardar" icon="pi pi-save" @click="saveImage" />
+        </template>
+      </Dialog>
 
       <!-- Dialog para editar el producto toma los valores del producto seleccionado -->
       <Dialog header="Editar Equivalencia" v-model:visible="editDialog" :breakpoints="{ '960px': '75vw', '75vw': '85vw' }"
