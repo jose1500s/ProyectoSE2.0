@@ -137,12 +137,19 @@ export default {
     registrarAdmision() {
       this.submitted = true; // esto es para que se muestre el mensaje de error en el formulario
       // validar los campos del formulario, que no esten vacios y si estan mandar un mensaje y no enviar el formulario, los campos son: carrerasModel, aspirantes, examinados, hombres, mujeres, noAdmitidos y selectedPeriodo
+      if(this.hombres == 0 && this.mujeres == 0){
+        this.$toast.add({
+          severity: "error",
+          summary: "Error",
+          detail: "No se puede editar un reingreso con 0 hombres y 0 mujeres, ingrese un numero de solicitudes valido en hombres y/o mujeres",
+          life: 3000,
+        });
+        return false;
+      }
       if (
         this.carreras == null ||
         this.aspirantes == 0 ||
         this.examinados == 0 ||
-        this.hombres == 0 ||
-        this.mujeres == 0 ||
         this.noAdmitidos == 0 ||
         this.periodos == null
       ) {
@@ -183,13 +190,20 @@ export default {
       // editarl usando el dialog de editar producto
       this.submitted = true; // esto es para que se muestre el mensaje de error en el formulario
       // validar los campos del formulario, que no esten vacios y si estan mandar un mensaje y no enviar el formulario, los campos son: carrerasModel, aspirantes, examinados, hombres, mujeres, noAdmitidos y selectedPeriodo
+      if(this.product.hombres == 0 && this.product.mujeres == 0){
+        this.$toast.add({
+          severity: "error",
+          summary: "Error",
+          detail: "No se puede editar un reingreso con 0 hombres y 0 mujeres, ingrese un numero de solicitudes valido en hombres y/o mujeres",
+          life: 3000,
+        });
+        return false;
+      }
       if (
         this.product.id == 0 ||
         this.product.carrera == null ||
         this.product.aspirantes == 0 ||
         this.product.examinados == 0 ||
-        this.product.hombres == 0 ||
-        this.product.mujeres == 0 ||
         this.product.no_admitidos == 0 ||
         this.product.periodo == null
       ) {

@@ -297,8 +297,15 @@ Route::middleware([
     //------------------------------------------------- FIN BAJAS ---------------------------------------------
     // ---------- rutas para GRAFICAS -------------
     Route::post('/obtener-filtro-carreras-admision', [admisionGraficasController::class, 'filtrarDatosCarreras']);
-    // ruta para importar excels
-    Route::post('/importar-excel-admisiones', [main::class, 'importarDataExcelAdmisiones']);
 
-    Route::post('/importar-excel-ningresos', [main::class, 'importarDataExcelNIngresos']);
+    // ruta para importar excels
+    Route::post('/importar-excel-admisiones', [IngresoController::class, 'importarDataExcelAdmisiones']);
+
+    Route::post('/importar-excel-ningresos', [IngresoController::class, 'importarDataExcelNIngresos']);
+
+    Route::post('/importar-excel-reingreso', [IngresoController::class, 'importarDataExcelRIngresos']);
+
+    Route::post('/importar-excel-equivalencias', [IngresoController::class, 'importarDataExcelEquivalencias']);
+
+    Route::post('/importar-excel-maestrias', [IngresoController::class, 'importarDataExcelMaestrias']);
 });

@@ -12,7 +12,7 @@ use App\Models\tb_re_ingreso;
 
 class IngresoController extends Controller
 {
-    public function ingreso()
+   public function ingreso()
    {
       // traer de la tabla tb_admision todos los registros
       $ingresos = tb_admision::all();
@@ -25,9 +25,9 @@ class IngresoController extends Controller
    }
 
    public function importarDataExcelAdmisiones(Request $request) {
-    $datosExcel = $request->input('datos');
+      $datosExcel = $request->input('datos');
 
-    foreach ($datosExcel as $fila) {
+   foreach ($datosExcel as $fila) {
       $admision = new tb_admision();
       $admision->carrera = $fila['carrera'];
       $admision->aspirantes = $fila['aspirantes'];
@@ -38,7 +38,7 @@ class IngresoController extends Controller
       $admision->no_admitidos = $fila['no_admitidos'];
       $admision->periodo = $fila['periodo'];
       $admision->save();
-    }
+   }
 
       return redirect()->route('usuario.ingreso');
 }
@@ -66,332 +66,430 @@ class IngresoController extends Controller
       return redirect()->route('usuario.ingreso');
    }
 
+   public function importarDataExcelRIngresos(Request $request){
+      $datosExcel = $request->input('datos');
+
+      foreach ($datosExcel as $fila) {
+         $reingreso = new tb_re_ingreso();
+         $reingreso->carrera = $fila['carrera'];
+         $reingreso->cuatrimestre = $fila['cuatrimestre'];
+         $reingreso->hombres = $fila['hombres'];
+         $reingreso->mujeres = $fila['mujeres'];
+         $reingreso->solicitudes = $fila['solicitudes'];
+         $reingreso->generacion = $fila['generacion'];
+         $reingreso->tipo_baja = $fila['tipo_baja'];
+         $reingreso->periodo = $fila['periodo'];
+         $reingreso->save();
+      }
+
+      return redirect()->route('usuario.ingreso');
+
+   }
+
+
+   public function importarDataExcelEquivalencias(Request $request){
+      $datosExcel = $request->input('datos');
+
+      foreach ($datosExcel as $fila) {
+         $equivalencia = new tb_equivalencia();
+         $equivalencia->carrera = $fila['carrera'];
+         $equivalencia->aspirantes = $fila['aspirantes'];
+         $equivalencia->examinados = $fila['examinados'];
+         $equivalencia->hombres = $fila['hombres'];
+         $equivalencia->mujeres = $fila['mujeres'];
+         $equivalencia->admitidos = $fila['admitidos'];
+         $equivalencia->no_admitidos = $fila['no_admitidos'];
+         $equivalencia->periodo = $fila['periodo'];
+         $equivalencia->save();
+
+         
+      }
+
+      return redirect()->route('usuario.ingreso');
+   }
+
+   public function importarDataExcelMaestrias(Request $request){
+      $datosExcel = $request->input('datos');
+
+      foreach ($datosExcel as $fila) {
+         $maestria = new tb_maestria();
+         $maestria->carrera = $fila['carrera'];
+         $maestria->aspirantes = $fila['aspirantes'];
+         $maestria->examinados = $fila['examinados'];
+         $maestria->hombres = $fila['hombres'];
+         $maestria->mujeres = $fila['mujeres'];
+         $maestria->admitidos = $fila['admitidos'];
+         $maestria->no_admitidos = $fila['no_admitidos'];
+         $maestria->periodo = $fila['periodo'];
+         $maestria->save();
+         
+      }
+
+      return redirect()->route('usuario.ingreso');
+   }
+
    //  --------------------- TAB ADMISION -----------------------
 
-   function registrarAdmision(Request $request) {
-    $carrera = $request->input('carreras');
-    $aspirantes = $request->input('aspirantes');
-    $examinados = $request->input('examinados');
-    $hombres = $request->input('hombres');
-    $mujeres = $request->input('mujeres');
-    $admitidos = $hombres + $mujeres;
-    $no_admitidos = $request->input('noAdmitidos');
-    $periodo = $request->input('periodos');
+      function registrarAdmision(Request $request) {
+      $carrera = $request->input('carreras');
+      $aspirantes = $request->input('aspirantes');
+      $examinados = $request->input('examinados');
+      $hombres = $request->input('hombres');
+      $mujeres = $request->input('mujeres');
+      $admitidos = $hombres + $mujeres;
+      $no_admitidos = $request->input('noAdmitidos');
+      $periodo = $request->input('periodos');
 
-    // crear un nuevo registro en la tabla tb_admision
-    $admision = new tb_admision();
-    $admision->carrera = $carrera;
-    $admision->aspirantes = $aspirantes;
-    $admision->examinados = $examinados;
-    $admision->hombres = $hombres;
-    $admision->mujeres = $mujeres;
-    $admision->admitidos = $admitidos;
-    $admision->no_admitidos = $no_admitidos;
-    $admision->periodo = $periodo;
-    $admision->save();
+      // crear un nuevo registro en la tabla tb_admision
+      $admision = new tb_admision();
+      $admision->carrera = $carrera;
+      $admision->aspirantes = $aspirantes;
+      $admision->examinados = $examinados;
+      $admision->hombres = $hombres;
+      $admision->mujeres = $mujeres;
+      $admision->admitidos = $admitidos;
+      $admision->no_admitidos = $no_admitidos;
+      $admision->periodo = $periodo;
+      $admision->save();
 
-    // retornar a la vista ingreso
-    return redirect()->route('usuario.ingreso');
- 
-}
-
-  // ruta para editar una admision
-  function editarAdmision(Request $request) {
-    // obtener los datos dle form y luego actualizar el registro
-    $id = $request->input('id');
-    $carrera = $request->input('carrera');
-    $aspirantes = $request->input('aspirantes');
-    $examinados = $request->input('examinados');
-    $hombres = $request->input('hombres');
-    $mujeres = $request->input('mujeres');
-    $admitidos = $hombres + $mujeres;
-    $no_admitidos = $request->input('no_admitidos');
-    $periodo = $request->input('periodo');
- 
-    // actualizar el registro
-    $admision = tb_admision::find($id);
-    $admision->carrera = $carrera;
-    $admision->aspirantes = $aspirantes;
-    $admision->examinados = $examinados;
-    $admision->hombres = $hombres;
-    $admision->mujeres = $mujeres;
-    $admision->admitidos = $admitidos;
-    $admision->no_admitidos = $no_admitidos;
-    $admision->periodo = $periodo;
-    $admision->save();
- 
-    // retornar a la vista ingreso
-    return redirect()->route('usuario.ingreso');
-   }
- 
-   function eliminarAdmision(Request $request) {
-    $id = $request->input('id');
-    $admision = tb_admision::findOrFail($id);
-    $admision->delete(); 
-    return redirect()->route('usuario.ingreso');
-   }
- 
-   function eliminarAdmisiones(Request $request) {
-    $id = $request->id;
-    $admision = tb_admision::whereIn('id', $id);
-    $admision->delete();
-    return redirect()->route('usuario.ingreso');
+      // retornar a la vista ingreso
+      return redirect()->route('usuario.ingreso');
+   
    }
 
-   //  --------------------- FIN TAB ADMISION -----------------------
+   // ruta para editar una admision
+   function editarAdmision(Request $request) {
+      // obtener los datos dle form y luego actualizar el registro
+      $id = $request->input('id');
+      $carrera = $request->input('carrera');
+      $aspirantes = $request->input('aspirantes');
+      $examinados = $request->input('examinados');
+      $hombres = $request->input('hombres');
+      $mujeres = $request->input('mujeres');
+      $admitidos = $hombres + $mujeres;
+      $no_admitidos = $request->input('no_admitidos');
+      $periodo = $request->input('periodo');
+   
+      // actualizar el registro
+      $admision = tb_admision::find($id);
+      $admision->carrera = $carrera;
+      $admision->aspirantes = $aspirantes;
+      $admision->examinados = $examinados;
+      $admision->hombres = $hombres;
+      $admision->mujeres = $mujeres;
+      $admision->admitidos = $admitidos;
+      $admision->no_admitidos = $no_admitidos;
+      $admision->periodo = $periodo;
+      $admision->save();
+   
+      // retornar a la vista ingreso
+      return redirect()->route('usuario.ingreso');
+      }
+   
+      function eliminarAdmision(Request $request) {
+      $id = $request->input('id');
+      $admision = tb_admision::findOrFail($id);
+      $admision->delete(); 
+      return redirect()->route('usuario.ingreso');
+      }
+   
+      function eliminarAdmisiones(Request $request) {
+      $id = $request->id;
+      $admision = tb_admision::whereIn('id', $id);
+      $admision->delete();
+      return redirect()->route('usuario.ingreso');
+      }
 
-   //  --------------------- TAB NUEVO INGRESO -----------------------
+      //  --------------------- FIN TAB ADMISION -----------------------
 
-  function registrarNIngreso(Request $request) {
-    $carrera = $request->input('carrera');
-    $total_ingresos = $request->input('totalIngresos');
-    $generacion = $request->input('generacion');
-    $hombres = $request->input('hombres');
-    $mujeres = $request->input('mujeres');
-    $admitidos = $hombres + $mujeres;
-    $inscritos = $request->input('inscritos');
-    $proceso = $request->input('procesos');
-    $periodo = "SEP-DIC ". date("Y"); 
- 
-    // crear un nuevo registro en la tabla tb_nuevo_ingreso
-    $nuevo_ingreso = new tb_nuevo_ingreso();
-    $nuevo_ingreso->carrera = $carrera;
-    $nuevo_ingreso->total_ingresos = $total_ingresos;
-    $nuevo_ingreso->generacion = $generacion;
-    $nuevo_ingreso->hombres = $hombres;
-    $nuevo_ingreso->mujeres = $mujeres;
-    $nuevo_ingreso->admitidos = $admitidos;
-    $nuevo_ingreso->inscritos = $inscritos;
-    $nuevo_ingreso->proceso = $proceso;
-    $nuevo_ingreso->periodo = $periodo;
-    $nuevo_ingreso->save();
- 
- 
-    // retornar a la vista ingres-o
-    return redirect()->route('usuario.ingreso');
-   }
- 
-   function eliminarNIngresos(Request $request) {
-    $id = $request->id;
-    $nuevo_ingreso = tb_nuevo_ingreso::whereIn('id', $id);
-    $nuevo_ingreso->delete();
-    return redirect()->route('usuario.ingreso');
-   }
- 
-   function eliminarNIngreso(Request $request) {
-    $id = $request->input('id');
-    $nuevo_ingreso = tb_nuevo_ingreso::findOrFail($id);
-    $nuevo_ingreso->delete(); 
-    return redirect()->route('usuario.ingreso');
-   }
- 
-   function editarNIngreso(Request $request) {
-       // recibir los datos del form
-       $id = $request->input('id');
-       $carrera = $request->input('carrera');
-       $total_ingresos = $request->input('totalIngresos');
-       $generacion = $request->input('generacion');
-       $hombres = $request->input('hombres');
-       $mujeres = $request->input('mujeres');
-       $admitidos = $hombres + $mujeres;
-       $inscritos = $request->input('inscritos');
-       $proceso = $request->input('procesos');
- 
-       // actualizar el registro
-       $nuevo_ingreso = tb_nuevo_ingreso::find($id);
-       $nuevo_ingreso->carrera = $carrera;
-       $nuevo_ingreso->total_ingresos = $total_ingresos;
-       $nuevo_ingreso->generacion = $generacion;
-       $nuevo_ingreso->hombres = $hombres;
-       $nuevo_ingreso->mujeres = $mujeres;
-       $nuevo_ingreso->admitidos = $admitidos;
-       $nuevo_ingreso->inscritos = $inscritos;
-       $nuevo_ingreso->proceso = $proceso;
-       $nuevo_ingreso->save();
- 
-       // retornar a la vista ingreso
-       return redirect()->route('usuario.ingreso');
-   }
- 
-    //  --------------------- TAB NUEVO RE INGRESO -----------------------
- 
-    function registrarRIngreso(Request $request) {
-       $carrera = $request->input('carrera');
-       $cuatrimestre = $request->input('cuatrimestre');
-       $generacion = $request->input('generacion');
-       $tipo_baja = $request->input('bajas');
-       $periodo = $request->input('periodo');
- 
-       // crear un nuevo registro en la tabla tb_re_ingreso
-       $re_ingreso = new tb_re_ingreso();
-       $re_ingreso->carrera = $carrera;
-       $re_ingreso->cuatrimestre = $cuatrimestre;
-       $re_ingreso->generacion = $generacion;
-       $re_ingreso->tipo_baja = $tipo_baja;
-       $re_ingreso->periodo = $periodo;
-       $re_ingreso->save();
- 
-       // retornar a la vista ingreso
-       return redirect()->route('usuario.ingreso');
- 
-    }
- 
-    function editarRIngresos(Request $request) {
-       // recibir los datos del form
-       $id = $request->input('id');
-       $carrera = $request->input('carrera');
-       $cuatrimestre = $request->input('cuatrimestre');
-       $generacion = $request->input('generacion');
-       $tipo_baja = $request->input('bajas');
-       $periodo = $request->input('periodo');
- 
-       // actualizar el registro
-       $re_ingreso = tb_re_ingreso::find($id);
-       $re_ingreso->carrera = $carrera;
-       $re_ingreso->cuatrimestre = $cuatrimestre;
-       $re_ingreso->generacion = $generacion;
-       $re_ingreso->tipo_baja = $tipo_baja;
-       $re_ingreso->periodo = $periodo;
-       $re_ingreso->save();
- 
-       // retornar a la vista ingreso
-       return redirect()->route('usuario.ingreso');
-    }
- 
-    function eliminarRIngreso(Request $request) {
-       $id = $request->input('id');
-       $re_ingreso = tb_re_ingreso::findOrFail($id);
-       $re_ingreso->delete(); 
-       return redirect()->route('usuario.ingreso');
-    }
- 
-    function eliminarRIngresos(Request $request) {
-       $id = $request->id;
-       $re_ingreso = tb_re_ingreso::whereIn('id', $id);
-       $re_ingreso->delete();
-       return redirect()->route('usuario.ingreso');
-    }
+      //  --------------------- TAB NUEVO INGRESO -----------------------
 
-    //  --------------------- TAB NUEVO EQUIVALENCIA -----------------------
-   // ruta para guardar una nueva equivalencia del indicador ingreso en la equivalencia
-  function registrarEquivalencia(Request $request) {
-    $carrera = $request->input('carreras');
-    $aspirantes = $request->input('aspirantes');
-    $examinados = $request->input('examinados');
-    $no_admitidos = $request->input('noAdmitidos');
-    $periodo = $request->input('periodos');
- 
-    // crear un nuevo registro en la tabla tb_equivalencia
-    $admision = new tb_equivalencia();
-    $admision->carrera = $carrera;
-    $admision->aspirantes = $aspirantes;
-    $admision->examinados = $examinados;
-    $admision->no_admitidos = $no_admitidos;
-    $admision->periodo = $periodo;
-    $admision->save();
- 
-    // retornar a la vista ingreso
-    return redirect()->route('usuario.ingreso');
- 
- } 
- 
- // ruta para editar una equivalencia
- function editarEquivalencia(Request $request) {
-    // obtener los datos dle form y luego actualizar el registro
-    $id = $request->input('id');
-    $carrera = $request->input('carrera');
-    $aspirantes = $request->input('aspirantes');
-    $examinados = $request->input('examinados');
-    $no_admitidos = $request->input('no_admitidos');
-    $periodo = $request->input('periodo');
- 
-    // actualizar el registro
-    $admision = tb_equivalencia::find($id);
-    $admision->carrera = $carrera;
-    $admision->aspirantes = $aspirantes;
-    $admision->examinados = $examinados;
-    $admision->no_admitidos = $no_admitidos;
-    $admision->periodo = $periodo;
-    $admision->save();
- 
-    // retornar a la vista ingreso
-    return redirect()->route('usuario.ingreso');
+   function registrarNIngreso(Request $request) {
+      $carrera = $request->input('carrera');
+      $total_ingresos = $request->input('totalIngresos');
+      $generacion = $request->input('generacion');
+      $hombres = $request->input('hombres');
+      $mujeres = $request->input('mujeres');
+      $admitidos = $hombres + $mujeres;
+      $inscritos = $request->input('inscritos');
+      $proceso = $request->input('procesos');
+      $periodo = "SEP-DIC ". date("Y"); 
+   
+      // crear un nuevo registro en la tabla tb_nuevo_ingreso
+      $nuevo_ingreso = new tb_nuevo_ingreso();
+      $nuevo_ingreso->carrera = $carrera;
+      $nuevo_ingreso->total_ingresos = $total_ingresos;
+      $nuevo_ingreso->generacion = $generacion;
+      $nuevo_ingreso->hombres = $hombres;
+      $nuevo_ingreso->mujeres = $mujeres;
+      $nuevo_ingreso->admitidos = $admitidos;
+      $nuevo_ingreso->inscritos = $inscritos;
+      $nuevo_ingreso->proceso = $proceso;
+      $nuevo_ingreso->periodo = $periodo;
+      $nuevo_ingreso->save();
+   
+   
+      // retornar a la vista ingres-o
+      return redirect()->route('usuario.ingreso');
+      }
+   
+      function eliminarNIngresos(Request $request) {
+      $id = $request->id;
+      $nuevo_ingreso = tb_nuevo_ingreso::whereIn('id', $id);
+      $nuevo_ingreso->delete();
+      return redirect()->route('usuario.ingreso');
+      }
+   
+      function eliminarNIngreso(Request $request) {
+      $id = $request->input('id');
+      $nuevo_ingreso = tb_nuevo_ingreso::findOrFail($id);
+      $nuevo_ingreso->delete(); 
+      return redirect()->route('usuario.ingreso');
+      }
+   
+      function editarNIngreso(Request $request) {
+         // recibir los datos del form
+         $id = $request->input('id');
+         $carrera = $request->input('carrera');
+         $total_ingresos = $request->input('totalIngresos');
+         $generacion = $request->input('generacion');
+         $hombres = $request->input('hombres');
+         $mujeres = $request->input('mujeres');
+         $admitidos = $hombres + $mujeres;
+         $inscritos = $request->input('inscritos');
+         $proceso = $request->input('procesos');
+   
+         // actualizar el registro
+         $nuevo_ingreso = tb_nuevo_ingreso::find($id);
+         $nuevo_ingreso->carrera = $carrera;
+         $nuevo_ingreso->total_ingresos = $total_ingresos;
+         $nuevo_ingreso->generacion = $generacion;
+         $nuevo_ingreso->hombres = $hombres;
+         $nuevo_ingreso->mujeres = $mujeres;
+         $nuevo_ingreso->admitidos = $admitidos;
+         $nuevo_ingreso->inscritos = $inscritos;
+         $nuevo_ingreso->proceso = $proceso;
+         $nuevo_ingreso->save();
+   
+         // retornar a la vista ingreso
+         return redirect()->route('usuario.ingreso');
+      }
+   
+      //  --------------------- TAB NUEVO RE INGRESO -----------------------
+   
+      function registrarRIngreso(Request $request) {
+         $carrera = $request->input('carrera');
+         $cuatrimestre = $request->input('cuatrimestre');
+         $hombres = $request->input('hombres');
+         $mujeres = $request->input('mujeres');
+         $solicitudes = $hombres + $mujeres;
+         $generacion = $request->input('generacion');
+         $tipo_baja = $request->input('bajas');
+         $periodo = $request->input('periodo');
+   
+         // crear un nuevo registro en la tabla tb_re_ingreso
+         $re_ingreso = new tb_re_ingreso();
+         $re_ingreso->carrera = $carrera;
+         $re_ingreso->cuatrimestre = $cuatrimestre;
+         $re_ingreso->hombres = $hombres;
+         $re_ingreso->mujeres = $mujeres;
+         $re_ingreso->solicitudes = $solicitudes;
+         $re_ingreso->generacion = $generacion;
+         $re_ingreso->tipo_baja = $tipo_baja;
+         $re_ingreso->periodo = $periodo;
+         $re_ingreso->save();
+   
+         // retornar a la vista ingreso
+         return redirect()->route('usuario.ingreso');
+   
+      }
+   
+      function editarRIngresos(Request $request) {
+         // recibir los datos del form
+         $id = $request->input('id');
+         $carrera = $request->input('carrera');
+         $cuatrimestre = $request->input('cuatrimestre');
+         $hombres = $request->input('hombres');
+         $mujeres = $request->input('mujeres');
+         $solicitudes = $hombres + $mujeres;
+         $generacion = $request->input('generacion');
+         $tipo_baja = $request->input('bajas');
+         $periodo = $request->input('periodo');
+   
+         // actualizar el registro
+         $re_ingreso = tb_re_ingreso::find($id);
+         $re_ingreso->carrera = $carrera;
+         $re_ingreso->cuatrimestre = $cuatrimestre;
+         $re_ingreso->hombres = $hombres;
+         $re_ingreso->mujeres = $mujeres;
+         $re_ingreso->solicitudes = $solicitudes;
+         $re_ingreso->generacion = $generacion;
+         $re_ingreso->tipo_baja = $tipo_baja;
+         $re_ingreso->periodo = $periodo;
+         $re_ingreso->save();
+   
+         // retornar a la vista ingreso
+         return redirect()->route('usuario.ingreso');
+      }
+   
+      function eliminarRIngreso(Request $request) {
+         $id = $request->input('id');
+         $re_ingreso = tb_re_ingreso::findOrFail($id);
+         $re_ingreso->delete(); 
+         return redirect()->route('usuario.ingreso');
+      }
+   
+      function eliminarRIngresos(Request $request) {
+         $id = $request->id;
+         $re_ingreso = tb_re_ingreso::whereIn('id', $id);
+         $re_ingreso->delete();
+         return redirect()->route('usuario.ingreso');
+      }
+
+      //  --------------------- TAB NUEVO EQUIVALENCIA -----------------------
+      // ruta para guardar una nueva equivalencia del indicador ingreso en la equivalencia
+   function registrarEquivalencia(Request $request) {
+      $carrera = $request->input('carreras');
+      $aspirantes = $request->input('aspirantes');
+      $hombres = $request->input('hombres');
+      $mujeres = $request->input('mujeres');
+      $admitidos = $hombres + $mujeres;
+      $examinados = $request->input('examinados');
+      $no_admitidos = $request->input('noAdmitidos');
+      $periodo = $request->input('periodos');
+   
+      // crear un nuevo registro en la tabla tb_equivalencia
+      $admision = new tb_equivalencia();
+      $admision->carrera = $carrera;
+      $admision->aspirantes = $aspirantes;
+      $admision->hombres = $hombres;
+      $admision->mujeres = $mujeres;
+      $admision->admitidos = $admitidos;
+      $admision->examinados = $examinados;
+      $admision->no_admitidos = $no_admitidos;
+      $admision->periodo = $periodo;
+      $admision->save();
+   
+      // retornar a la vista ingreso
+      return redirect()->route('usuario.ingreso');
+   
+   } 
+   
+   // ruta para editar una equivalencia
+   function editarEquivalencia(Request $request) {
+      // obtener los datos dle form y luego actualizar el registro
+      $id = $request->input('id');
+      $carrera = $request->input('carrera');
+      $aspirantes = $request->input('aspirantes');
+      $hombres = $request->input('hombres');
+      $mujeres = $request->input('mujeres');
+      $admitidos = $hombres + $mujeres;
+      $examinados = $request->input('examinados');
+      $no_admitidos = $request->input('no_admitidos');
+      $periodo = $request->input('periodo');
+   
+      // actualizar el registro
+      $admision = tb_equivalencia::find($id);
+      $admision->carrera = $carrera;
+      $admision->aspirantes = $aspirantes;
+      $admision->hombres = $hombres;
+      $admision->mujeres = $mujeres;
+      $admision->admitidos = $admitidos;
+      $admision->examinados = $examinados;
+      $admision->no_admitidos = $no_admitidos;
+      $admision->periodo = $periodo;
+      $admision->save();
+   
+      // retornar a la vista ingreso
+      return redirect()->route('usuario.ingreso');
+      }
+   
+      function eliminarEquivalencia(Request $request) {
+      $id = $request->input('id');
+      $equivalencia = tb_equivalencia::findOrFail($id);
+      $equivalencia->delete(); 
+      return redirect()->route('usuario.ingreso');
    }
- 
-   function eliminarEquivalencia(Request $request) {
-    $id = $request->input('id');
-    $equivalencia = tb_equivalencia::findOrFail($id);
-    $equivalencia->delete(); 
-    return redirect()->route('usuario.ingreso');
- }
- 
- function eliminarEquivalencias(Request $request) {
-    $id = $request->id;
-    $equivalencia = tb_equivalencia::whereIn('id', $id);
-    $equivalencia->delete();
-    return redirect()->route('usuario.ingreso');
- }
- 
- //  --------------------- TAB NUEVO MAESTRIAS -----------------------
-    // ruta para guardar una nueva MAESTRIA del indicador ingreso en la maestria
- 
-    function registrarMaestria(Request $request) {
-       $carrera = $request->input('carreras');
-       $aspirantes = $request->input('aspirantes');
-       $examinados = $request->input('examinados');
-       $no_admitidos = $request->input('noAdmitidos');
-       $periodo = $request->input('periodos');
- 
-       // crear un nuevo registro en la tabla tb_equivalencia
-       $admision = new tb_maestria();
-       $admision->carrera = $carrera;
-       $admision->aspirantes = $aspirantes;
-       $admision->examinados = $examinados;
-       $admision->no_admitidos = $no_admitidos;
-       $admision->periodo = $periodo;
-       $admision->save();
- 
-       // retornar a la vista ingreso
-       return redirect()->route('usuario.ingreso');
- 
-    }
- 
-    // ruta para editar una maestria
-    function editarMaestria(Request $request) {
-       // obtener los datos dle form y luego actualizar el registro
-       $id = $request->input('id');
-       $carrera = $request->input('carrera');
-       $aspirantes = $request->input('aspirantes');
-       $examinados = $request->input('examinados');
-       $no_admitidos = $request->input('no_admitidos');
-       $periodo = $request->input('periodo');
- 
-       // actualizar el registro
-       $admision = tb_maestria::find($id);
-       $admision->carrera = $carrera;
-       $admision->aspirantes = $aspirantes;
-       $admision->examinados = $examinados;
-       $admision->no_admitidos = $no_admitidos;
-       $admision->periodo = $periodo;
-       $admision->save();
- 
-       // retornar a la vista ingreso
-       return redirect()->route('usuario.ingreso');
-    }
- 
-    function eliminarMaestria(Request $request) {
-       $id = $request->input('id');
-       $maestria = tb_maestria::findOrFail($id);
-       $maestria->delete(); 
-       return redirect()->route('usuario.ingreso');
-    }
- 
-    function eliminarMaestrias(Request $request) {
-       $id = $request->id;
-       $maestria = tb_maestria::whereIn('id', $id);
-       $maestria->delete();
-       return redirect()->route('usuario.ingreso');
-    }
- 
- //  --------------------- Fin Maestrias -----------------------//
-}
+   
+   function eliminarEquivalencias(Request $request) {
+      $id = $request->id;
+      $equivalencia = tb_equivalencia::whereIn('id', $id);
+      $equivalencia->delete();
+      return redirect()->route('usuario.ingreso');
+   }
+   
+   //  --------------------- TAB NUEVO MAESTRIAS -----------------------
+      // ruta para guardar una nueva MAESTRIA del indicador ingreso en la maestria
+   
+      function registrarMaestria(Request $request) {
+         $carrera = $request->input('carreras');
+         $aspirantes = $request->input('aspirantes');
+         $hombres = $request->input('hombres');
+         $mujeres = $request->input('mujeres');
+         $admitidos = $hombres + $mujeres;
+         $examinados = $request->input('examinados');
+         $no_admitidos = $request->input('noAdmitidos');
+         $periodo = $request->input('periodos');
+   
+         // crear un nuevo registro en la tabla tb_equivalencia
+         $admision = new tb_maestria();
+         $admision->carrera = $carrera;
+         $admision->aspirantes = $aspirantes;
+         $admision->hombres = $hombres;
+         $admision->mujeres = $mujeres;
+         $admision->admitidos = $admitidos;
+         $admision->examinados = $examinados;
+         $admision->no_admitidos = $no_admitidos;
+         $admision->periodo = $periodo;
+         $admision->save();
+   
+         // retornar a la vista ingreso
+         return redirect()->route('usuario.ingreso');
+   
+      }
+   
+      // ruta para editar una maestria
+      function editarMaestria(Request $request) {
+         // obtener los datos dle form y luego actualizar el registro
+         $id = $request->input('id');
+         $carrera = $request->input('carrera');
+         $aspirantes = $request->input('aspirantes');
+         $hombres = $request->input('hombres');
+         $mujeres = $request->input('mujeres');
+         $admitidos = $hombres + $mujeres;
+         $examinados = $request->input('examinados');
+         $no_admitidos = $request->input('no_admitidos');
+         $periodo = $request->input('periodo');
+   
+         // actualizar el registro
+         $admision = tb_maestria::find($id);
+         $admision->carrera = $carrera;
+         $admision->aspirantes = $aspirantes;
+         $admision->hombres = $hombres;
+         $admision->mujeres = $mujeres;
+         $admision->admitidos = $admitidos;
+         $admision->examinados = $examinados;
+         $admision->no_admitidos = $no_admitidos;
+         $admision->periodo = $periodo;
+         $admision->save();
+   
+         // retornar a la vista ingreso
+         return redirect()->route('usuario.ingreso');
+      }
+   
+      function eliminarMaestria(Request $request) {
+         $id = $request->input('id');
+         $maestria = tb_maestria::findOrFail($id);
+         $maestria->delete(); 
+         return redirect()->route('usuario.ingreso');
+      }
+   
+      function eliminarMaestrias(Request $request) {
+         $id = $request->id;
+         $maestria = tb_maestria::whereIn('id', $id);
+         $maestria->delete();
+         return redirect()->route('usuario.ingreso');
+      }
+   
+   //  --------------------- Fin Maestrias -----------------------//
+   }
