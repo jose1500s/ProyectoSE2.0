@@ -87,7 +87,7 @@ export default {
     limpiarFiltros() {
       // limpia/eliminar los filtros realizados en la  tabla y volver a mostrar todos los datos
       this.filters.carrera.value = null;
-      this.filters.Proceso.value = null;
+      this.filters.proceso.value = null;
       this.filters.fecha.value = null;
       this.$refs.dt.filter(this.filters, "carrera");
       this.$refs.dt.filter(this.filters, "Proceso");
@@ -147,13 +147,20 @@ export default {
     },
     registrarNIngreso() {
       this.submitted = true;
+      if(this.NIhombres == 0 && this.NImujeres == 0){
+        this.$toast.add({
+          severity: "error",
+          summary: "Error",
+          detail: "No se puede editar un reingreso con 0 hombres y 0 mujeres, ingrese un numero de solicitudes valido en hombres y/o mujeres",
+          life: 3000,
+        });
+        return false;
+      }
       if (
         this.NIcarreras == null ||
         this.totalIngresos == 0 ||
         this.NIexaminados == 0 ||
         this.NIgeneracion == 0 ||
-        this.NIhombres == 0 ||
-        this.NImujeres == 0 ||
         this.NIinscritos == 0 ||
         this.NIprocesos == null
       ) {
@@ -193,13 +200,20 @@ export default {
     },
     editarNIngreso() {
       this.submitted = true;
+      if(this.product.hombres == 0 && this.product.mujeres == 0){
+        this.$toast.add({
+          severity: "error",
+          summary: "Error",
+          detail: "No se puede editar un reingreso con 0 hombres y 0 mujeres, ingrese un numero de solicitudes valido en hombres y/o mujeres",
+          life: 3000,
+        });
+        return false;
+      }
       if (
         this.product.id == null ||
         this.product.carrera == null ||
         this.product.total_ingresos == 0 ||
         this.product.generacion == 0 ||
-        this.product.hombres == 0 ||
-        this.product.mujeres == 0 ||
         this.product.inscritos == 0 ||
         this.product.proceso == null
       ) {
@@ -383,7 +397,7 @@ export default {
     return {
       filters: {
         carrera: { value: null, matchMode: FilterMatchMode.IN },
-        Proceso: { value: null, matchMode: FilterMatchMode.IN },
+        proceso: { value: null, matchMode: FilterMatchMode.IN },
         fecha: { value: null, matchMode: FilterMatchMode.IN },
       },
       datosFiltrados: [],
@@ -434,6 +448,11 @@ export default {
         { name: "Inscritos", code: "7" },
         { name: "Proceso", code: "8" },
         { name: "Periodo", code: "9" },
+      ],
+      procesosLista: [
+        { name: "1er Proceso", code: "1er Proceso" },
+        { name: "2do Proceso", code: "2do Proceso" },
+        { name: "3er Proceso", code: "3er Proceso" },
       ],
     };
   },
@@ -509,13 +528,11 @@ export default {
             </template>
           </Dialog>
 
-          <MultiSelect v-model="filters.carrera.value" :options="filtrarCarreras()" placeholder="Carrera"
-            display="chip" />
+          <MultiSelect v-model="filters.carrera.value" :options="carrerasLista" optionLabel="name" optionValue="code"
+            placeholder="Carrera" display="chip" @change="filtroCarreras($event)" />
 
-          <MultiSelect v-model="filters.Proceso.value" :options="filtrarProcesos()" placeholder="Proceso"
-            display="chip" />
-
-          <MultiSelect v-model="filters.fecha.value" :options="filtrarFecha()" placeholder="Fecha" display="chip" />
+          <MultiSelect v-model="filters.proceso.value" :options="procesosLista" optionLabel="name" optionValue="code"
+            placeholder="Proceso" display="chip" />
 
           <Button icon="pi pi-times" label="Limpiar" @click="limpiarFiltros()" />
         </div>
@@ -643,7 +660,7 @@ export default {
 
             <div class="p-field p-col-12 p-md-12">
               <label for="total_ingresos">Total Ingresos</label>
-              <InputNumber id="total_ingresos" v-model.trim="product.total_ingresos" />
+              <InputText id="total_ingresos" v-model.trim="product.total_ingresos" />
             </div>
 
             <div class="p-field p-col-12 p-md-12">
@@ -653,17 +670,17 @@ export default {
 
             <div class="p-field p-col-12 p-md-12">
               <label for="total_ingresos">Hombres</label>
-              <InputNumber id="total_ingresos" v-model="product.hombres" />
+              <InputText id="total_ingresos" v-model="product.hombres" />
             </div>
 
             <div class="p-field p-col-12 p-md-12">
               <label for="total_ingresos">Mujeres</label>
-              <InputNumber id="total_ingresos" v-model="product.mujeres" />
+              <InputText id="total_ingresos" v-model="product.mujeres" />
             </div>
 
             <div class="p-field p-col-12 p-md-12">
               <label for="total_ingresos">Inscritos</label>
-              <InputNumber id="total_ingresos" v-model="product.inscritos" />
+              <InputText id="total_ingresos" v-model="product.inscritos" />
             </div>
 
             <div class="p-field p-col-12 p-md-12">
