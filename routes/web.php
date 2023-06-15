@@ -294,6 +294,42 @@ Route::middleware([
 
     Route::post('/eliminar-baja-administrativa/{id}', [BajasController::class, 'eliminarAdministrativa']);
 
+    // ---------------------------------------------- TOTALES TIPOS -------------------------------------
+
+    Route::post('/registro-baja-total-tipos', [BajasController::class, 'registrarBajasTotalTipos']);
+    
+    Route::post('/editar-baja-total-tipos/{id}', [BajasController::class, 'editarBajasTotalTipos']);
+
+    Route::post('/eliminar-bajas-totales-tipos', [BajasController::class, 'eliminiarBajasTotalesTipos']);
+
+    Route::post('/eliminar-baja-total-tipos/{id}', [BajasController::class, 'eliminarBajaTotalTipos']);
+
+    Route::post('/importar-excel-bajas-tipos', [BajasController::class, 'importarExcelBajasTipos']);
+
+    //------------------------------------------- TOTALES CARRERAS --------------------------------------
+
+    Route::post('/registro-baja-total-carreras', [BajasController::class, 'registrarBajasTotalCarreras']);
+
+    Route::post('/editar-baja-total-carreras/{id}', [BajasController::class, 'editarBajasTotalCarreras']);
+
+    Route::post('/eliminar-bajas-totales-carreras', [BajasController::class, 'eliminarBajasTotalesCarreras']);
+
+    Route::post('/eliminar-baja-total-carreras/{id}', [BajasController::class, 'eliminarBajaTotalCarreras']);
+
+    Route::post('/importar-excel-bajas-carreras', [BajasController::class, 'importarExcelBajasTotalesCarrreras']);
+
+    // -------------------------------------------------TOTALES -----------------------------------------------
+
+    Route::post('/registro-baja-total', [BajasController::class, 'registrarBajaTotal']);
+
+    Route::post('/editar-baja-total/{id}', [BajasController::class, 'editarBajaTotal']);
+
+    Route::post('/eliminar-bajas-totales', [BajasController::class, 'eliminarBajasTotales']);
+
+    Route::post('/eliminar-baja-total', [BajasController::class, 'eliminarBajaTotal']);
+
+    Route::post('/importar-excel-bajas-totales', [BajasController::class, 'importarExcelBajasTotales']);
+
     //------------------------------------------------- FIN BAJAS ---------------------------------------------
     // ---------- rutas para GRAFICAS -------------
     Route::post('/obtener-filtro-carreras-admision', [admisionGraficasController::class, 'filtrarDatosCarreras']);
