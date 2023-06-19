@@ -214,6 +214,49 @@ Route::middleware([
     // --------------------------- FIN TRANSPORTE -----------------------
 
     // --------------------------- BECAS -----------------------
+    Route::post('/importar-excel-becas', [BecasController::class, 'importarDataExcelBecas']);
+    
+    // ------------------------------------------- BecasEA -------------------------------------------------
+
+    Route::post('/registro-beca-excelencia-academica', [BecasController::class, 'registrarBecaEA']);
+
+    Route::post('/editar-beca-excelencia-academica/{id}', [BecasController::class, 'editarBecaEA']);
+    
+    Route::post('/eliminar-becas-excelencia-academicas', [BecasController::class, 'eliminarBecaEAs']);
+
+    Route::post('/eliminar-beca-excelencia-academica/{id}', [BecasController::class, 'eliminarBecaEA']);
+
+    // ----------------------------------------- BecasAC --------------------------------------------------
+
+    Route::post('/registro-beca-apoyo-cardenal', [BecasController::class, 'registrarBecaAC']);
+
+    Route::post('/editar-beca-apoyo-cardenal/{id}', [BecasController::class, 'editarBecaAC']);
+    
+    Route::post('/eliminar-becas-apoyo-cardenales', [BecasController::class, 'eliminarBecaACs']);
+
+    Route::post('/eliminar-beca-apoyo-cardenal/{id}', [BecasController::class, 'eliminarBecaAC']);
+
+    // ------------------------------------------ BecasPP -----------------------------------------------
+
+    Route::post('/registro-beca-por-proyecto', [BecasController::class, 'registrarBecaPP']);
+
+    Route::post('/editar-beca-por-proyecto/{id}', [BecasController::class, 'editarBecaPP']);
+    
+    Route::post('/eliminar-becas-por-proyectos', [BecasController::class, 'eliminarBecaPPs']);
+
+    Route::post('/eliminar-beca-por-proyecto/{id}', [BecasController::class, 'eliminarBecaPP']);
+
+    // --------------------------------------------- BecasCA -----------------------------------------
+
+    Route::post('/registro-beca-cardenal-azul', [BecasController::class, 'registrarBecaCA']);
+
+    Route::post('/editar-beca-cardenal-azul/{id}', [BecasController::class, 'editarBecaCA']);
+    
+    Route::post('/eliminar-becas-cardenal-azules', [BecasController::class, 'eliminarBecaCAs']);
+
+    Route::post('/eliminar-beca-cardenal-azul/{id}', [BecasController::class, 'eliminarBecaCA']);
+
+    // --------------------------Fin indicador Becas----------------------------------
 
     // --------------------------- EGRESADOS -----------------------
 
