@@ -27,12 +27,12 @@ export default {
     methods: {
         setChartData() {
             return {
-                labels: this.data.map((item) => item.carrera + '-' + item.periodo),
+                labels: this.data.map((item) => item.carrera + '-' + item.proceso),
                 datasets: [
                     {
-                        label: 'Aspirantes',
+                        label: 'Cuatrimestre',
                         backgroundColor: '#FFB84C',
-                        data: this.data.map((item) => item.aspirantes)
+                        data: this.data.map((item) => item.cuatrimestre)
                     },
                     {
                         label: 'Hombres',
@@ -45,19 +45,9 @@ export default {
                         data: this.data.map((item) => item.mujeres)
                     },
                     {
-                        label: 'Admitidos',
+                        label: 'Solicitudes',
                         backgroundColor: '#4BC0C0',
-                        data: this.data.map((item) => item.admitidos)
-                    },
-                    {
-                        label: 'Examinados',
-                        backgroundColor: '#7DB9B6',
-                        data: this.data.map((item) => item.examinados)
-                    },
-                    {
-                        label: 'No Admitidos',
-                        backgroundColor: '#EB455F',
-                        data: this.data.map((item) => item.no_admitidos)
+                        data: this.data.map((item) => item.solicitudes)
                     },
                 ]
             }

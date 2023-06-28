@@ -1,7 +1,7 @@
 <script>
 // componentes
 import AppLayout from "@/Layouts/AppLayout.vue";
-import GraficaIngreso from "@/Pages/menusComponentes/Ingreso/GraficaIngreso.vue";
+import GraficaReingreso from "./GraficaReingreso.vue";
 
 // PrimeVue
 import DataTable from "primevue/datatable";
@@ -32,7 +32,7 @@ export default {
     MultiSelect,
     Chart,
     Dialog,
-    GraficaIngreso,
+    GraficaReingreso,
     Toast,
     ConfirmDialog,
     Toolbar,
@@ -112,7 +112,7 @@ export default {
       const imagen = grafica.toDataURL("image/png");
 
       const link = document.createElement("a");
-      link.download = "GraficaIngreso.png";
+      link.download = "GraficaReingreso.png";
       link.href = imagen;
       link.click();
     },
@@ -543,18 +543,6 @@ export default {
           </div>
           <!-- model para abrir grafica -->
           <Button label="Grafica" icon="pi pi-chart-bar" @click="openResponsive" />
-          <Dialog header="Grafica" v-model:visible="displayResponsive" :breakpoints="{ '960px': '75vw', '640px': '90vw' }"
-            :style="{ width: '70vw' }">
-            <!-- contenido del dialog/model desde aqui... -->
-            <div class="w-full" id="contenedorGrafica">
-              <GraficaIngreso :ingresos="reingresos" />
-            </div>
-            <template #footer>
-              <Button label="Cerrar" icon="pi pi-check" @click="closeResponsive" autofocus />
-              <!-- boton para guardar la grafica como img -->
-              <Button label="Guardar" icon="pi pi-save" @click="saveImage" />
-            </template>
-          </Dialog>
 
 
           <MultiSelect v-model="filters.carrera.value" :options="carrerasLista" optionLabel="name" optionValue="code"
@@ -597,13 +585,26 @@ export default {
         </template>
       </DataTable>
 
+      <Dialog header="Gráfica dinámica" v-model:visible="displayResponsive"
+        :breakpoints="{ '960px': '75vw', '75vw': '90vw' }" :style="{ width: '70vw' }">
+        <!-- contenido del dialog/model desde aqui... -->
+        <div class="w-full" id="contenedorGrafica">
+          <GraficaReingreso :data="selectedProducts" />
+        </div>
+        <template #footer>
+          <Button label="Cerrar" icon="pi pi-check" @click="closeResponsive" autofocus />
+          <!-- boton para guardar la grafica como img -->
+          <Button label="Guardar" icon="pi pi-save" @click="saveImage" />
+        </template>
+      </Dialog>
+
       <!-- Dialog para REGISTRAR -->
       <Dialog v-model:visible="productDialog" :style="{ width: '450px' }" header="Nuevo Registro" :modal="true"
         class="p-fluid">
         <div class="field">
           <form @submit.prevent="registrarRIngreso">
             <div class="field col-12 md:col-3 !mt-3">
-              <label for="minmax">Generacion</label>
+              <label for="minmax">Carrera</label>
             <Dropdown v-model="RIcarrera" :options="carrerasLista" optionLabel="name" optionValue="code" :filter="true"
               placeholder="Carrera..." class="!mt-3" />
             </div>

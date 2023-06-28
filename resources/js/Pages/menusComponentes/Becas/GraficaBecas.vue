@@ -27,37 +27,22 @@ export default {
     methods: {
         setChartData() {
             return {
-                labels: this.data.map((item) => item.carrera + '-' + item.periodo),
+                labels: this.data.map((item) => item.periodo_con_año + '-' + item.carrera),
                 datasets: [
                     {
-                        label: 'Aspirantes',
-                        backgroundColor: '#FFB84C',
-                        data: this.data.map((item) => item.aspirantes)
-                    },
-                    {
                         label: 'Hombres',
-                        backgroundColor: '#36A2EB',
+                        backgroundColor: '#7DC0FF',
                         data: this.data.map((item) => item.hombres)
                     },
                     {
                         label: 'Mujeres',
-                        backgroundColor: '#FF6384',
+                        backgroundColor: '#FF66F7',
                         data: this.data.map((item) => item.mujeres)
                     },
                     {
-                        label: 'Admitidos',
-                        backgroundColor: '#4BC0C0',
-                        data: this.data.map((item) => item.admitidos)
-                    },
-                    {
-                        label: 'Examinados',
-                        backgroundColor: '#7DB9B6',
-                        data: this.data.map((item) => item.examinados)
-                    },
-                    {
-                        label: 'No Admitidos',
-                        backgroundColor: '#EB455F',
-                        data: this.data.map((item) => item.no_admitidos)
+                        label: 'Total',
+                        backgroundColor: '#FFB84C',
+                        data: this.data.map((item) => item.total)
                     },
                 ]
             }
@@ -117,9 +102,9 @@ export default {
             <select class="mb-5" v-model="tipoGrafica">
                 <option value="">Tipo de grafica</option>
                 <option value="pie">Pie</option>
-                <option value="doughnut">doughnut</option>
-                <option value="line">line</option>
-                <option value="bar">Bar</option>
+                <option value="doughnut">Anillo</option>
+                <option value="line">Líneas</option>
+                <option value="bar">Barras</option>
             </select>
         </div>
         <div v-if="tipoGrafica === 'bar'">
