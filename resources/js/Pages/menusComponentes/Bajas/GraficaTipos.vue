@@ -1,6 +1,6 @@
 <script>
 import Chart from 'primevue/chart';
-import { ref, watch } from 'vue';
+import { ref, watch } from 'vue'
 
 
 export default {
@@ -27,7 +27,7 @@ export default {
     methods: {
         setChartData() {
             return {
-                labels: this.data.map((item) => item.periodo_con_año + '-' + item.carrera),
+                labels: this.data.map((item) => item.periodo_con_año + '-' + item.tipo_baja),
                 datasets: [
                     {
                         label: 'Hombres',

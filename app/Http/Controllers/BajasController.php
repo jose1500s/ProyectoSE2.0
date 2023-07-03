@@ -104,6 +104,9 @@ class BajasController extends Controller
          elseif ($fila['tipo_baja'] == "administrativa"){
             $baja = new tb_bajas_administrativas();
          }
+         elseif ($fila['tipo_baja'] == "totales"){
+            $baja = new tb_bajas_totales_periodos();
+         }
          $baja->periodo = $fila['periodo'];
          $baja->año = $fila['año'];
          $baja->periodo_con_año = $periodoconaño;
@@ -126,24 +129,6 @@ class BajasController extends Controller
          $baja->año = $fila['año'];
          $baja->periodo_con_año = $periodoconaño;
          $baja->tipo_baja = $fila['tipo_baja'];
-         $baja->hombres = $fila['hombres'];
-         $baja->mujeres = $fila['mujeres'];
-         $baja->total = $total;
-         $baja->save();
-      }
-      return redirect()->route('usuario.bajas');
-     }
-
-     public function importarExcelBajasTotalesCarrreras(Request $request){
-      $excel = $request->input('datos');
-      foreach($excel as $fila){
-         $periodoconaño = $fila['periodo'] . " " . strval($fila['año']);
-         $total = $fila['hombres'] + $fila['mujeres'];
-         $baja = new tb_bajas_totales_tipos();
-         $baja->periodo = $fila['periodo'];
-         $baja->año = $fila['año'];
-         $baja->periodo_con_año = $periodoconaño;
-         $baja->carrera = $fila['carrera'];
          $baja->hombres = $fila['hombres'];
          $baja->mujeres = $fila['mujeres'];
          $baja->total = $total;

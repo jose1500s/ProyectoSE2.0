@@ -298,6 +298,7 @@ export default {
         readXlsxFile(input.files[0]).then((rows) => {
           //mandar a datosExcel los datos apartir de la psicion 1 del array
           this.datosExcel = rows.slice(1);
+          for (let i = 0; i < this.datosExcel.length; i++) { this.datosExcel[i][6] = "totales" }
           // mandar a columnasExcel las columnas del archivo
           this.columnasExcel = rows[0];
           console.log(this.datosExcel)
@@ -334,6 +335,7 @@ export default {
           carrera: this.datosExcel[i][3],
           hombres: this.datosExcel[i][4],
           mujeres: this.datosExcel[i][5],
+          tipo_baja: this.datosExcel[i][6]
         })
       }
 
@@ -341,7 +343,7 @@ export default {
         datos: datosInsertar,
       };
 
-      this.$inertia.post("/importar-excel-bajas-carreras", data, {
+      this.$inertia.post("/importar-excel-bajas", data, {
         preserveState: true,
         preserveScroll: true,
         onSuccess: () => {

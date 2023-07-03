@@ -50,11 +50,11 @@ export default {
             <TabPanel header="Administrativa">
                 <Administrativa :administrativa="administrativa"/>
             </TabPanel>
-            <TabPanel header="Totales por Tipo">
-                <TotalesTipos :totalesTipos="totalesTipos"/>
-            </TabPanel>
             <TabPanel header="Totales por Carrera">
                 <TotalesCarreras :totalesCarreras="totalesCarreras"/>
+            </TabPanel>
+            <TabPanel header="Totales por Tipo">
+                <TotalesTipos :totalesTipos="totalesTipos"/>
             </TabPanel>
             <TabPanel header="Totales Generales">
                 <Totales :totales="totales"/>
