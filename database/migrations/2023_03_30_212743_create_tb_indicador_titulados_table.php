@@ -18,9 +18,11 @@ return new class extends Migration
             $table->string('generacion', 50);
             $table->string('carrera', 50);
             $table->integer('total');
-            $table->integer('cedula');
-            $table->date('cuatrimestre_egreso');
-            $table->date('fecha_titulacion');
+            $table->integer('hombre');
+            $table->integer('mujer');
+            $table->string('periodo');
+            $table->integer('año');
+            $table->string('periodo_con_año');
             $table->timestamps();
         });
     }

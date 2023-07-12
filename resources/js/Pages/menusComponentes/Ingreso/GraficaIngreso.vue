@@ -35,6 +35,21 @@ export default {
                         data: this.data.map((item) => item.aspirantes)
                     },
                     {
+                        label: 'Hombres',
+                        backgroundColor: '#36A2EB',
+                        data: this.data.map((item) => item.hombres)
+                    },
+                    {
+                        label: 'Mujeres',
+                        backgroundColor: '#FF6384',
+                        data: this.data.map((item) => item.mujeres)
+                    },
+                    {
+                        label: 'Admitidos',
+                        backgroundColor: '#4BC0C0',
+                        data: this.data.map((item) => item.admitidos)
+                    },
+                    {
                         label: 'Examinados',
                         backgroundColor: '#7DB9B6',
                         data: this.data.map((item) => item.examinados)

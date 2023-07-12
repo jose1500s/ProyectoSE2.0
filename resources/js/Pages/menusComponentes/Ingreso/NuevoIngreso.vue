@@ -1,7 +1,7 @@
 <script>
 // componentes
 import AppLayout from "@/Layouts/AppLayout.vue";
-import GraficaIngreso from "@/Pages/menusComponentes/Ingreso/GraficaIngreso.vue";
+import GraficaNIngreso from "./GraficaNIngreso.vue";
 
 // PrimeVue
 import DataTable from "primevue/datatable";
@@ -18,6 +18,8 @@ import ConfirmDialog from "primevue/confirmdialog";
 import Toolbar from "primevue/toolbar";
 import Dropdown from "primevue/dropdown";
 import InputNumber from "primevue/inputnumber";
+import axios from "axios";
+import readXlsxFile from "read-excel-file";
 
 export default {
   components: {
@@ -30,7 +32,7 @@ export default {
     MultiSelect,
     Chart,
     Dialog,
-    GraficaIngreso,
+    GraficaNIngreso,
     Toast,
     ConfirmDialog,
     Toolbar,
@@ -40,7 +42,7 @@ export default {
   props: {
     ningresos: Array,
   },
-  setup() {},
+  setup() { },
   methods: {
     filtrarCarreras() {
       // filtar del arreglo ingresos.carrera, todos los que se repiten
@@ -85,7 +87,7 @@ export default {
     limpiarFiltros() {
       // limpia/eliminar los filtros realizados en la  tabla y volver a mostrar todos los datos
       this.filters.carrera.value = null;
-      this.filters.Proceso.value = null;
+      this.filters.proceso.value = null;
       this.filters.fecha.value = null;
       this.$refs.dt.filter(this.filters, "carrera");
       this.$refs.dt.filter(this.filters, "Proceso");
@@ -104,7 +106,7 @@ export default {
       const imagen = grafica.toDataURL("image/png");
 
       const link = document.createElement("a");
-      link.download = "GraficaIngreso.png";
+      link.download = "GraficaNuevoIngreso.png";
       link.href = imagen;
       link.click();
     },
@@ -144,17 +146,23 @@ export default {
       this.submitted = false;
     },
     registrarNIngreso() {
-      this.submitted = true; 
+      this.submitted = true;
+      if(this.NIhombres == 0 && this.NImujeres == 0){
+        this.$toast.add({
+          severity: "error",
+          summary: "Error",
+          detail: "No se puede editar un reingreso con 0 hombres y 0 mujeres, ingrese un numero de solicitudes valido en hombres y/o mujeres",
+          life: 3000,
+        });
+        return false;
+      }
       if (
         this.NIcarreras == null ||
         this.totalIngresos == 0 ||
         this.NIexaminados == 0 ||
-        this.NIsexo == null ||
         this.NIgeneracion == 0 ||
-        this.NIadmitidos == 0 ||
         this.NIinscritos == 0 ||
-        this.NIprocesos == null ||
-        this.NIperiodos == null
+        this.NIprocesos == null
       ) {
         // si alguno de los campos esta vacio, no enviar el formulario y mostrar un mensaje de error
         this.$toast.add({
@@ -169,12 +177,11 @@ export default {
           carrera: this.NIcarreras,
           totalIngresos: this.totalIngresos,
           examinados: this.NIexaminados,
-          sexo: this.NIsexo,
           generacion: this.NIgeneracion,
-          admitidos: this.NIadmitidos,
+          hombres: this.NIhombres,
+          mujeres: this.NImujeres,
           inscritos: this.NIinscritos,
           procesos: this.NIprocesos,
-          periodos: this.NIperiodos,
         };
         this.$inertia.post("/registro-NIngreso", data, {
           preserveState: true,
@@ -192,17 +199,23 @@ export default {
       }
     },
     editarNIngreso() {
-      this.submitted = true; 
+      this.submitted = true;
+      if(this.product.hombres == 0 && this.product.mujeres == 0){
+        this.$toast.add({
+          severity: "error",
+          summary: "Error",
+          detail: "No se puede editar un reingreso con 0 hombres y 0 mujeres, ingrese un numero de solicitudes valido en hombres y/o mujeres",
+          life: 3000,
+        });
+        return false;
+      }
       if (
         this.product.id == null ||
         this.product.carrera == null ||
         this.product.total_ingresos == 0 ||
-        this.product.sexo == 0 ||
         this.product.generacion == 0 ||
-        this.product.admitidos == 0 ||
         this.product.inscritos == 0 ||
-        this.product.proceso == null ||
-        this.product.periodo == null
+        this.product.proceso == null
       ) {
         // si alguno de los campos esta vacio, no enviar el formulario y mostrar un mensaje de error
         this.$toast.add({
@@ -213,17 +226,16 @@ export default {
         });
         return false;
       } else {
-       const data = {
+        const data = {
           id: this.product.id,
           carrera: this.product.carrera,
           totalIngresos: this.product.total_ingresos,
           examinados: this.product.examinados,
-          sexo: this.product.sexo,
           generacion: this.product.generacion,
-          admitidos: this.product.admitidos,
+          hombres: this.product.hombres,
+          mujeres: this.product.mujeres,
           inscritos: this.product.inscritos,
           procesos: this.product.proceso,
-          periodos: this.product.periodo,
         };
         this.$inertia.post(`/editar-NIngreso/${this.product.id}`, data, {
           preserveState: true,
@@ -291,14 +303,121 @@ export default {
     confirmDeleteSelected() {
       this.deleteProductsDialog = true;
     },
+    openImportExcel() {
+      this.importExcelDialog = true;
+      // cada que se abra se resetea el valor del array de datosExcel para que no se repitan los datos
+      this.datosExcel = [];
+    },
+    subirExcel() {
+      const input = document.getElementById("inputExcel");
+
+      // si el archivo no es .xlsx no se sube y mandar un mensaje de error
+      if (input.files[0].type != "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet") {
+        this.$toast.add({
+          severity: "error",
+          summary: "Error",
+          detail: "El archivo debe ser .xlsx",
+          life: 6000,
+        });
+        return false;
+      } else {
+        readXlsxFile(input.files[0]).then((rows) => {
+          //mandar a datosExcel los datos apartir de la psicion 1 del array
+          this.datosExcel = rows.slice(1);
+          // mandar a columnasExcel las columnas del archivo
+          this.columnasExcel = rows[0];
+          console.log(this.datosExcel)
+          console.log(this.columnasExcel)
+          // si el archivo no tiene las columnas 'carrera', 'total_ingresos', 'generacion', 'hombres', 'mujeres', 'inscritos', 'proceso', 'periodo
+          if (
+            this.columnasExcel[1] != "Carrera" ||
+            this.columnasExcel[2] != "Total Ingresos" ||
+            this.columnasExcel[3] != "Generacion" ||
+            this.columnasExcel[4] != "Hombres" ||
+            this.columnasExcel[5] != "Mujeres" ||
+            this.columnasExcel[6] != "Admitidos" ||
+            this.columnasExcel[7] != "Inscritos" ||
+            this.columnasExcel[8] != "Proceso" ||
+            this.columnasExcel[9] != "Periodo"
+
+          ) {
+            this.wrongFormatExcel = true;
+            this.$toast.add({
+              severity: "error",
+              summary: "Error",
+              detail: "Formato de archivo incorrecto",
+              life: 5000,
+            });
+            return false;
+          } else {
+            this.wrongFormatExcel = false;
+          }
+
+        });
+      }
+    },
+    importarExcel() {
+      const datosInsertar = []
+      for (let i = 0; i < this.datosExcel.length; i++) {
+        datosInsertar.push({
+          carrera: this.datosExcel[i][1],
+          total_ingresos: this.datosExcel[i][2],
+          generacion: this.datosExcel[i][3],
+          hombres: this.datosExcel[i][4],
+          mujeres: this.datosExcel[i][5],
+          admitidos: this.datosExcel[i][6],
+          inscritos: this.datosExcel[i][7],
+          proceso: this.datosExcel[i][8],
+          periodo: this.datosExcel[i][9],
+        });
+      }
+
+      const data = {
+        datos: datosInsertar,
+      };
+
+      this.$inertia.post("/importar-excel-ningresos", data, {
+        preserveState: true,
+        preserveScroll: true,
+        onSuccess: () => {
+          this.importExcelDialog = false;
+          this.$toast.add({
+            severity: "success",
+            summary: "Exito",
+            detail: "Importado exitosamente",
+            life: 3000,
+          });
+        },
+      });
+
+    },
+    filtroCarreras() {
+      let data = {
+        carrera: this.filters.carrera.value,
+      };
+      axios
+        .post("/obtener-filtro-carreras-admision", data)
+        .then((response) => {
+          this.datosFiltrados = response.data.datosCarrerasFiltro;
+          this.admisionesTodosLosRegistros = response.data.admisiones;
+          // Aquí puedes realizar otras operaciones con los datos recibidos
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
   },
+  mounted() { },
   data() {
     return {
       filters: {
         carrera: { value: null, matchMode: FilterMatchMode.IN },
-        Proceso: { value: null, matchMode: FilterMatchMode.IN },
+        proceso: { value: null, matchMode: FilterMatchMode.IN },
         fecha: { value: null, matchMode: FilterMatchMode.IN },
       },
+      datosFiltrados: [],
+      datosExcel: [],
+      columnasExcel: [],  
       carrerasLista: [
         { name: "Manufactura", code: "Manufactura" },
         { name: "Mecatronica", code: "Mecatronica" },
@@ -312,7 +431,6 @@ export default {
         { name: "Masculino", code: "Masculino" },
         { name: "Femenino", code: "Femenino" },
       ],
-      periodosLista: [{ name: "SEP-DIC", code: "SEP-DIC" }],
       procesosLista: [
         { name: "1er Proceso", code: "1er Proceso" },
         { name: "2do Proceso", code: "2do Proceso" },
@@ -324,16 +442,33 @@ export default {
       NIcarreras: null,
       totalIngresos: 0,
       NIexaminados: 0,
-      NIsexo: null,
       NIgeneracion: null,
-      NIadmitidos: 0,
+      NIhombres: 0,
+      NImujeres: 0,
       NIinscritos: 0,
       NIprocesos: null,
-      NIperiodos: null,
       editDialog: false,
       deleteProductDialog: false,
       selectedProducts: null,
       deleteProductsDialog: false,
+      importExcelDialog: false,
+      columnasPreviewExcel: [
+        { name: "ID", code: "0" },
+        { name: "Carrera", code: "1" },
+        { name: "Total Ingresos", code: "2" },
+        { name: "Generacion", code: "3" },
+        { name: "Hombres", code: "4" },
+        { name: "Mujeres", code: "5" },
+        { name: "Admitidos", code: "6" },
+        { name: "Inscritos", code: "7" },
+        { name: "Proceso", code: "8" },
+        { name: "Periodo", code: "9" },
+      ],
+      procesosLista: [
+        { name: "1er Proceso", code: "1er Proceso" },
+        { name: "2do Proceso", code: "2do Proceso" },
+        { name: "3er Proceso", code: "3er Proceso" },
+      ],
     };
   },
 };
@@ -343,21 +478,48 @@ export default {
   <!-- new button -->
   <Toolbar class="mb-4">
     <template #start>
-      <Button
-        label="Nuevo Registro"
-        icon="pi pi-plus"
-        class="p-button-success !mr-2"
-        @click="openNew"
-      />
-      <Button
-        label="Eliminar"
-        icon="pi pi-trash"
-        class="p-button-danger"
-        @click="confirmDeleteSelected"
-        :disabled="!selectedProducts || !selectedProducts.length"
-      />
+      <Button label="Nuevo Registro" icon="pi pi-plus" class="p-button-success !mr-2" @click="openNew" />
+      <Button label="Eliminar" icon="pi pi-trash" class="p-button-danger" @click="confirmDeleteSelected"
+        :disabled="!selectedProducts || !selectedProducts.length" />
+      <Button class="!ml-3" icon="pi pi-external-link" label="Exportar Excel" @click="exportCSV($event)" />
+
+      <!-- button dialog para importar excel-->
+      <Button label="Importar Excel" icon="pi pi-upload" class="!ml-2" @click="openImportExcel" />
     </template>
   </Toolbar>
+
+  <!-- Dialog para importar excel -->
+  <Dialog v-model:visible="importExcelDialog" :breakpoints="{ '1260px': '75vw', '640px': '85vw' }"
+    :style="{ width: '45vw' }" header="Importar Excel" :modal="true" class="p-fluid">
+
+
+    <!-- aqui selecciona el archivo de excel -->
+    <div class="border border-dashed border-gray-500 relative">
+      <input type="file" id="inputExcel" @change="subirExcel" multiple
+        class="cursor-pointer relative block opacity-0 w-full h-full p-20 z-50">
+      <div class="text-center p-10 absolute top-0 right-0 left-0 m-auto">
+        <h4>
+          Arrastra y suelta el archivo aquí
+          <br />ó
+        </h4>
+        <p class="">
+          Selecciona un archivo de excel
+        </p>
+      </div>
+    </div>
+
+    <!-- preview del documento subido en el array datosExcel -->
+    <DataTable v-if="datosExcel.length > 0" :value="datosExcel">
+      <Column v-for="columna in columnasPreviewExcel" :key="columna.code" :field="columna.code" :header="columna.name" />
+    </DataTable>
+
+    <div class="max-w-[50%] m-auto p-7">
+      <Button label="Importar" @click="importarExcel" id="btnImportarExcel"
+        :disabled="datosExcel.length == 0 || wrongFormatExcel" />
+    </div>
+
+
+  </Dialog>
 
   <section class="bg-white" id="tablaIngreso">
     <div class="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8 p-[20px]">
@@ -367,99 +529,28 @@ export default {
             <Toast />
           </div>
           <!-- model para abrir grafica -->
-          <Button
-            label="Grafica"
-            icon="pi pi-chart-bar"
-            @click="openResponsive"
-          />
-          <Dialog
-            header="Grafica"
-            v-model:visible="displayResponsive"
-            :breakpoints="{ '960px': '75vw', '640px': '90vw' }"
-            :style="{ width: '70vw' }"
-          >
-            <!-- contenido del dialog/model desde aqui... -->
-            <div class="w-full" id="contenedorGrafica">
-              <GraficaIngreso :ingresos="ningresos" />
-            </div>
-            <template #footer>
-              <Button
-                label="Cerrar"
-                icon="pi pi-check"
-                @click="closeResponsive"
-                autofocus
-              />
-              <!-- boton para guardar la grafica como img -->
-              <Button label="Guardar" icon="pi pi-save" @click="saveImage" />
-            </template>
-          </Dialog>
+          <Button label="Grafica" icon="pi pi-chart-bar" @click="openResponsive" />
 
-          <Button
-            icon="pi pi-external-link"
-            label="Exportar Excel"
-            @click="exportCSV($event)"
-          />
+          <MultiSelect v-model="filters.carrera.value" :options="carrerasLista" optionLabel="name" optionValue="code"
+            placeholder="Carrera" display="chip" @change="filtroCarreras($event)" />
 
-          <MultiSelect
-            v-model="filters.carrera.value"
-            :options="filtrarCarreras()"
-            placeholder="Carrera"
-            display="chip"
-          />
+          <MultiSelect v-model="filters.proceso.value" :options="procesosLista" optionLabel="name" optionValue="code"
+            placeholder="Proceso" display="chip" />
 
-          <MultiSelect
-            v-model="filters.Proceso.value"
-            :options="filtrarProcesos()"
-            placeholder="Proceso"
-            display="chip"
-          />
-
-          <MultiSelect
-            v-model="filters.fecha.value"
-            :options="filtrarFecha()"
-            placeholder="Fecha"
-            display="chip"
-          />
-
-          <Button
-            icon="pi pi-times"
-            label="Limpiar"
-            @click="limpiarFiltros()"
-          />
+          <Button icon="pi pi-times" label="Limpiar" @click="limpiarFiltros()" />
         </div>
       </div>
 
-      <DataTable
-        :value="ningresos"
-        :paginator="true"
-        class="p-datatable-customers"
-        :rows="7"
-        ref="dt"
-        v-model:filters="filters"
-        v-model:selection="selectedProducts"
-        :emptyMessage="noDataMessage"
-        stripedRows
-        sortMode="multiple"
-        removableSort
-      >
-        <Column
-          selectionMode="multiple"
-          style="width: 3rem"
-          :exportable="false"
-        ></Column>
+      <DataTable exportFilename="Nuevo Ingresos" :value="ningresos" :paginator="true" class="p-datatable-customers" :rows="7" ref="dt"
+        v-model:filters="filters" v-model:selection="selectedProducts" :emptyMessage="noDataMessage" stripedRows
+        sortMode="multiple" removableSort>
+        <Column selectionMode="multiple" style="width: 3rem" :exportable="false"></Column>
         <Column field="id" header="ID" :sortable="true" hidden></Column>
         <Column field="carrera" header="Carrera" :sortable="true"></Column>
-        <Column
-          field="total_ingresos"
-          header="Total Ingresos"
-          :sortable="true"
-        ></Column>
-        <Column field="sexo" header="Sexo" :sortable="true"></Column>
-        <Column
-          field="generacion"
-          header="Generacion"
-          :sortable="true"
-        ></Column>
+        <Column field="total_ingresos" header="Total Ingresos" :sortable="true"></Column>
+        <Column field="generacion" header="Generacion" :sortable="true"></Column>
+        <Column field="hombres" header="Hombres" :sortable="true"></Column>
+        <Column field="mujeres" header="Mujeres" :sortable="true"></Column>
         <Column field="admitidos" header="Admitidos" :sortable="true"></Column>
         <Column field="inscritos" header="Inscritos" :sortable="true"></Column>
         <Column field="proceso" header="Proceso" :sortable="true"></Column>
@@ -481,136 +572,74 @@ export default {
         </template>
       </DataTable>
 
+      <Dialog header="Gráfica dinámica" v-model:visible="displayResponsive"
+        :breakpoints="{ '960px': '75vw', '75vw': '90vw' }" :style="{ width: '70vw' }">
+        <!-- contenido del dialog/model desde aqui... -->
+        <div class="w-full" id="contenedorGrafica">
+          <GraficaNIngreso :data="selectedProducts" />
+        </div>
+        <template #footer>
+          <Button label="Cerrar" icon="pi pi-check" @click="closeResponsive" autofocus />
+          <!-- boton para guardar la grafica como img -->
+          <Button label="Guardar" icon="pi pi-save" @click="saveImage" />
+        </template>
+      </Dialog>
+
       <!-- Dialog para REGISTRAR  -->
-      <Dialog
-        v-model:visible="productDialog"
-        :breakpoints="{ '960px': '75vw', '640px': '85vw' }"
-        :style="{ width: '35vw' }"
-        header="Nuevo Registro"
-        :modal="true"
-        class="p-fluid"
-      >
+      <Dialog v-model:visible="productDialog" :breakpoints="{ '960px': '75vw', '640px': '85vw' }"
+        :style="{ width: '35vw' }" header="Nuevo Registro" :modal="true" class="p-fluid">
         <div class="field">
           <form @submit.prevent="registrarNIngreso">
             <!-- select con opciones -->
-            <Dropdown
-              v-model="NIcarreras"
-              :options="carrerasLista"
-              optionLabel="name"
-              optionValue="code"
-              :filter="true"
-              placeholder="Carrera..."
-              class="!mt-3"
-            />
+            <Dropdown v-model="NIcarreras" :options="carrerasLista" optionLabel="name" optionValue="code" :filter="true"
+              placeholder="Carrera..." class="!mt-3" />
 
             <div class="field col-12 md:col-3">
               <label for="minmax">Total Ingresos</label>
-              <InputNumber
-                inputId="minmax"
-                v-model="totalIngresos"
-                mode="decimal"
-                :min="0"
-                :max="10000"
-                :showButtons="true"
-              />
+              <InputNumber inputId="minmax" v-model="totalIngresos" mode="decimal" :min="0" :max="10000"
+                :showButtons="true" />
             </div>
 
             <div class="field col-12 md:col-3">
               <label for="minmax">Examinados</label>
-              <InputNumber
-                inputId="minmax"
-                v-model="NIexaminados"
-                mode="decimal"
-                :min="0"
-                :max="10000"
-                :showButtons="true"
-              />
-            </div>
-
-            <div class="field col-12 md:col-3">
-              <Dropdown
-                v-model="NIsexo"
-                :options="sexoLista"
-                optionLabel="name"
-                optionValue="code"
-                placeholder="Sexo"
-                class="!mt-3"
-              />
+              <InputNumber inputId="minmax" v-model="NIexaminados" mode="decimal" :min="0" :max="10000"
+                :showButtons="true" />
             </div>
 
             <div class="field col-12 md:col-3">
               <label for="minmax">Generacion</label>
-              <InputNumber
-                inputId="minmax"
-                v-model="NIgeneracion"
-                :min="0"
-                :max="10000"
-                :showButtons="true"
-              />
+              <InputNumber inputId="minmax" v-model="NIgeneracion" :min="0" :max="10000" :showButtons="true" />
             </div>
 
             <div class="field col-12 md:col-3">
-              <label for="minmax">Admitidos</label>
-              <InputNumber
-                inputId="minmax"
-                v-model="NIadmitidos"
-                mode="decimal"
-                :min="0"
-                :max="10000"
-                :showButtons="true"
-              />
+              <label for="minmax">Hombres</label>
+              <InputNumber inputId="minmax" v-model="NIhombres" mode="decimal" :min="0" :max="10000"
+                :showButtons="true" />
+            </div>
+
+            <div class="field col-12 md:col-3">
+              <label for="minmax">Mujeres</label>
+              <InputNumber inputId="minmax" v-model="NImujeres" mode="decimal" :min="0" :max="10000"
+                :showButtons="true" />
             </div>
 
             <div class="field col-12 md:col-3">
               <label for="minmax">Inscritos</label>
-              <InputNumber
-                inputId="minmax"
-                v-model="NIinscritos"
-                mode="decimal"
-                :min="0"
-                :max="10000"
-                :showButtons="true"
-              />
+              <InputNumber inputId="minmax" v-model="NIinscritos" mode="decimal" :min="0" :max="10000"
+                :showButtons="true" />
             </div>
 
-            <Dropdown
-              v-model="NIprocesos"
-              :options="procesosLista"
-              optionLabel="name"
-              optionValue="code"
-              placeholder="Proceso"
-              class="!mt-3"
-            />
+            <Dropdown v-model="NIprocesos" :options="procesosLista" optionLabel="name" optionValue="code"
+              placeholder="Proceso" class="!mt-3" />
 
-            <div class="field col-12 md:col-3">
-              <Dropdown
-                v-model="NIperiodos"
-                :options="periodosLista"
-                optionLabel="name"
-                optionValue="code"
-                class="!mt-3"
-                placeholder="Periodo"
-              />
-            </div>
-
-            <Button
-              type="submit"
-              id="btnRegisrar"
-              class="flex items-center justify-center space-x-2 rounded-md border-2 border-blue-500 px-4 py-2 font-medium text-blue-600 transition hover:bg-blue-500 hover:text-white"
-            >
+            <Button type="submit" id="btnRegisrar"
+              class="flex items-center justify-center space-x-2 rounded-md border-2 border-blue-500 px-4 py-2 font-medium text-blue-600 transition hover:bg-blue-500 hover:text-white">
               <span> Registrar </span>
               <span>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="currentColor"
-                  class="h-6 w-6"
-                >
-                  <path
-                    fill-rule="evenodd"
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="h-6 w-6">
+                  <path fill-rule="evenodd"
                     d="M16.72 7.72a.75.75 0 011.06 0l3.75 3.75a.75.75 0 010 1.06l-3.75 3.75a.75.75 0 11-1.06-1.06l2.47-2.47H3a.75.75 0 010-1.5h16.19l-2.47-2.47a.75.75 0 010-1.06z"
-                    clip-rule="evenodd"
-                  />
+                    clip-rule="evenodd" />
                 </svg>
               </span>
             </Button>
@@ -619,81 +648,62 @@ export default {
       </Dialog>
 
       <!-- Dialog para eliminar el/los productos seleccionados de la tabla -->
-      <Dialog
-        v-model:visible="deleteProductsDialog"
-        :style="{ width: '550px' }"
-        header="Confirm"
-        :modal="true"
-      >
+      <Dialog v-model:visible="deleteProductsDialog" :style="{ width: '550px' }" header="Confirm" :modal="true">
         <div class="confirmation-content flex items-center justify-center">
           <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem" />
           <span> ¿Confirma eliminar los registros seleccionados? </span>
         </div>
         <template #footer>
-          <Button
-            label="No"
-            icon="pi pi-times"
-            class="p-button-text"
-            @click="deleteProductsDialog = false"
-          />
-          <Button
-            label="Si"
-            icon="pi pi-check"
-            class="p-button-text"
-            @click="deleteSelectedProducts"
-          />
+          <Button label="No" icon="pi pi-times" class="p-button-text" @click="deleteProductsDialog = false" />
+          <Button label="Si" icon="pi pi-check" class="p-button-text" @click="deleteSelectedProducts" />
         </template>
       </Dialog>
 
       <!-- Dialog para editar el producto toma los valores del producto seleccionado -->
-      <Dialog header="Editar Nuevo Ingreso" v-model:visible="editDialog" :breakpoints="{ '960px': '75vw', '75vw': '85vw' }" :style="{ width: '25vw' }" :modal="true" :closable="true" :dismissableMask="false">
+      <Dialog header="Editar Nuevo Ingreso" v-model:visible="editDialog"
+        :breakpoints="{ '960px': '75vw', '75vw': '85vw' }" :style="{ width: '25vw' }" :modal="true" :closable="true"
+        :dismissableMask="false">
         <div class="p-fluid p-formgrid p-grid">
           <form @submit.prevent="editarNIngreso">
 
             <InputText id="id" v-model="product.id" hidden />
-        
+
             <div class="p-field p-col-12 p-md-12">
               <label for="carrera">Carrera</label>
-              <InputText id="carrera" v-model="product.carrera" />
+              <InputText id="carrera" v-model.trim="product.carrera" />
             </div>
 
-            
+
             <div class="p-field p-col-12 p-md-12">
               <label for="total_ingresos">Total Ingresos</label>
-              <InputNumber id="total_ingresos" v-model="product.total_ingresos"  />
-            </div>
-
-            
-            <div class="p-field p-col-12 p-md-12">
-              <label for="total_ingresos">Sexo</label>
-              <inputText id="total_ingresos" v-model="product.sexo"  />
+              <InputText id="total_ingresos" v-model.trim="product.total_ingresos" />
             </div>
 
             <div class="p-field p-col-12 p-md-12">
-              <label for="total_ingresos">Generacion</label>
-              <InputNumber id="total_ingresos" v-model="product.generacion"  />
+              <label for="generacion">Generacion</label>
+              <InputText id="generacion" v-model.trim="product.generacion" />
             </div>
 
             <div class="p-field p-col-12 p-md-12">
-              <label for="total_ingresos">Admitidos</label>
-              <InputNumber id="total_ingresos" v-model="product.admitidos"  />
+              <label for="total_ingresos">Hombres</label>
+              <InputText id="total_ingresos" v-model="product.hombres" />
+            </div>
+
+            <div class="p-field p-col-12 p-md-12">
+              <label for="total_ingresos">Mujeres</label>
+              <InputText id="total_ingresos" v-model="product.mujeres" />
             </div>
 
             <div class="p-field p-col-12 p-md-12">
               <label for="total_ingresos">Inscritos</label>
-              <InputNumber id="total_ingresos" v-model="product.inscritos"  />
+              <InputText id="total_ingresos" v-model="product.inscritos" />
             </div>
 
             <div class="p-field p-col-12 p-md-12">
               <label for="total_ingresos">Proceso</label>
-              <InputText id="total_ingresos" v-model="product.proceso"  />
+              <InputText id="total_ingresos" v-model="product.proceso" />
             </div>
 
-            <div class="p-field p-col-12 p-md-12">
-              <label for="total_ingresos">Periodo</label>
-              <InputText id="total_ingresos" v-model="product.periodo"  />
-            </div>
-            
             <Button type="submit" label="Guardar" icon="pi pi-check" class="!mt-3" />
           </form>
         </div>
@@ -733,5 +743,4 @@ div#contenedorGrafica canvas {
 table.p-datatable-table {
   width: 100%;
 }
-
 </style>
