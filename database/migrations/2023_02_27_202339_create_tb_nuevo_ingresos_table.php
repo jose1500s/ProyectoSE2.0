@@ -17,9 +17,8 @@ return new class extends Migration
             $table->id();
             $table->string('carrera', 50);
             $table->integer('total_ingresos');
+            $table->enum('sexo', ['masculino', 'femenino']);
             $table->integer('generacion');
-            $table->integer('hombres');
-            $table->integer('mujeres');
             $table->integer('admitidos');
             $table->integer('inscritos');
             $table->string('proceso', 50);
