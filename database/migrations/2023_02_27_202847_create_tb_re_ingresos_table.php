@@ -17,9 +17,6 @@ return new class extends Migration
             $table->id();
             $table->string('carrera', 50);
             $table->integer('cuatrimestre');
-            $table->integer('hombres');
-            $table->integer('mujeres');  
-            $table->integer('solicitudes');
             $table->integer('generacion');
             $table->string('tipo_baja',50);
             $table->string('periodo',50);
