@@ -14,6 +14,7 @@ use App\Http\Controllers\TituladosController;
 use App\Http\Controllers\TransporteController;
 use App\Http\Controllers\BecasController;
 use App\Http\Controllers\Ingreso\admisionGraficasController;
+use App\Http\Controllers\MatriculaController;
 
 
 /*
@@ -59,7 +60,7 @@ Route::middleware([
     Route::get('/bajas', [BajasController::class, 'bajas'])->name('usuario.bajas');
     
     // Ruta para abrir el menu de matricula
-    Route::get('/matricula', [main::class, 'matricula'])->name('usuario.matricula');
+    Route::get('/matricula', [MatriculaController::class, 'matricula'])->name('usuario.matricula');
     
     // Ruta para abrir el menu de egresados
     Route::get('/egresados', [EgresadosController::class, 'egresados'])->name('usuario.egresados');
@@ -94,6 +95,20 @@ Route::middleware([
     Route::post('/eliminar-Admisiones', [IngresoController::class, 'eliminarAdmisiones']);
 
     // ---------- FIN TAB ADMISIONES ------------
+
+    // ---------- TAB MATRICULA ------------
+
+    Route::post('/registro-Matricula', [MatriculaController::class, 'registrarMatricula']);
+
+    Route::post('/eliminar-Matricula/{id}', [MatriculaController::class, 'eliminarMatricula']);
+
+    Route::post('/eliminar-Matriculas', [MatriculaController::class, 'eliminarMatriculas']);
+
+    Route::post('/editar-Matricula/{id}', [MatriculaController::class, 'editarMatricula']);
+
+    Route::post('/importar-excel-matriculas', [MatriculaController::class, 'importarDataExcelMatriculas']);
+
+    // ---------- FIN TAB MATRICULA ------------
 
     // ---------- TAB TITULADOS ------------
 
@@ -319,6 +334,10 @@ Route::middleware([
 
     // ------------------------------------------ ACADEMICAS -----------------------------------------------
 
+    
+
+    //------------------------------------------------- MATRICULA ---------------------------------------------
+
     Route::post('/registro-baja-academica', [BajasController::class, 'registrarAcademica']);
 
     Route::post('/editar-baja-academica/{id}', [BajasController::class, 'editarAcademica']);
@@ -351,4 +370,6 @@ Route::middleware([
     Route::post('/importar-excel-equivalencias', [IngresoController::class, 'importarDataExcelEquivalencias']);
 
     Route::post('/importar-excel-maestrias', [IngresoController::class, 'importarDataExcelMaestrias']);
+
+
 });
