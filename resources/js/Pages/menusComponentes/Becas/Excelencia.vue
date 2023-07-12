@@ -19,59 +19,26 @@ import InputNumber from "primevue/inputnumber";
 import axios from "axios";
 import readXlsxFile from "read-excel-file";
 export default {
-  data() {
-    return {
-      filters: {
-        carrera: { value: null, matchMode: FilterMatchMode.IN },
-        periodo: { value: null, matchMode: FilterMatchMode.IN },
-        año: { value: null, matchMode: FilterMatchMode.CONTAINS },
-      },
-      datosFiltrados: [],
-      datosExcel: [],
-      columnasExcel: [],
-      carrerasLista: [
-        { name: "Manufactura", code: "Manufactura" },
-        { name: "Mecatrónica", code: "Mecatronica" },
-        { name: "Negocios", code: "Negocios" },
-        { name: "Procesos", code: "Procesos" },
-        { name: "Pymes", code: "Pymes" },
-        { name: "Sistemas", code: "Sistemas" },
-        { name: "Telematica", code: "Telematica" },
-      ],
-      noDataMessage: "No se encontraron datos",
-      cuatriLista: [
-        { name: "SEP-DIC", code: "SEP-DIC" },
-        { name: "ENE-ABR", code: "ENE-ABR" },
-        { name: "MAY-AGO", code: "MAY-AGO" },
-      ],
-      columnasPreviewExcel: [
-        { name: "ID", code: "0"},
-        { name: "Periodo", code: "1"},
-        { name: "Año", code: "2"},
-        { name: "Carrera", code: "3"},
-        { name: "Hombres", code: "4"},
-        { name: "Mujeres", code: "5"},
-      ],
-      productDialog: false,
-      editDialog: false,
-      deleteProductDialog: false,
-      selectedProducts: null,
-      deleteProductsDialog: false,
-      importExcelDialog: false,
-      wrongFormatExcel: false,
-      file: null,
-      fileContent: null,
-      selectedProductsForChart: null,
-      displayResponsive: false,
-      BTperiodo: null,
-      BTaño: 0,
-      BTcarrera: null,
-      BThombres: 0,
-      BTmujeres: 0,
-    };
+  components: {
+    AppLayout,
+    DataTable,
+    Column,
+    InputText,
+    Row,
+    Button,
+    MultiSelect,
+    Chart,
+    Dialog,
+    Toast,
+    ConfirmDialog,
+    Toolbar,
+    Dropdown,
+    InputNumber,
+    GraficaBecas,
   },
-  created() {},
-  mounted() {},
+  props: {
+    excelencia: Array,
+  },
   methods: {
     resetearVariables(){
       this.BTperiodo = null;
@@ -364,62 +331,77 @@ export default {
       this.datosExcel = [];
     },
   },
-  components: {
-    AppLayout,
-    DataTable,
-    Column,
-    InputText,
-    Row,
-    Button,
-    MultiSelect,
-    Chart,
-    Dialog,
-    Toast,
-    ConfirmDialog,
-    Toolbar,
-    Dropdown,
-    InputNumber,
-    GraficaBecas,
-  },
-  props: {
-    excelencia: Array,
-  },
-  setup() {
-    //use
+  mounted() {},
+  data() {
+    return {
+      filters: {
+        carrera: { value: null, matchMode: FilterMatchMode.IN },
+        periodo: { value: null, matchMode: FilterMatchMode.IN },
+        año: { value: null, matchMode: FilterMatchMode.CONTAINS },
+      },
+      datosFiltrados: [],
+      datosExcel: [],
+      columnasExcel: [],
+      carrerasLista: [
+        { name: "Manufactura", code: "Manufactura" },
+        { name: "Mecatrónica", code: "Mecatronica" },
+        { name: "Negocios", code: "Negocios" },
+        { name: "Procesos", code: "Procesos" },
+        { name: "Pymes", code: "Pymes" },
+        { name: "Sistemas", code: "Sistemas" },
+        { name: "Telematica", code: "Telematica" },
+      ],
+      noDataMessage: "No se encontraron datos",
+      cuatriLista: [
+        { name: "SEP-DIC", code: "SEP-DIC" },
+        { name: "ENE-ABR", code: "ENE-ABR" },
+        { name: "MAY-AGO", code: "MAY-AGO" },
+      ],
+      columnasPreviewExcel: [
+        { name: "ID", code: "0"},
+        { name: "Periodo", code: "1"},
+        { name: "Año", code: "2"},
+        { name: "Carrera", code: "3"},
+        { name: "Hombres", code: "4"},
+        { name: "Mujeres", code: "5"},
+      ],
+      BTperiodo: null,
+      BTaño: 0,
+      BTcarrera: null,
+      BThombres: 0,
+      BTmujeres: 0,
+      productDialog: false,
+      editDialog: false,
+      deleteProductDialog: false,
+      selectedProducts: null,
+      deleteProductsDialog: false,
+      importExcelDialog: false,
+      wrongFormatExcel: false,
+      file: null,
+      fileContent: null,
+      selectedProductsForChart: null,
+      displayResponsive: false,
+    };
   },
 };
 </script>
 
 <template>
-  
-    <Toolbar class="mb-4">
-      <template #start>
-        <Button
-          label="Nuevo Registro"
-          icon="pi pi-plus"
-          class="p-button-success !mr-2"
-          @click="openNew"
-        />
-        <Button
-          label="Eliminar"
-          icon="pi pi-trash"
-          class="p-button-danger"
-          @click="confirmDeleteSelected"
-          :disabled="!selectedProducts || !selectedProducts.length"
-        />
-        <Button
-        class ="!ml-2"
-          icon="pi pi-external-link"
-          label="Exportar Excel"
-          @click="exportCSV($event)"
-        />
+  <Toolbar class="mb-4">
+    <template #start>
+      <Button label="Nuevo Registro" icon="pi pi-plus" class="p-button-success !mr-2" @click="openNew" />
+      <Button label="Eliminar" icon="pi pi-trash" class="p-button-danger" @click="confirmDeleteSelected" 
+        :disabled="!selectedProducts || !selectedProducts.length" />
+        
+      <Button class ="!ml-2" icon="pi pi-external-link" label="Exportar Excel" @click="exportCSV($event)" />
 
-        <!-- button dialog para importar excel-->
+      <!-- button dialog para importar excel-->
       <Button label="Importar Excel" icon="pi pi-upload" class="!ml-2" @click="openImportExcel" />
-      </template>
-    </Toolbar>
 
-    <!-- Dialog para importar excel -->
+    </template>
+  </Toolbar>
+
+  <!-- Dialog para importar excel -->
   <Dialog v-model:visible="importExcelDialog" :breakpoints="{ '1260px': '75vw', '640px': '85vw' }"
     :style="{ width: '45vw' }" header="Importar Excel" :modal="true" class="p-fluid">
 
@@ -452,45 +434,28 @@ export default {
 
   </Dialog>
     <!-- formulario de nuevo registro-->
-    <Dialog
-      v-model:visible="productDialog"
-      :breakpoints="{ '960px': '75vw', '640px': '85vw' }"
-      :style="{ width: '25vw' }"
-      header="Nuevo Registro"
-      :modal="true"
-      class="p-fluid"
-    >
-      <div class="field">
-        <form @submit.prevent="registrarBecaEA">
-          <!-- select con opciones -->
+  <Dialog v-model:visible="productDialog" :breakpoints="{ '960px': '75vw', '640px': '85vw' }" :style="{ width: '25vw' }"
+    header="Nuevo Registro" :modal="true" class="p-fluid">
+    <div class="field">
+      <form @submit.prevent="registrarBecaEA">
+        <!-- select con opciones -->
 
-          <div class="field col-12 md:col-3 mt-3">
+        <div class="field col-12 md:col-3 mt-3">
           <label for="minmax">Periodo</label>
-          <Dropdown
-            v-model="BTperiodo"
-            :options="cuatriLista"
-            optionLabel="name"
-            optionValue="code"
-            placeholder="Seleccione"
-          />
+        <Dropdown v-model="BTperiodo" :options="cuatriLista" optionLabel="name" optionValue="code"
+          placeholder="Seleccione"/>
         </div>
+
         <div class="field col-12 md:col-3">
           <label for="minmax">Año</label>
-          <InputNumber inputId="minmax" v-model="BTaño" mode="decimal" :min="0" :max="10000" :showButtons="true" />
+            <InputNumber inputId="minmax" v-model="BTaño" mode="decimal" :min="0" :max="10000" :showButtons="true" />
         </div>
 
-
-          <div class="field col-12 md:col-3">
-            <label for="minmax">Carrera</label>
-            <Dropdown
-              v-model="BTcarrera"
-              :options="carrerasLista"
-              optionLabel="name"
-              optionValue="code"
-              :filter="true"
-              placeholder="Seleccione"
-            />
-          </div>
+        <div class="field col-12 md:col-3">
+          <label for="minmax">Carrera</label>
+          <Dropdown v-model="BTcarrera" :options="carrerasLista" optionLabel="name" optionValue="code" :filter="true"
+            placeholder="Seleccione"/>
+        </div>
 
         <div class="field col-12 md:col-3">
           <label for="minmax">Hombres</label>
@@ -502,43 +467,77 @@ export default {
           <InputNumber inputId="minmax" v-model="BTmujeres" mode="decimal" :min="0" :max="10000" :showButtons="true" />
         </div>
 
-          <div class="field col-12 md:col-3 mt-3">
-          <Button
-            type="submit"
-            id="btnRegisrar"
-            class="flex items-center justify-center space-x-2 rounded-md border-2 border-blue-500 px-4 py-2 font-medium text-blue-600 transition hover:bg-blue-500 hover:text-white"
-          >
-            <span> Registrar </span>
-            <span>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-                class="h-6 w-6"
-              >
-                <path
-                  fill-rule="evenodd"
-                  d="M16.72 7.72a.75.75 0 011.06 0l3.75 3.75a.75.75 0 010 1.06l-3.75 3.75a.75.75 0 11-1.06-1.06l2.47-2.47H3a.75.75 0 010-1.5h16.19l-2.47-2.47a.75.75 0 010-1.06z"
-                  clip-rule="evenodd"
-                />
-              </svg>
-            </span>
-          </Button></div>
-        </form>
+        <div class="field col-12 md:col-3 mt-3">
+        <Button type="submit" id="btnRegisrar"
+          class="flex items-center justify-center space-x-2 rounded-md border-2 border-blue-500 px-4 py-2 font-medium text-blue-600 transition hover:bg-blue-500 hover:text-white">
+          <span> Registrar </span>
+          <span>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="h-6 w-6">
+              <path fill-rule="evenodd"
+                d="M16.72 7.72a.75.75 0 011.06 0l3.75 3.75a.75.75 0 010 1.06l-3.75 3.75a.75.75 0 11-1.06-1.06l2.47-2.47H3a.75.75 0 010-1.5h16.19l-2.47-2.47a.75.75 0 010-1.06z"
+                clip-rule="evenodd"/>
+            </svg>
+          </span>
+        </Button></div>
+      </form>
+    </div>
+  </Dialog>
+  <!-- Botonera de filtros-->
+  <section class="bg-white" id="tablaEgreso">
+    <div class="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8 p-[20px]">
+      <div class="text-center mb-5">
+        <div class="flex gap-5 justify-center flex-wrap">
+          <div>
+            <Toast />
+          </div>
+          <!-- model para abrir grafica -->
+          <Button label="Gráfica" icon="pi pi-chart-bar" @click="openResponsive" />
+          <!-- Filtros -->
+                
+          <MultiSelect v-model="filters.periodo.value" :options="filtrarPeriodo()"
+            placeholder="Periodo"
+            display="chip"/>
+            
+          <InputNumber v-model="filters.año.value" mode="decimal" :min="0" :max="10000"
+            placeholder="Año" />
+              
+          <MultiSelect v-model="filters.carrera.value" :options="filtrarCarreras()" placeholder="Carrera"
+            display="chip"/>
+            
+          <Button icon="pi pi-times" label="Limpiar" @click="limpiarFiltros()" />
+        </div>
       </div>
 
-      <!-- Botonera de filtros-->
-    </Dialog>
-    <section class="bg-white" id="tablaEgreso">
-      <div class="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8 p-[20px]">
-        <div class="text-center mb-5">
-          <div class="flex gap-5 justify-center flex-wrap">
-            <div>
-              <Toast />
-            </div>
-            <!-- model para abrir grafica -->
-          <Button label="Gráfica" icon="pi pi-chart-bar" @click="openResponsive" />
-          <Dialog header="Gráfica dinámica" v-model:visible="displayResponsive"
+      <DataTable :value="excelencia" :paginator="true" class="p-datatable-customers" :rows="7"
+        ref="dt" v-model:filters="filters" v-model:selection="selectedProducts" :emptyMessage="noDataMessage"
+        stripedRows sortMode="multiple" removableSort>
+          
+        <Column selectionMode="multiple" style="width: 3rem" :exportable="false"></Column>
+
+        <Column field="id" header="ID" :sortable="true" hidden ></Column>
+        <Column field="periodo_con_año" header="Periodo" :sortable="true"></Column>
+        <Column field="carrera" header="Carrera" :sortable="true"></Column>
+        <Column field="hombres" header="Hombres" :sortable="true"></Column>
+        <Column field="mujeres" header="Mujeres" :sortable="true"></Column>
+        <Column field="total" header="Total" :sortable="true" ></Column>
+          
+        <Column :exportable="false" style="min-width: 8rem" class="p-6">
+          <template #body="slotProps">
+            <Button icon="pi pi-pencil" class="p-button-rounded p-button-success !mr-2" @click="editProduct(slotProps.data)" />
+            <Button icon="pi pi-trash" class="p-button-rounded p-button-warning" @click="confirmDeleteProduct(slotProps.data)" />
+          </template>
+        </Column>
+
+        <!-- mensaje de no hay datos -->
+        <template #empty>
+          <div class="flex justify-center align-middle text-xl">
+            <h2>No se encontraron datos</h2>
+          </div>
+        </template>
+         
+      </DataTable>
+
+      <Dialog header="Gráfica dinámica" v-model:visible="displayResponsive"
         :breakpoints="{ '960px': '75vw', '75vw': '90vw' }" :style="{ width: '70vw' }">
         <!-- contenido del dialog/model desde aqui... -->
         <div class="w-full" id="contenedorGrafica">
@@ -551,159 +550,49 @@ export default {
         </template>
       </Dialog>
 
-            <!-- Filtros -->
-                
-            <MultiSelect
-            v-model="filters.periodo.value"
-            :options="filtrarPeriodo()"
-              placeholder="Periodo"
-              display="chip"
-            />
-            
-            <InputNumber
-                v-model="filters.año.value"
-                mode="decimal"
-                :min="0"
-                :max="10000"
-                placeholder="Año"
-                />
-              
-              <MultiSelect
-                v-model="filters.carrera.value"
-                :options="filtrarCarreras()"
-                placeholder="Carrera"
-                display="chip"
-              />
-            <Button
-              icon="pi pi-times"
-              label="Limpiar"
-              @click="limpiarFiltros()"
-            />
+      <!-- Dialog para editar el producto toma los valores del producto seleccionado -->
+      <Dialog header="Editar Beca" v-model:visible="editDialog" :breakpoints="{ '960px': '75vw', '75vw': '85vw' }"
+        :style="{ width: '25vw' }" :modal="true" :closable="true" :dismissableMask="false">
+        <div class="p-fluid p-formgrid p-grid">
+          <form @submit.prevent="editarBecaEA">
+            <InputText id="id" v-model.trim="product.id" required="true" hidden/>
+
+          <div class="field col-12 md:col-3 mt-3">
+            <label for="minmax">Periodo</label>
+            <Dropdown v-model="BTperiodo" :options="cuatriLista" optionLabel="name" optionValue="code"
+            placeholder="Seleccione" />
           </div>
-        </div>
-
-        <DataTable
-          :value="excelencia"
-          :paginator="true"
-          class="p-datatable-customers"
-          :rows="7"
-          ref="dt"
-          v-model:filters="filters"
-          v-model:selection="selectedProducts"
-          :emptyMessage="noDataMessage"
-          stripedRows
-          sortMode="multiple"
-          removableSort
-        >
-          <Column
-            selectionMode="multiple"
-            style="width: 3rem"
-            :exportable="false"
-          ></Column>
-
-          <Column field="id" header="ID" :sortable="true" hidden ></Column>
-          <Column field="periodo_con_año" header="Periodo" :sortable="true"></Column>
-          <Column field="carrera" header="Carrera" :sortable="true"></Column>
-          <Column field="hombres" header="Hombres" :sortable="true"></Column>
-          <Column field="mujeres" header="Mujeres" :sortable="true"></Column>
-          <Column field="total" header="Total" :sortable="true" ></Column>
-          
-          <Column :exportable="false" style="min-width: 8rem" class="p-6">
-            <template #body="slotProps">
-              <Button
-                icon="pi pi-pencil"
-                class="p-button-rounded p-button-success !mr-2"
-                @click="editProduct(slotProps.data)"
-              />
-              <Button
-                icon="pi pi-trash"
-                class="p-button-rounded p-button-warning"
-                @click="confirmDeleteProduct(slotProps.data)"
-              />
-            </template>
-          </Column>
-
-          <!-- mensaje de no hay datos -->
-          <template #empty>
-            <div class="flex justify-center align-middle text-xl">
-              <h2>No se encontraron datos</h2>
-            </div>
-          </template>
-        </DataTable>
-
-        <!-- Dialog para editar el producto toma los valores del producto seleccionado -->
-        <Dialog
-          header="Editar Beca"
-          v-model:visible="editDialog"
-          :breakpoints="{ '960px': '75vw', '75vw': '85vw' }"
-          :style="{ width: '25vw' }"
-          :modal="true"
-          :closable="true"
-          :dismissableMask="false"
-        >
-          <div class="p-fluid p-formgrid p-grid">
-            <form @submit.prevent="editarBecaEA">
-              <InputText id="id" v-model.trim="product.id" required="true" hidden/>
-
-              <div class="field col-12 md:col-3 mt-3">
-          <label for="minmax">Periodo</label>
-          <Dropdown
-            v-model="BTperiodo"
-            :options="cuatriLista"
-            optionLabel="name"
-            optionValue="code"
-            placeholder="Seleccione"
-          />
-        </div>
-        <div class="field col-12 md:col-3">
-          <label for="minmax">Año</label>
-          <InputNumber inputId="minmax" v-model="BTaño" mode="decimal" :min="0" :max="10000" :showButtons="true" />
-        </div>
+          <div class="field col-12 md:col-3">
+            <label for="minmax">Año</label>
+            <InputNumber inputId="minmax" v-model="BTaño" mode="decimal" :min="0" :max="10000" :showButtons="true" />
+          </div>
 
 
           <div class="field col-12 md:col-3">
             <label for="minmax">Carrera</label>
-            <Dropdown
-              v-model="BTcarrera"
-              :options="carrerasLista"
-              optionLabel="name"
-              optionValue="code"
-              :filter="true"
-              placeholder="Seleccione"
-            />
+            <Dropdown v-model="BTcarrera" :options="carrerasLista" optionLabel="name" optionValue="code"
+              :filter="true" placeholder="Seleccione"/>
           </div>
 
-        <div class="field col-12 md:col-3">
-          <label for="minmax">Hombres</label>
-          <InputNumber inputId="minmax" v-model="BThombres" mode="decimal" :min="0" :max="10000" :showButtons="true" />
-        </div>
-
-        <div class="field col-12 md:col-3">
-          <label for="minmax">Mujeres</label>
-          <InputNumber inputId="minmax" v-model="BTmujeres" mode="decimal" :min="0" :max="10000" :showButtons="true" />
-        </div>
-              <Button
-                type="submit"
-                label="Guardar"
-                icon="pi pi-check"
-                class="!mt-3"
-              />
-            </form>
+          <div class="field col-12 md:col-3">
+            <label for="minmax">Hombres</label>
+            <InputNumber inputId="minmax" v-model="BThombres" mode="decimal" :min="0" :max="10000" :showButtons="true" />
           </div>
-        </Dialog>
 
-        <!-- Dialog para eliminar un registro -->
-        <Dialog
-          v-model:visible="deleteProductDialog"
-          :style="{ width: '450px' }"
-          header="Confirmar"
-          :modal="true"
-        >
+          <div class="field col-12 md:col-3">
+            <label for="minmax">Mujeres</label>
+            <InputNumber inputId="minmax" v-model="BTmujeres" mode="decimal" :min="0" :max="10000" :showButtons="true" />
+          </div>
+            <Button type="submit" label="Guardar" icon="pi pi-check" class="!mt-3" />
+          </form>
+        </div>
+      </Dialog>
+
+      <!-- Dialog para eliminar un registro -->
+        <Dialog v-model:visible="deleteProductDialog" :style="{ width: '450px' }" header="Confirmar"
+          :modal="true" >
           <div class="confirmation-content flex justify-center items-center">
-            <i
-              class="pi pi-exclamation-triangle mr-3"
-              style="font-size: 2rem"
-            />
+            <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem" />
             <span v-if="product"
               >¿Confirma eliminar el registro <b>{{ product.carrera }}</b
               >?</span
