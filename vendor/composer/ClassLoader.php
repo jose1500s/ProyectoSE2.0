@@ -42,6 +42,9 @@ namespace Composer\Autoload;
  */
 class ClassLoader
 {
+    /** @var \Closure(string):void */
+    private static $includeFile;
+
     /** @var ?string */
     private $vendorDir;
 
@@ -563,12 +566,16 @@ class ClassLoader
             return;
         }
 
-/**
- * Scope isolated include.
- *
- * Prevents access to $this/self from included files.
- */
-function includeFile($file)
-{
-    include $file;
+        /**
+         * Scope isolated include.
+         *
+         * Prevents access to $this/self from included files.
+         *
+         * @param  string $file
+         * @return void
+         */
+        self::$includeFile = static function($file) {
+            include $file;
+        };
+    }
 }
