@@ -27,22 +27,22 @@ export default {
     methods: {
         setChartData() {
             return {
-                labels: this.data.map((item) => item.carrera + '-' + item.ruta),
+                labels: this.data.map((item) => item.ruta+ '-' + item.cuatrimestre),
                 datasets: [
                     {
-                        label: 'Solicitudes',
+                        label: 'Lugares Disponibles',
+                        backgroundColor: '#FFB84C',
+                        data: this.data.map((item) => item.lugare_disp)
+                    },
+                    {
+                        label: 'Hombres',
                         backgroundColor: '#36A2EB',
-                        data: this.data.map((item) => item.solicitudes)
+                        data: this.data.map((item) => item.hombres)
                     },
                     {
                         label: 'Mujeres',
                         backgroundColor: '#FF6384',
                         data: this.data.map((item) => item.mujeres)
-                    },
-                    {
-                        label: 'Hombres',
-                        backgroundColor: '#4BC0C0',
-                        data: this.data.map((item) => item.hombres)
                     },
                 ]
             }
