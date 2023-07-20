@@ -753,7 +753,7 @@ export default defineComponent({
                   </Link>
                 </li>
               </ul>
-              <div class="a absolute bottom-0 w-[95%] h-auto ">
+              <div class="w-[95%] h-auto !mt-12">
                 <div class="avatar flex justify-center">
 
                   <div id="divFoto" v-if="$page.props.jetstream.managesProfilePhotos"

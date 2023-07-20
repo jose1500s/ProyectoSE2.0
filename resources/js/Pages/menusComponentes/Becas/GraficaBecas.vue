@@ -22,7 +22,7 @@ export default {
 
     },
     created() {
-        this.actualizarChartOptions(); // llama al método cuando se inicialice el componente
+        //this.actualizarChartOptions(); // llama al método cuando se inicialice el componente
     },
     methods: {
         setChartData() {
@@ -70,8 +70,8 @@ export default {
         actualizarChartOptions() {
             this.chartOptions = {
                 responsive: true,
-                maintainAspectRatio: false,
-                aspectRatio: 0.6,
+                maintainAspectRatio: true, // esto sirve para que se ajuste al tamaño del contenedor
+                aspectRatio: 2, //esto sirve para que se ajuste al tamaño del contenedor, se le pone 0.6 por que si no se ve muy pequeño
                 scales: {
                     x: {
                         stacked: true,
@@ -82,6 +82,9 @@ export default {
                 },
                 indexAxis: this.orientacionGrafica,
             };
+            console.log(this.chartOptions);
+            console.log(this.orientacionGrafica);
+            console.log("acabo la funcion actualizar") 
         },
 
     },
