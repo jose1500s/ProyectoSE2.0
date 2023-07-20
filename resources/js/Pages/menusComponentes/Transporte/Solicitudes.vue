@@ -1,6 +1,8 @@
 <script>
+// componentes
 import AppLayout from "@/Layouts/AppLayout.vue";
-
+import GraficaSolicitudes from "./GraficaSolicitudes.vue";
+// PrimeVue
 import DataTable from "primevue/datatable";
 import Column from "primevue/column";
 import InputText from "primevue/inputtext";
@@ -18,24 +20,24 @@ import InputNumber from "primevue/inputnumber";
 import axios from "axios";
 import readXlsxFile from "read-excel-file";
 
-
 export default {
-    components: {
-        AppLayout,
-        DataTable,
-        Column,
-        InputText,
-        Row,
-        Button,
-        MultiSelect,
-        Chart,
-        Dialog,
-        Toast,
-        ConfirmDialog,
-        Toolbar,
-        Dropdown,
-        InputNumber,
-    },
+  components: {
+    AppLayout,
+    DataTable,
+    Column,
+    InputText,
+    Row,
+    Button,
+    MultiSelect,
+    Chart,
+    Dialog,
+    Toast,
+    ConfirmDialog,
+    Toolbar,
+    Dropdown,
+    InputNumber,
+    GraficaSolicitudes,
+  },
     props: {
         solicitudes: Array,
     },
@@ -104,6 +106,16 @@ export default {
         confirmDeleteSelected() {
             this.deleteProductsDialog = true;
         },
+        saveImage() {
+      // guardar la grafica como imagen en el escritorio
+      const contenedorGrafica = document.getElementById("contenedorGrafica");
+      const grafica = contenedorGrafica.getElementsByTagName("canvas")[0];
+      const imagen = grafica.toDataURL("image/png");
+      const link = document.createElement("a");
+      link.download = "GraficaSolicitudes.png";
+      link.href = imagen;
+      link.click();
+    },
         openImportExcel() {
       this.importExcelDialog = true;
       // cada que se abra se resetea el valor del array de datosExcel para que no se repitan los datos
@@ -409,7 +421,7 @@ export default {
             <Button
                 label="Eliminar"
                 icon="pi pi-trash"
-                class="p-button-danger"
+                class="p-button-danger !mr-2"
                 @click="confirmDeleteSelected"
                 :disabled="!selectedProducts || !selectedProducts.length"
             />
@@ -433,8 +445,9 @@ export default {
                 <div>
                     <Toast />
                 </div>
-
-
+                <!-- model para abrir grafica -->
+                <Button label="Grafica" icon="pi pi-chart-bar" @click="openResponsive"/>
+                
                 <MultiSelect
                     v-model="filters.carrera.value"
                     :options="filtrarCarreras()"
@@ -512,6 +525,9 @@ export default {
           </div>
         </template>    
     </DataTable>
+
+
+
       <!-- Dialog para importar excel -->
   <Dialog v-model:visible="importExcelDialog" :breakpoints="{ '1260px': '75vw', '640px': '85vw' }"
     :style="{ width: '45vw' }" header="Importar Excel" :modal="true" class="p-fluid">
@@ -544,6 +560,7 @@ export default {
 
 
   </Dialog>
+  
 
         <Dialog
         v-model:visible="productDialog"
@@ -686,6 +703,19 @@ export default {
         </template>
       </Dialog>
 
+      <Dialog header="Gráfica dinámica" v-model:visible="displayResponsive"
+        :breakpoints="{ '960px': '75vw', '75vw': '90vw' }" :style="{ width: '70vw' }">
+        <!-- contenido del dialog/model desde aqui... -->
+        <div class="w-full" id="contenedorGrafica">
+          <GraficaSolicitudes :data="selectedProducts" />
+        </div>
+        <template #footer>
+          <Button label="Cerrar" icon="pi pi-check" @click="closeResponsive" autofocus />
+          <!-- boton para guardar la grafica como img -->
+          <Button label="Guardar" icon="pi pi-save" @click="saveImage" />
+        </template>
+      </Dialog>
+
       <Dialog header="Editar Solicitud" v-model:visible="editDialog" :breakpoints="{ '960px': '75vw', '75vw': '85vw' }" :style="{ width: '25vw' }" :modal="true" :closable="true" :dismissableMask="false">
         <div class="p-fluid p-formgrid p-grid">
           <form @submit.prevent="editarSolicitud">
@@ -757,11 +787,6 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-}
-
-div#contenedorGrafica canvas {
-  width: 100% !important;
-  height: 100% !important;
 }
 
 table.p-datatable-table {
