@@ -22,6 +22,8 @@ class User extends Authenticatable
     use HasRoles;
     use HasPermissions;
 
+    protected array $guard_name = ['sanctum','web'];
+
     /**
      * The attributes that are mass assignable.
      *
@@ -62,4 +64,5 @@ class User extends Authenticatable
     protected $appends = [
         'profile_photo_url',
     ];
+
 }
