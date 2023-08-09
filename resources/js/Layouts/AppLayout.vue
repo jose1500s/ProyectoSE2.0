@@ -43,7 +43,7 @@ export default defineComponent({
   props: {
     users: Array,
     title: String,
-    permisos: Array,
+    // permisos: Array,
   },
   // metodo para cerrar sesion
   methods: {
@@ -54,6 +54,43 @@ export default defineComponent({
     showProfile() {
       router.get(route("profile.show"));
     },
+    ImprimirRoles(){
+      console.log('Hola');
+    },
+    hasPermission(permiso){
+      return this.Rol.permissions.some(permission => permission.name === permiso);
+    },
+    routeWithParameter(ruta, permiso){
+      return ruta + encodeURIComponent(permiso);
+    }
+  },
+  computed: {
+    Rol(){
+        // try {
+          if(this.$page.props.user.roles.length > 0){
+          // console.log(this.$page.props.roles[0]);
+
+          return this.$page.props.user.roles[0];
+        } else {
+          console.log("No existen roles para este usuario");
+        }  
+      // } catch(error){
+
+      // }
+      
+    }
+  },
+  // mounted() {
+  //   this.ImprimirRoles();
+  // },
+  created() {
+    // if(this.Rol.permissions.some(permiso => permiso.name === 'consultar_ingreso')){
+    //   console.log("Si existe el permiso");
+    // } else {
+    //   console.log("No existe el permiso");
+    // }
+
+    // console.log(this.$page.props.user.roles[0]);
   },
   setup() {
     const confirm = useConfirm();
@@ -189,7 +226,7 @@ export default defineComponent({
         <div class="menus">
           <ul>
 
-            <li v-if="permisos.includes('consultar_ingreso') || permisos.includes('editar_ingreso')">
+            <li v-if="hasPermission('consultar_ingreso')">
               <Link class="
                       inline-flex
                       items-center
@@ -215,7 +252,7 @@ export default defineComponent({
               </Link>
             </li>
 
-            <li v-if="permisos.includes('consultar_matricula') || permisos.includes('editar_matricula')">
+            <li v-if="hasPermission('consultar_matricula')">
               <Link class="
                       inline-flex
                       items-center
@@ -239,7 +276,7 @@ export default defineComponent({
               </Link>
             </li>
 
-            <li v-if="permisos.includes('consultar_bajas') || permisos.includes('editar_bajas')">
+            <li v-if="hasPermission('consultar_bajas')">
               <Link class="
                       inline-flex
                       items-center
@@ -266,7 +303,7 @@ export default defineComponent({
               </Link>
             </li>
 
-            <li v-if="permisos.includes('consultar_egresados') || permisos.includes('editar_egresados')">
+            <li v-if="hasPermission('consultar_egresados')">
               <Link class="
                       inline-flex
                       items-center
@@ -296,7 +333,7 @@ export default defineComponent({
               </Link>
             </li>
 
-            <li v-if="permisos.includes('consultar_titulados') || permisos.includes('editar_titulados')">
+            <li v-if="hasPermission('consultar_titulados')">
               <Link class="
                       inline-flex
                       items-center
@@ -322,7 +359,7 @@ export default defineComponent({
               </Link>
             </li>
 
-            <li v-if="permisos.includes('consultar_becas') || permisos.includes('editar_becas')">
+            <li v-if="hasPermission('consultar_becas')">
               <Link class="
                       inline-flex
                       items-center
@@ -349,7 +386,7 @@ export default defineComponent({
               </Link>
             </li>
 
-            <li v-if="permisos.includes('consultar_transporte') || permisos.includes('editar_transporte')">
+            <li v-if="hasPermission('consultar_transporte')">
               <Link class="
                       inline-flex
                       items-center
@@ -374,7 +411,7 @@ export default defineComponent({
               </Link>
             </li>
 
-            <li v-if="permisos.includes('consultar_cambio_carrera') || permisos.includes('editar_cambio_carrera')">
+            <li v-if="hasPermission('consultar_cambio_de_carrera')">
               <Link class="
                       inline-flex
                       items-center
@@ -399,32 +436,6 @@ export default defineComponent({
               </svg>
 
               <span class="ml-4"> Cambio de carrera</span>
-              </Link>
-            </li>
-            <li>
-              <Link class="
-                      inline-flex
-                      items-center
-                      w-full
-                      px-4
-                      py-2
-                      mt-1
-                      text-base text-gray-900
-                      transition
-                      duration-500
-                      ease-in-out
-                      transform
-                      rounded-lg
-                      bg-gray-50
-                      hover:bg-gray-200
-                      focus:shadow-outline
-                      hover:cursor-pointer
-                    " white="" :href="route('usuario.segurofacultativo')">
-              <!-- :href="route('posts.index')" :active="route().current('post.index')" -->
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
-              </svg>
-              <span class="ml-4"> Seguro facultativo</span>
               </Link>
             </li>
 
@@ -523,7 +534,9 @@ export default defineComponent({
             <nav class="flex-1 space-y-1 bg-white">
               <ul>
 
-                <li>
+                <!-- <li v-if="$page.props.user.name == 'Administrador'"> -->
+                  <li v-if="hasPermission('consultar_ingreso')">
+                    
                   <Link class="
                       inline-flex
                       items-center
@@ -549,7 +562,7 @@ export default defineComponent({
                   </Link>
                 </li>
 
-                <li>
+                <li v-if="hasPermission('consultar_matricula')">
                   <Link class="
                       inline-flex
                       items-center
@@ -574,7 +587,7 @@ export default defineComponent({
                   </Link>
                 </li>
 
-                <li>
+                <li v-if="hasPermission('consultar_bajas')">
                   <Link class="
                       inline-flex
                       items-center
@@ -601,7 +614,7 @@ export default defineComponent({
                   </Link>
                 </li>
 
-                <li>
+                <li v-if="hasPermission('consultar_egresados')">
                   <Link class="
                       inline-flex
                       items-center
@@ -630,7 +643,7 @@ export default defineComponent({
                   <span class="ml-4"> Egresados</span>
                   </Link>
                 </li>
-                <li>
+                <li v-if="hasPermission('consultar_titulados')">
                   <Link class="
                       inline-flex
                       items-center
@@ -656,7 +669,7 @@ export default defineComponent({
                   </Link>
                 </li>
 
-                <li>
+                <li v-if="hasPermission('consultar_becas')">
                   <Link class="
                       inline-flex
                       items-center
@@ -683,7 +696,7 @@ export default defineComponent({
                   </Link>
                 </li>
 
-                <li>
+                <li v-if="hasPermission('consultar_transporte')">
                   <Link class="
                       inline-flex
                       items-center
@@ -708,7 +721,7 @@ export default defineComponent({
                   </Link>
                 </li>
 
-                <li>
+                <li v-if="hasPermission('consultar_cambio_de_carrera')">
                   <Link class="
                       inline-flex
                       items-center
@@ -735,7 +748,7 @@ export default defineComponent({
                   <span class="ml-4"> Cambio de carrera</span>
                   </Link>
                 </li>
-                <li>
+                <li v-if="this.Rol.name == 'Administrador'">
                   <Link class="
                       inline-flex
                       items-center
@@ -753,12 +766,12 @@ export default defineComponent({
                       hover:bg-gray-200
                       focus:shadow-outline
                       hover:cursor-pointer
-                    " white="" :href="route('usuario.segurofacultativo')">
+                    " white="" :href="route('usuario.usuarios')">
                   <!-- :href="route('posts.index')" :active="route().current('post.index')" -->
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" d="" />
                  </svg>
-                  <span class="ml-4"> Seguro facultativo</span>
+                  <span class="ml-4"> Usuarios</span>
                   </Link>
                 </li>
               </ul>
