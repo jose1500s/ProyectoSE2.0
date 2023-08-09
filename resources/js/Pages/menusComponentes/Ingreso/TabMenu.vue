@@ -5,7 +5,6 @@ import Equivalencia from "@/Pages/menusComponentes/Ingreso/Equivalencia.vue";
 import Maestrias from "@/Pages/menusComponentes/Ingreso/Maestrias.vue";
 import NIngreso from "@/Pages/menusComponentes/Ingreso/NuevoIngreso.vue";
 import Reingreso from "@/Pages/menusComponentes/Ingreso/Reingreso.vue";
-
 import TabView from 'primevue/tabview';
 import TabPanel from 'primevue/tabpanel';
 
@@ -22,7 +21,7 @@ export default {
     },
     props: {
         usuario: Object,
-        permisos: Array,
+        // permisos: Array,
         ingresos: Array,
         maestrias: Array,
         equivalencias: Array,
@@ -33,22 +32,22 @@ export default {
 </script>
 
 <template>
-    <AppLayout title="Ingreso" :permisos="permisos">
+    <AppLayout title="Ingreso">
         <TabView ref="tabview1" class="p-3">
             <TabPanel header="Admision">
-                <Ingreso :ingresos="ingresos" :permisos="permisos"/>
+                <Ingreso :ingresos="ingresos"/>
             </TabPanel>
             <TabPanel header="Nuevo Ingreso">
-                <NIngreso :ningresos="ningresos"  :permisos="permisos"/>
+                <NIngreso :ningresos="ningresos"/>
             </TabPanel>
             <TabPanel header="Reingreso">
-                <Reingreso :reingresos="reingresos"  :permisos="permisos"/>
+                <Reingreso :reingresos="reingresos"/>
             </TabPanel>
             <TabPanel header="Equivalencia">
-                <Equivalencia :equivalencias="equivalencias"  :permisos="permisos"/>
+                <Equivalencia :equivalencias="equivalencias"/>
             </TabPanel>
             <TabPanel header="Maestrias">
-                <Maestrias :maestrias="maestrias"  :permisos="permisos"/>
+                <Maestrias :maestrias="maestrias"/>
             </TabPanel>
         </TabView>
     </AppLayout>

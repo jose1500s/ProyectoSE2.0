@@ -38,7 +38,7 @@ export default {
     InputNumber,
   },
   props: {
-    permisos: Array,
+    // permisos: Array,
     reingresos: Array,
   },
   setup() {},
@@ -289,6 +289,9 @@ export default {
         },
       });
     },
+    hasPermission(permiso){
+      return this.$page.props.user.roles[0].permissions.some(permission => permission.name === permiso);
+    }
   },
   data() {
     return {
@@ -353,21 +356,14 @@ export default {
 
 <template>
   <!-- new button -->
-  <Toolbar v-if="permisos.includes('editar_ingreso')" class="mb-4">
+  <Toolbar class="mb-4">
     <template #start>
-      <Button
-        label="Nuevo Registro"
-        icon="pi pi-plus"
-        class="p-button-success !mr-2"
-        @click="openNew"
-      />
-      <Button
-        label="Eliminar"
-        icon="pi pi-trash"
-        class="p-button-danger"
-        @click="confirmDeleteSelected"
-        :disabled="!selectedProducts || !selectedProducts.length"
-      />
+      <Button v-if="hasPermission('registrar_ingreso')" label="Nuevo Registro" icon="pi pi-plus" class="p-button-success !mr-2" @click="openNew" />
+      <Button v-else disabled label="Nuevo Registro" icon="pi pi-plus" class="p-button-success !mr-2" @click="openNew" />
+      <Button v-if="hasPermission('eliminar_ingreso')" label="Eliminar" icon="pi pi-trash" class="p-button-danger" @click="confirmDeleteSelected"
+        :disabled="!selectedProducts || !selectedProducts.length" />
+      <Button v-else disabled label="Eliminar" icon="pi pi-trash" class="p-button-danger" @click="confirmDeleteSelected"
+        :disabled="!selectedProducts || !selectedProducts.length" />
     </template>
   </Toolbar>
 
@@ -479,9 +475,13 @@ export default {
         <Column field="periodo" header="Periodo" :sortable="true"></Column>
         <Column :exportable="false" style="min-width: 8rem" class="p-6">
           <template #body="slotProps">
-            <Button v-if="permisos.includes('editar_ingreso')" icon="pi pi-pencil" class="p-button-rounded p-button-success !mr-2"
+            <Button v-if="hasPermission('editar_ingreso')" icon="pi pi-pencil" class="p-button-rounded p-button-success !mr-2"
               @click="editProduct(slotProps.data)" />
-            <Button v-if="permisos.includes('editar_ingreso')" icon="pi pi-trash" class="p-button-rounded p-button-warning"
+            <Button v-else disabled icon="pi pi-pencil" class="p-button-rounded p-button-success !mr-2"
+              @click="editProduct(slotProps.data)" />
+            <Button v-if="hasPermission('eliminar_ingreso')" icon="pi pi-trash" class="p-button-rounded p-button-warning"
+              @click="confirmDeleteProduct(slotProps.data)" />
+            <Button v-else disabled icon="pi pi-trash" class="p-button-rounded p-button-warning"
               @click="confirmDeleteProduct(slotProps.data)" />
           </template>
         </Column>

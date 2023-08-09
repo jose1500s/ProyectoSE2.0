@@ -36,8 +36,9 @@ export default {
     InputNumber,
   },
   props: {
-    permisos: Array,
+    // permisos: Array,
     ingresos: Array,
+    // roles: Array,
   },
   setup() {
     //use
@@ -119,10 +120,6 @@ export default {
       this.product = {};
       this.submitted = false;
       this.productDialog = true;
-    },
-    hideDialog() {
-      this.productDialog = false;
-      this.submitted = false;
     },
     registrarAdmision() {
       this.submitted = true; // esto es para que se muestre el mensaje de error en el formulario
@@ -258,13 +255,16 @@ export default {
     confirmDeleteSelected() {
       this.deleteProductsDialog = true;
     },
+    hasPermission(permiso){
+      return this.$page.props.user.roles[0].permissions.some(permission => permission.name === permiso);
+    }
   },
   data() {
     return {
       filters: {
         carrera: { value: null, matchMode: FilterMatchMode.IN },
         Proceso: { value: null, matchMode: FilterMatchMode.IN },
-        periodo: { value: null, matchMode: FilterMatchMode.IN }, 
+        periodo: { value: null, matchMode: FilterMatchMode.IN },
       },
       noDataMessage: "No se encontraron datos",
       displayResponsive: false,
@@ -295,13 +295,14 @@ export default {
 </script>
 
 <template>
-  <Toolbar v-if="permisos.includes('editar_ingreso')" class="mb-4">
+  <Toolbar class="mb-4">
     <template #start>
-      <Button label="Nuevo Registro" icon="pi pi-plus" class="p-button-success !mr-2" @click="openNew" />
-      <Button label="Eliminar" icon="pi pi-trash" class="p-button-danger" @click="confirmDeleteSelected"
+      <Button v-if="hasPermission('registrar_ingreso')" label="Nuevo Registro" icon="pi pi-plus" class="p-button-success !mr-2" @click="openNew" />
+      <Button v-else disabled label="Nuevo Registro" icon="pi pi-plus" class="p-button-success !mr-2" @click="openNew" />
+      <Button v-if="hasPermission('eliminar_ingreso')" label="Eliminar" icon="pi pi-trash" class="p-button-danger" @click="confirmDeleteSelected"
         :disabled="!selectedProducts || !selectedProducts.length" />
-        <!-- <Button v-if="usuario.roles.includes('rol_admin')" label="Nuevo Registro" icon="pi pi-plus" class="p-button-success !mr-2" @click="openNew" />
-      <Button v-if="usuario.roles.includes('rol_admin')" label="Eliminar" icon="pi pi-trash" class="p-button-danger" @click="confirmDeleteSelected" -->
+      <Button v-else disabled label="Eliminar" icon="pi pi-trash" class="p-button-danger" @click="confirmDeleteSelected"
+        :disabled="!selectedProducts || !selectedProducts.length" />
     </template>
   </Toolbar>
 
@@ -310,7 +311,7 @@ export default {
     <div class="field">
       <form @submit.prevent="registrarAdmision">
         <!-- select con opciones -->
-        <Dropdown v-model="carreras" :options="carrerasLista" optionLabel="name" optionValue="code" :filter="true"
+        <Dropdown v-model="carreras" :options="carrerasLista" optionLabel="name" optionValue="code"
           placeholder="Carrera..." />
 
         <div class="field col-12 md:col-3">
@@ -383,7 +384,7 @@ export default {
 
           <Button icon="pi pi-times" label="Limpiar" @click="limpiarFiltros()" />
         </div>
-      </div>
+      </div>  
 
       <DataTable :value="ingresos" :paginator="true" class="p-datatable-customers" :rows="7" ref="dt"
         v-model:filters="filters" v-model:selection="selectedProducts" :emptyMessage="noDataMessage" stripedRows
@@ -398,9 +399,13 @@ export default {
         <Column field="periodo" header="Periodo" :sortable="true"></Column>
         <Column :exportable="false" style="min-width: 8rem" class="p-6">
           <template #body="slotProps">
-            <Button v-if="permisos.includes('editar_ingreso')" icon="pi pi-pencil" class="p-button-rounded p-button-success !mr-2"
+            <Button v-if="hasPermission('editar_ingreso')" icon="pi pi-pencil" class="p-button-rounded p-button-success !mr-2"
               @click="editProduct(slotProps.data)" />
-            <Button v-if="permisos.includes('editar_ingreso')" icon="pi pi-trash" class="p-button-rounded p-button-warning"
+            <Button v-else disabled icon="pi pi-pencil" class="p-button-rounded p-button-success !mr-2"
+              @click="editProduct(slotProps.data)" />
+            <Button v-if="hasPermission('eliminar_ingreso')" icon="pi pi-trash" class="p-button-rounded p-button-warning"
+              @click="confirmDeleteProduct(slotProps.data)" />
+            <Button v-else disabled icon="pi pi-trash" class="p-button-rounded p-button-warning"
               @click="confirmDeleteProduct(slotProps.data)" />
           </template>
         </Column>
