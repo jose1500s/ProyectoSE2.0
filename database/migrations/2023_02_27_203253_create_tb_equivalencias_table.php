@@ -18,6 +18,9 @@ return new class extends Migration
             $table->string('carrera', 50);
             $table->integer('aspirantes');
             $table->integer('examinados');
+            $table->integer('hombres');
+            $table->integer('mujeres');
+            $table->integer('admitidos');
             $table->integer('no_admitidos');
             $table->string('periodo', 50);
             $table->timestamps();
