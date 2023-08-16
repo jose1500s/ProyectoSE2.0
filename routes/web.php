@@ -15,6 +15,7 @@ use App\Http\Controllers\TransporteController;
 use App\Http\Controllers\BecasController;
 use App\Http\Controllers\Ingreso\admisionGraficasController;
 use App\Http\Controllers\MatriculaController;
+use App\Http\Controllers\WelcomeController;
 
 
 /*
@@ -371,5 +372,8 @@ Route::middleware([
 
     Route::post('/importar-excel-maestrias', [IngresoController::class, 'importarDataExcelMaestrias']);
 
+    //--------------------Exportar Plantilla Excel--------------------
+
+    Route::get('/exportar-plantilla-becas', [WelcomeController::class, 'exportExcelBecas']);
 
 });
