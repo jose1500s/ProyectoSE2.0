@@ -18,6 +18,7 @@ use App\Http\Controllers\TransporteController;
 use App\Http\Controllers\BecasController;
 use App\Http\Controllers\Ingreso\admisionGraficasController;
 use App\Http\Controllers\MatriculaController;
+use App\Http\Controllers\WelcomeController;
 
 
 /*
@@ -380,9 +381,7 @@ Route::middleware([
 
     Route::post('/importar-excel-maestrias', [IngresoController::class, 'importarDataExcelMaestrias']);
 
-    // Route::post('/eliminar-Maestrias/{id}', [main::class, 'eliminarMaestrias']);
-
-    // Ruta para la gestión de usuarios, roles y permisos
+    // -------------------------- Ruta para la gestión de usuarios, roles y permisos ----------------------------
     Route::get('/usuarios', [ControladorUsuarios::class, 'usuarios'])->middleware(CheckAdminUser::class)->name('usuario.usuarios');
 
     // ---------- Rutas para Usuarios -------------
@@ -410,5 +409,8 @@ Route::middleware([
     Route::post('/agregar-Permiso', [ControladorUsuarios::class, 'agregarPermiso']);
 
     Route::post('/remover-Permiso', [ControladorUsuarios::class, 'removerPermiso']);
+
+    Route::get('/exportar-plantilla-becas', [WelcomeController::class, 'exportExcelBecas']);
+
 
 });

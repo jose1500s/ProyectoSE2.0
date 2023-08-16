@@ -497,7 +497,7 @@ export default {
             <Toast />
           </div>
           <!-- model para abrir grafica -->
-          <Button label="Gráfica" icon="pi pi-chart-bar" @click="openResponsive" />
+          <Button label="Grafica" icon="pi pi-chart-bar" @click="openResponsive" />
           <!-- Filtros -->
                 
           <MultiSelect v-model="filters.periodo.value" :options="filtrarPeriodo()"

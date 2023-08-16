@@ -1,6 +1,7 @@
 <script>
 // componentes
 import AppLayout from "@/Layouts/AppLayout.vue";
+import GraficaMatricula from "./GraficaMatricula.vue";
 // PrimeVue
 import DataTable from "primevue/datatable";
 import Column from "primevue/column";
@@ -36,7 +37,7 @@ export default {
     Toolbar,
     Dropdown,
     InputNumber,
-    GraficaIngreso,
+    GraficaMatricula,
   },
   props: {
     dataMatriculas: Array,
@@ -97,7 +98,7 @@ export default {
       const grafica = contenedorGrafica.getElementsByTagName("canvas")[0];
       const imagen = grafica.toDataURL("image/png");
       const link = document.createElement("a");
-      link.download = "GraficaIngreso.png";
+      link.download = "GraficaMatricula.png";
       link.href = imagen;
       link.click();
     },
@@ -361,6 +362,35 @@ export default {
       }
     },
     importarExcel() {
+
+
+      //Verificar que no se pueda importar si el la carrera ya esta registrada en el periodo y año seleccionado
+      for (let i = 0; i < this.datosExcel.length; i++) {
+        for (let j = 0; j < this.dataMatriculas.length; j++) {
+          if (
+            this.datosExcel[i][1] == this.dataMatriculas[j].carrera &&
+            this.datosExcel[i][4] == this.dataMatriculas[j].periodo &&
+            this.datosExcel[i][5] == this.dataMatriculas[j].year
+          ) {
+            //Guarda todos los registros del excel en un array donde la carrera ya esta registrada en el periodo y año seleccionado
+            this.datosMostrar.push(this.dataMatriculas[j].carrera + " " + this.dataMatriculas[j].periodo + " " + this.dataMatriculas[j].year);
+            this.datosMostrarStatus = true;
+          }
+        }
+      }
+      
+      if(this.datosMostrarStatus){
+        this.$toast.add({
+          severity: "error",
+          summary: "Error",
+          detail: "Ya existen registros con la carrera, periodo y año seleccionado, los cuales son los siguientes: " + this.datosMostrar,
+          life: 5000,
+        });
+        this.datosMostrar = [];
+        this.datosMostrarStatus = false;
+        return false;
+      }
+
       const datosInsertar = []
       for (let i = 0; i < this.datosExcel.length; i++) {
         datosInsertar.push({
@@ -407,6 +437,8 @@ export default {
       datosFiltrados: [],
       datosExcel: [],
       columnasExcel: [],
+      datosMostrar: [],
+      datosMostrarStatus: false,
       admisionesTodosLosRegistros: [],
       noDataMessage: "No se encontraron datos",
       displayResponsive: false,
@@ -623,7 +655,7 @@ export default {
         :breakpoints="{ '960px': '75vw', '75vw': '90vw' }" :style="{ width: '70vw' }">
         <!-- contenido del dialog/model desde aqui... -->
         <div class="w-full" id="contenedorGrafica">
-          <GraficaIngreso :data="selectedProducts" />
+          <GraficaMatricula :data="selectedProducts" />
         </div>
         <template #footer>
           <Button label="Cerrar" icon="pi pi-check" @click="closeResponsive" autofocus />
