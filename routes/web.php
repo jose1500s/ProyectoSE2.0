@@ -5,8 +5,11 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
 // importar el componente Register.vue de la carpeta Auth dentro de pages
-use resources\js\pages\Auth\Login;
+use resources\js\pages\Auth\Login;  
 use App\Http\Controllers\main;
+
+use App\Http\Controllers\ControladorUsuarios;
+
 use App\Http\Controllers\BajasController;
 use App\Http\Controllers\IngresoController;
 use App\Http\Controllers\EgresadosController;
@@ -51,35 +54,41 @@ Route::middleware([
     'verified',
 ])->group(function () {
     Route::get('/dashboard', function () {
+        $roles = Auth::user()->roles;
+
+        foreach($roles as $rol){
+            $rol->permissions;
+        }
+
         return Inertia::render('Dashboard');
     })->name('dashboard');
 
     // ruta para abrir el perfil del usuario
-    Route::get('/ingreso', [IngresoController::class, 'ingreso'])->name('usuario.ingreso');
+    Route::get('/ingreso', [IngresoController::class, 'ingreso'])->middleware(CheckPermissions::class . ':consultar_ingreso')->name('usuario.ingreso');
 
     // ruta para abrir el menu de bajas
-    Route::get('/bajas', [BajasController::class, 'bajas'])->name('usuario.bajas');
+    Route::get('/bajas', [BajasController::class, 'bajas'])->middleware(CheckPermissions::class . ":consultar_bajas")->name('usuario.bajas');
     
     // Ruta para abrir el menu de matricula
-    Route::get('/matricula', [MatriculaController::class, 'matricula'])->name('usuario.matricula');
+    Route::get('/matricula', [MatriculaController::class, 'matricula'])->middleware(CheckPermissions::class . ":consultar_matricula")->name('usuario.matricula');
     
     // Ruta para abrir el menu de egresados
-    Route::get('/egresados', [EgresadosController::class, 'egresados'])->name('usuario.egresados');
+    Route::get('/egresados', [EgresadosController::class, 'egresados'])->middleware(CheckPermissions::class . ":consultar_egresados")->name('usuario.egresados');
 
     // Ruta para abrir el menu de titulados
-    Route::get('/titulados', [TituladosController::class, 'titulados'])->name('usuario.titulados');
+    Route::get('/titulados', [TituladosController::class, 'titulados'])->middleware(CheckPermissions::class . ":consultar_titulados")->name('usuario.titulados');
 
     // Ruta para abrir el menu de becas
-    Route::get('/becas', [BecasController::class, 'becas'])->name('usuario.becas');
+    Route::get('/becas', [BecasController::class, 'becas'])->middleware(CheckPermissions::class . ":consultar_becas")->name('usuario.becas');
 
     // Ruta para abrir el menu de transporte
-    Route::get('/transporte', [TransporteController::class, 'transporte'])->name('usuario.transporte');
+    Route::get('/transporte', [TransporteController::class, 'transporte'])->middleware(CheckPermissions::class . ":consultar_transporte")->name('usuario.transporte');
 
     // Ruta para abrir el menu de cambio de carrera
-    Route::get('/cambio-de-carrera', [main::class, 'cambioDeCarrera'])->name('usuario.cambio_de_carrera');
+    Route::get('/cambio-de-carrera', [main::class, 'cambioDeCarrera'])->middleware(CheckPermissions::class . ":consultar_cambio_de_carrera")->name('usuario.cambio_de_carrera');
 
-    // Ruta para abrir el menu de seguro facultativo
-    Route::get('/equivalencia', [main::class, 'equivalencia'])->name('usuario.equivalencia');
+    // Ruta para abrir el menu de equivalencias
+    Route::get('/equivalencia', [main::class, 'equivalencia'])->middleware(CheckPermission::class . ":consultar_equivalencias")->name('usuario.equivalencia');
 
     // ---------- TAB ADMISIONES ------------
     
@@ -372,8 +381,36 @@ Route::middleware([
 
     Route::post('/importar-excel-maestrias', [IngresoController::class, 'importarDataExcelMaestrias']);
 
-    //--------------------Exportar Plantilla Excel--------------------
+    // -------------------------- Ruta para la gestión de usuarios, roles y permisos ----------------------------
+    Route::get('/usuarios', [ControladorUsuarios::class, 'usuarios'])->middleware(CheckAdminUser::class)->name('usuario.usuarios');
+
+    // ---------- Rutas para Usuarios -------------
+    Route::post('/registrar-Usuario', [ControladorUsuarios::class, 'registrarUsuario']);
+
+    Route::post('/editar-Usuario', [ControladorUsuarios::class, 'editarUsuario']);
+
+    Route::post('/eliminar-Usuario', [ControladorUsuarios::class, 'eliminarUsuario']);
+
+    Route::post('/eliminar-Usuarios', [ControladorUsuarios::class, 'eliminarUsuarios']);
+
+    // ---------- Rutas para Roles -------------
+    Route::post('/registrar-Rol', [ControladorUsuarios::class, 'registrarRol']);
+
+    Route::post('/editar-Rol', [ControladorUsuarios::class, 'editarRol']);
+
+    Route::post('/eliminar-Rol', [ControladorUsuarios::class, 'eliminarRol']);
+
+    Route::post('/eliminar-Roles',[ControladorUsuarios::class, 'eliminarRoles']);
+
+    // Rutas para agregar y remover permisos
+
+    Route::post('/obtener-Permisos', [ControladorUsuarios::class, 'obtenerPermisos']);
+
+    Route::post('/agregar-Permiso', [ControladorUsuarios::class, 'agregarPermiso']);
+
+    Route::post('/remover-Permiso', [ControladorUsuarios::class, 'removerPermiso']);
 
     Route::get('/exportar-plantilla-becas', [WelcomeController::class, 'exportExcelBecas']);
+
 
 });
