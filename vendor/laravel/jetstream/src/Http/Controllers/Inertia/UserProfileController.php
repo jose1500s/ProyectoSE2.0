@@ -24,6 +24,12 @@ class UserProfileController extends Controller
      */
     public function show(Request $request)
     {
+        $roles = Auth::user()->roles;
+
+        foreach($roles as $rol){
+            $rol->permissions;
+        }
+
         $this->validateTwoFactorAuthenticationState($request);
 
         return Jetstream::inertia()->render($request, 'Profile/Show', [

@@ -39,9 +39,7 @@ export default {
     GraficaIngreso,
   },
   props: {
-    // permisos: Array,
     ingresos: Array,
-    // roles: Array,
     admisiones: Array,
     datosCarrerasFiltro: Array,
   },

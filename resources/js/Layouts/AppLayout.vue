@@ -66,31 +66,14 @@ export default defineComponent({
   },
   computed: {
     Rol(){
-        // try {
           if(this.$page.props.user.roles.length > 0){
-          // console.log(this.$page.props.roles[0]);
 
           return this.$page.props.user.roles[0];
         } else {
           console.log("No existen roles para este usuario");
-        }  
-      // } catch(error){
-
-      // }
+        } 
       
     }
-  },
-  // mounted() {
-  //   this.ImprimirRoles();
-  // },
-  created() {
-    // if(this.Rol.permissions.some(permiso => permiso.name === 'consultar_ingreso')){
-    //   console.log("Si existe el permiso");
-    // } else {
-    //   console.log("No existe el permiso");
-    // }
-
-    // console.log(this.$page.props.user.roles[0]);
   },
   setup() {
     const confirm = useConfirm();
