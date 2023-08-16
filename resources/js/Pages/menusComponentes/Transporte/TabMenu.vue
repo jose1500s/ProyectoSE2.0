@@ -20,23 +20,11 @@ export default {
         AppLayout,
         Solicitudes,
         Rutas,
-        /*
-        Ingreso,
-        Equivalencia,
-        Maestrias,
-        NIngreso,
-        Reingreso,
-        */
+
     },
     props: {
         solicitudes: Array,
         rutas: Array,
-        /*ingresos: Array,
-        maestrias: Array,
-        equivalencias: Array,
-        ningresos: Array,
-        reingresos: Array,
-        */
     },
 }
 </script>

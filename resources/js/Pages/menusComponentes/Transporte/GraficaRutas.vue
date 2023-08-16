@@ -22,27 +22,27 @@ export default {
 
     },
     created() {
-        //this.actualizarChartOptions(); // llama al método cuando se inicialice el componente
+        this.actualizarChartOptions(); // llama al método cuando se inicialice el componente
     },
     methods: {
         setChartData() {
             return {
-                labels: this.data.map((item) => item.periodo_con_año + '-' + item.carrera),
+                labels: this.data.map((item) => item.ruta+ '-' + item.cuatrimestre),
                 datasets: [
                     {
+                        label: 'Lugares Disponibles',
+                        backgroundColor: '#FFB84C',
+                        data: this.data.map((item) => item.lugare_disp)
+                    },
+                    {
                         label: 'Hombres',
-                        backgroundColor: '#7DC0FF',
+                        backgroundColor: '#36A2EB',
                         data: this.data.map((item) => item.hombres)
                     },
                     {
                         label: 'Mujeres',
-                        backgroundColor: '#FF66F7',
+                        backgroundColor: '#FF6384',
                         data: this.data.map((item) => item.mujeres)
-                    },
-                    {
-                        label: 'Total',
-                        backgroundColor: '#FFB84C',
-                        data: this.data.map((item) => item.total)
                     },
                 ]
             }
@@ -70,8 +70,8 @@ export default {
         actualizarChartOptions() {
             this.chartOptions = {
                 responsive: true,
-                maintainAspectRatio: true, // esto sirve para que se ajuste al tamaño del contenedor
-                aspectRatio: 2, //esto sirve para que se ajuste al tamaño del contenedor, se le pone 0.6 por que si no se ve muy pequeño
+                maintainAspectRatio: false,
+                aspectRatio: 0.6,
                 scales: {
                     x: {
                         stacked: true,
@@ -82,9 +82,6 @@ export default {
                 },
                 indexAxis: this.orientacionGrafica,
             };
-            console.log(this.chartOptions);
-            console.log(this.orientacionGrafica);
-            console.log("acabo la funcion actualizar") 
         },
 
     },
@@ -105,9 +102,9 @@ export default {
             <select class="mb-5" v-model="tipoGrafica">
                 <option value="">Tipo de grafica</option>
                 <option value="pie">Pie</option>
-                <option value="doughnut">Anillo</option>
-                <option value="line">Líneas</option>
-                <option value="bar">Barras</option>
+                <option value="doughnut">doughnut</option>
+                <option value="line">line</option>
+                <option value="bar">Bar</option>
             </select>
         </div>
         <div v-if="tipoGrafica === 'bar'">
