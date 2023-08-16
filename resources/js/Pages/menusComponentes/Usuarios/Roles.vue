@@ -16,7 +16,6 @@ import MultiSelect from 'primevue/multiselect';
 import Toast from "primevue/toast";
 import { FilterMatchMode, FilterService } from "primevue/api";
 import ToggleButton from 'primevue/togglebutton';
-import { Inertia } from '@inertiajs/inertia';
 
 export default {
   components: {
@@ -441,7 +440,7 @@ export default {
                   <ToggleButton v-if="slotProps.data.consultar.estado == true" v-model="slotProps.data.editar.estado" onLabel="Activado" offLabel="Desactivado" onIcon="pi pi-check" offIcon="pi pi-times" class="w-9rem p-button-sm tg-button" @change="cambiarPermiso(product.id, slotProps.data.editar)"/>
                   <ToggleButton v-else disabled v-model="slotProps.data.editar.estado" onLabel="Activado" offLabel="Desactivado" onIcon="pi pi-check" offIcon="pi pi-times" class="w-9rem p-button-sm tg-button" @change="cambiarPermiso(product.id, slotProps.data.editar)"/>
               </template>
-            </Column>w
+            </Column>
             <Column field="eliminar" header="Eliminar" :sortable="true">
               <template #body="slotProps">
                   <ToggleButton v-if="slotProps.data.consultar.estado == true" v-model="slotProps.data.eliminar.estado" onLabel="Activado" offLabel="Desactivado" onIcon="pi pi-check" offIcon="pi pi-times" class="w-9rem p-button-sm tg-button" @change="cambiarPermiso(product.id, slotProps.data.eliminar)"/>

@@ -1,7 +1,7 @@
 <script>
 // componentes
 import AppLayout from "@/Layouts/AppLayout.vue";
-import GraficaIngreso from "@/Pages/menusComponentes/Ingreso/GraficaIngreso.vue";
+import GraficaIngreso from "./GraficaIngreso.vue";
 // PrimeVue
 import DataTable from "primevue/datatable";
 import Column from "primevue/column";
@@ -17,6 +17,10 @@ import ConfirmDialog from "primevue/confirmdialog";
 import Toolbar from "primevue/toolbar";
 import Dropdown from "primevue/dropdown";
 import InputNumber from "primevue/inputnumber";
+import axios from "axios";
+import readXlsxFile from "read-excel-file";
+
+
 export default {
   components: {
     AppLayout,
@@ -67,10 +71,15 @@ export default {
     exportCSV() {
       this.$refs.dt.exportCSV();
     },
+    openImportExcel() {
+      this.importExcelDialog = true;
+      // cada que se abra se resetea el valor del array de datosExcel para que no se repitan los datos
+      this.datosExcel = [];
+    },
     limpiarFiltros() {
       // limpia/eliminar los filtros realizados en la  tabla y volver a mostrar todos los datos
       this.filters.carrera.value = null;
-      this.filters.Proceso.value = null;
+      this.filters.periodo.value = null;
       this.filters.fecha.value = null;
       this.$refs.dt.filter(this.filters, "carrera");
       this.$refs.dt.filter(this.filters, "Proceso");
@@ -88,7 +97,7 @@ export default {
       const grafica = contenedorGrafica.getElementsByTagName("canvas")[0];
       const imagen = grafica.toDataURL("image/png");
       const link = document.createElement("a");
-      link.download = "GraficaIngreso.png";
+      link.download = "GraficaMaestria.png";
       link.href = imagen;
       link.click();
     },
@@ -127,6 +136,15 @@ export default {
     registrarMaestria() {
       this.submitted = true; // esto es para que se muestre el mensaje de error en el formulario
       // validar los campos del formulario, que no esten vacios y si estan mandar un mensaje y no enviar el formulario, los campos son: carrerasModel, aspirantes, examinados, noAdmitidos y selectedPeriodo
+      if(this.hombres == 0 && this.mujeres == 0){
+        this.$toast.add({
+          severity: "error",
+          summary: "Error",
+          detail: "No se puede editar un reingreso con 0 hombres y 0 mujeres, ingrese un numero de solicitudes valido en hombres y/o mujeres",
+          life: 3000,
+        });
+        return false;
+      }
       if (
         this.carreras == null ||
         this.aspirantes == 0 ||
@@ -147,6 +165,8 @@ export default {
           carreras: this.carreras,
           aspirantes: this.aspirantes,
           examinados: this.examinados,
+          hombres: this.hombres,
+          mujeres: this.mujeres,
           noAdmitidos: this.noAdmitidos,
           periodos: this.periodos,
         };
@@ -169,6 +189,15 @@ export default {
       // editarl usando el dialog de editar producto
       this.submitted = true; // esto es para que se muestre el mensaje de error en el formulario
       // validar los campos del formulario, que no esten vacios y si estan mandar un mensaje y no enviar el formulario, los campos son: carrerasModel, aspirantes, examinados, noAdmitidos y selectedPeriodo
+      if(this.product.hombres == 0 && this.product.mujeres == 0){
+        this.$toast.add({
+          severity: "error",
+          summary: "Error",
+          detail: "No se puede editar un reingreso con 0 hombres y 0 mujeres, ingrese un numero de solicitudes valido en hombres y/o mujeres",
+          life: 3000,
+        });
+        return false;
+      }
       if (
         this.product.id == 0 ||
         this.product.carrera == null ||
@@ -191,6 +220,8 @@ export default {
           carrera: this.product.carrera,
           aspirantes: this.product.aspirantes,
           examinados: this.product.examinados,
+          hombres: this.product.hombres,
+          mujeres: this.product.mujeres,
           no_admitidos: this.product.no_admitidos,
           periodo: this.product.periodo,
         };
@@ -241,11 +272,12 @@ export default {
       const data = {
         id: this.selectedProducts.map((item) => item.id), 
       };
-      this.$inertia.post("/eliminar-Maestrias", data, {
+      this.$inertia.post(`/eliminar-Maestrias/${this.selectedProducts.map((item) => item.id)}`, data, {
         preserveState: true,
         preserveScroll: true,
         onSuccess: () => {
           this.deleteProductsDialog = false;
+          this.selectedProducts = [];
           this.$toast.add({
             severity: "success",
             summary: "Exito",
@@ -260,13 +292,92 @@ export default {
     },
     hasPermission(permiso){
       return this.$page.props.user.roles[0].permissions.some(permission => permission.name === permiso);
-    }
+    },
+    subirExcel() {
+      const input = document.getElementById("inputExcel");
+
+      // si el archivo no es .xlsx no se sube y mandar un mensaje de error
+      if (input.files[0].type != "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet") {
+        this.$toast.add({
+          severity: "error",
+          summary: "Error",
+          detail: "El archivo debe ser .xlsx",
+          life: 6000,
+        });
+        return false;
+      } else {
+        readXlsxFile(input.files[0]).then((rows) => {
+          //mandar a datosExcel los datos apartir de la psicion 1 del array
+          this.datosExcel = rows.slice(1);
+          // mandar a columnasExcel las columnas del archivo
+          this.columnasExcel = rows[0];
+          console.log(this.datosExcel)
+          console.log(this.columnasExcel)
+          // si el archivo no tiene las columnas 'carrera', 'aspirantes', 'examinados', 'hombres', 'mujeres', 'admitidos', 'no admitidos' y 'periodo' no se sube y mandar un mensaje de error
+          if (
+            this.columnasExcel[1] != "Carrera" ||
+            this.columnasExcel[2] != "Aspirantes" ||
+            this.columnasExcel[3] != "Examinados" ||
+            this.columnasExcel[4] != "Hombres" ||
+            this.columnasExcel[5] != "Mujeres" ||
+            this.columnasExcel[6] != "Admitidos" ||
+            this.columnasExcel[7] != "No Admitidos" ||
+            this.columnasExcel[8] != "Periodo"
+          ) {
+            this.wrongFormatExcel = true;
+            this.$toast.add({
+              severity: "error",
+              summary: "Error",
+              detail: "Formato de archivo incorrecto",
+              life: 5000,
+            });
+            return false;
+          } else {
+            this.wrongFormatExcel = false;
+          }
+
+        });
+      }
+    },
+    importarExcel() {
+      const datosInsertar = []
+      for (let i = 0; i < this.datosExcel.length; i++) {
+        datosInsertar.push({
+          carrera: this.datosExcel[i][1],
+          aspirantes: this.datosExcel[i][2],
+          examinados: this.datosExcel[i][3],
+          hombres: this.datosExcel[i][4],
+          mujeres: this.datosExcel[i][5],
+          admitidos: this.datosExcel[i][6],
+          no_admitidos: this.datosExcel[i][7],
+          periodo: this.datosExcel[i][8],
+        });
+      }
+
+      const data = {
+        datos: datosInsertar,
+      };
+
+      this.$inertia.post("/importar-excel-maestrias", data, {
+        preserveState: true,
+        preserveScroll: true,
+        onSuccess: () => {
+          this.importExcelDialog = false;
+          this.$toast.add({
+            severity: "success",
+            summary: "Exito",
+            detail: "Importado exitosamente",
+            life: 3000,
+          });
+        },
+      });
+
+    },
   },
   data() {
     return {
       filters: {
         carrera: { value: null, matchMode: FilterMatchMode.IN },
-        Proceso: { value: null, matchMode: FilterMatchMode.IN },
         periodo: { value: null, matchMode: FilterMatchMode.IN }, //fecha: es como se llama el campo en la base de datos
       },
       noDataMessage: "No se encontraron datos",
@@ -280,17 +391,38 @@ export default {
         { name: "Sistemas", code: "Sistemas" },
         { name: "Telematica", code: "Telematica" },
       ],
-      periodosLista: [{ name: "SEP-DIC", code: "SEP-DIC" }],
+      periodosLista: [
+        { name: "SEP-DIC " + new Date().getFullYear(), code: "SEP-DIC" + new Date().getFullYear() },
+        { name: "ENE-ABR " + new Date().getFullYear(), code: "ENE-MAR" + new Date().getFullYear() },
+        { name: "MAY-AGO " + new Date().getFullYear(), code: "ABR-JUN" + new Date().getFullYear() },
+      ],
       carreras: null,
       periodos: null,
       aspirantes: 0,
       examinados: 0,
+      hombres: 0,
+      mujeres: 0,
       noAdmitidos: 0,
       productDialog: false,
       editDialog: false,
       deleteProductDialog: false,
       selectedProducts: null,
       deleteProductsDialog: false,
+      datosExcel: [],
+      columnasExcel: [],
+      columnasPreviewExcel: [
+        { name: "ID", code: "0" },
+        { name: "Carrera", code: "1" },
+        { name: "Aspirantes", code: "2" },
+        { name: "Examinados", code: "3" },
+        { name: "Hombres", code: "4" },
+        { name: "Mujeres", code: "5" },
+        { name: "Admitidos", code: "6" },
+        { name: "No Admitidos", code: "7" },
+        { name: "Periodo", code: "8" },
+      ],
+      importExcelDialog: false,
+      wrongFormatExcel: false,
     };
   },
 };
@@ -305,8 +437,46 @@ export default {
         :disabled="!selectedProducts || !selectedProducts.length" />
       <Button v-else disabled label="Eliminar" icon="pi pi-trash" class="p-button-danger" @click="confirmDeleteSelected"
         :disabled="!selectedProducts || !selectedProducts.length" />
+        
+      <Button class="!ml-3" icon="pi pi-external-link" label="Exportar Excel" @click="exportCSV($event)" />
+
+      <!-- button dialog para importar excel-->
+      <Button label="Importar Excel" icon="pi pi-upload" class="!ml-2" @click="openImportExcel" />
     </template>
   </Toolbar>
+
+  <!-- Dialog para importar excel -->
+  <Dialog v-model:visible="importExcelDialog" :breakpoints="{ '1260px': '75vw', '640px': '85vw' }"
+    :style="{ width: '45vw' }" header="Importar Excel" :modal="true" class="p-fluid">
+
+
+    <!-- aqui selecciona el archivo de excel -->
+    <div class="border border-dashed border-gray-500 relative">
+      <input type="file" id="inputExcel" @change="subirExcel" multiple
+        class="cursor-pointer relative block opacity-0 w-full h-full p-20 z-50">
+      <div class="text-center p-10 absolute top-0 right-0 left-0 m-auto">
+        <h4>
+          Arrastra y suelta el archivo aquí
+          <br />ó
+        </h4>
+        <p class="">
+          Selecciona un archivo de excel
+        </p>
+      </div>
+    </div>
+
+    <!-- preview del documento subido en el array datosExcel -->
+    <DataTable v-if="datosExcel.length > 0" :value="datosExcel">
+      <Column v-for="columna in columnasPreviewExcel" :key="columna.code" :field="columna.code" :header="columna.name" />
+    </DataTable>
+
+    <div class="max-w-[50%] m-auto p-7">
+      <Button label="Importar" @click="importarExcel" id="btnImportarExcel"
+        :disabled="datosExcel.length == 0 || wrongFormatExcel" />
+    </div>
+
+
+  </Dialog>
 
   <Dialog v-model:visible="productDialog" :breakpoints="{ '960px': '75vw', '640px': '85vw' }" :style="{ width: '25vw' }"
     header="Nuevo Registro" :modal="true" class="p-fluid">
@@ -326,6 +496,15 @@ export default {
           <InputNumber inputId="minmax" v-model="examinados" mode="decimal" :min="0" :max="10000" :showButtons="true" />
         </div>
 
+        <div class="field col-12 md:col-3">
+          <label for="minmax">Hombres</label>
+          <InputNumber inputId="minmax" v-model="hombres" mode="decimal" :min="0" :max="10000" :showButtons="true" />
+        </div>
+
+        <div class="field col-12 md:col-3">
+          <label for="minmax">Mujeres</label>
+          <InputNumber inputId="minmax" v-model="mujeres" mode="decimal" :min="0" :max="10000" :showButtons="true" />
+        </div>
         <div class="field col-12 md:col-3">
           <label for="minmax">No Admitidos</label>
           <InputNumber inputId="minmax" v-model="noAdmitidos" mode="decimal" :min="0" :max="10000" :showButtons="true" />
@@ -360,35 +539,19 @@ export default {
           </div>
           <!-- model para abrir grafica -->
           <Button label="Grafica" icon="pi pi-chart-bar" @click="openResponsive" />
-          <Dialog header="Grafica" v-model:visible="displayResponsive" :breakpoints="{ '960px': '75vw', '75vw': '90vw' }"
-            :style="{ width: '70vw' }">
-            <!-- contenido del dialog/model desde aqui... -->
-            <div class="w-full" id="contenedorGrafica">
-              <GraficaIngreso :ingresos="maestrias" />
-            </div>
-            <template #footer>
-              <Button label="Cerrar" icon="pi pi-check" @click="closeResponsive" autofocus />
-              <!-- boton para guardar la grafica como img -->
-              <Button label="Guardar" icon="pi pi-save" @click="saveImage" />
-            </template>
-          </Dialog>
-
-          <Button icon="pi pi-external-link" label="Exportar Excel" @click="exportCSV($event)" />
 
           <!-- Filtros -->
-          <MultiSelect v-model="filters.carrera.value" :options="filtrarCarreras()" placeholder="Carrera"
-            display="chip" />
+          <MultiSelect v-model="filters.carrera.value" :options="carrerasLista" optionLabel="name" optionValue="code"
+            placeholder="Carrera" display="chip" @change="filtroCarreras($event)" />
 
-          <MultiSelect v-model="filters.Proceso.value" :options="filtrarProcesos()" placeholder="Proceso"
-            display="chip" />
-
-          <MultiSelect v-model="filters.periodo.value" :options="filtrarFecha()" placeholder="Fecha" display="chip" />
+          <MultiSelect v-model="filters.periodo.value" :options="periodosLista" optionLabel="name" optionValue="code"
+            placeholder="Periodo" display="chip" />
 
           <Button icon="pi pi-times" label="Limpiar" @click="limpiarFiltros()" />
         </div>
       </div>
 
-      <DataTable :value="maestrias" :paginator="true" class="p-datatable-customers" :rows="7" ref="dt"
+      <DataTable exportFilename="Maestrias" :value="maestrias" :paginator="true" class="p-datatable-customers" :rows="7" ref="dt"
         v-model:filters="filters" v-model:selection="selectedProducts" :emptyMessage="noDataMessage" stripedRows
         sortMode="multiple" removableSort>
         <Column selectionMode="multiple" style="width: 3rem" :exportable="false"></Column>
@@ -397,6 +560,9 @@ export default {
         <Column field="carrera" header="Carrera" :sortable="true"></Column>
         <Column field="aspirantes" header="Aspirantes" :sortable="true"></Column>
         <Column field="examinados" header="Examinados" :sortable="true"></Column>
+        <Column field="hombres" header="Hombres" :sortable="true"></Column>
+        <Column field="mujeres" header="Mujeres" :sortable="true"></Column>
+        <Column field="admitidos" header="Admitidos" :sortable="true"></Column>
         <Column field="no_admitidos" header="No Admitidos" :sortable="true"></Column>
         <Column field="periodo" header="Periodo" :sortable="true"></Column>
         <Column :exportable="false" style="min-width: 8rem" class="p-6">
@@ -419,7 +585,18 @@ export default {
           </div>
         </template>
       </DataTable>
-
+      <Dialog header="Gráfica dinámica" v-model:visible="displayResponsive"
+        :breakpoints="{ '960px': '75vw', '75vw': '90vw' }" :style="{ width: '70vw' }">
+        <!-- contenido del dialog/model desde aqui... -->
+        <div class="w-full" id="contenedorGrafica">
+          <GraficaIngreso :data="selectedProducts" />
+        </div>
+        <template #footer>
+          <Button label="Cerrar" icon="pi pi-check" @click="closeResponsive" autofocus />
+          <!-- boton para guardar la grafica como img -->
+          <Button label="Guardar" icon="pi pi-save" @click="saveImage" />
+        </template>
+      </Dialog>
       <!-- Dialog para editar el producto toma los valores del producto seleccionado -->
       <Dialog header="Editar Maestria" v-model:visible="editDialog" :breakpoints="{ '960px': '75vw', '75vw': '85vw' }"
         :style="{ width: '25vw' }" :modal="true" :closable="true" :dismissableMask="false">
@@ -438,6 +615,16 @@ export default {
             <div class="p-field p-col-12 p-md-6">
               <label for="examinados">Examinados</label>
               <InputText inputId="minmax" v-model.trim="product.examinados" mode="decimal" :min="0" :max="10000"
+                :showButtons="true" />
+            </div>
+            <div class="p-field p-col-12 p-md-6">
+              <label for="hombres">Hombres</label>
+              <InputText inputId="minmax" v-model.trim="product.hombres" mode="decimal" :min="0" :max="10000"
+                :showButtons="true" />
+            </div>
+            <div class="p-field p-col-12 p-md-6">
+              <label for="mujeres">Mujeres</label>
+              <InputText inputId="minmax" v-model.trim="product.mujeres" mode="decimal" :min="0" :max="10000"
                 :showButtons="true" />
             </div>
             <div class="p-field p-col-12 p-md-6">
