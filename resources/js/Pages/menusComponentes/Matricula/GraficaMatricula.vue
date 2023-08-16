@@ -27,22 +27,17 @@ export default {
     methods: {
         setChartData() {
             return {
-                labels: this.data.map((item) => item.periodo_con_año + '-' + item.carrera),
+                labels: this.data.map((item) => item.carrera + '-' + item.periodo),
                 datasets: [
                     {
-                        label: 'Hombres',
-                        backgroundColor: '#7DC0FF',
-                        data: this.data.map((item) => item.hombres)
-                    },
-                    {
-                        label: 'Mujeres',
-                        backgroundColor: '#FF66F7',
-                        data: this.data.map((item) => item.mujeres)
-                    },
-                    {
-                        label: 'Total',
+                        label: 'Matricula',
                         backgroundColor: '#FFB84C',
-                        data: this.data.map((item) => item.total)
+                        data: this.data.map((item) => item.matricula)
+                    },
+                    {
+                        label: 'Porcentaje',
+                        backgroundColor: '#36A2EB',
+                        data: this.data.map((item) => item.porcentaje)
                     },
                 ]
             }
@@ -82,9 +77,6 @@ export default {
                 },
                 indexAxis: this.orientacionGrafica,
             };
-            console.log(this.chartOptions);
-            console.log(this.orientacionGrafica);
-            console.log(this.tipoGrafica);
         },
 
     },
@@ -105,9 +97,9 @@ export default {
             <select class="mb-5" v-model="tipoGrafica">
                 <option value="">Tipo de grafica</option>
                 <option value="pie">Pie</option>
-                <option value="doughnut">Anillo</option>
-                <option value="line">Líneas</option>
-                <option value="bar">Barras</option>
+                <option value="doughnut">doughnut</option>
+                <option value="line">line</option>
+                <option value="bar">Bar</option>
             </select>
         </div>
         <div v-if="tipoGrafica === 'bar'">
@@ -133,6 +125,5 @@ export default {
 <style scoped>
 .p-chart {
     max-height: 420px !important;
-    max-width: 100% !important;
 }
 </style>

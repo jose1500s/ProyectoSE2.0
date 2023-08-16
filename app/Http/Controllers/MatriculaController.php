@@ -22,30 +22,10 @@ class MatriculaController extends Controller
         $periodo = $request->input('periodos');
         $year = $request->input('year');
 
-        //traer todos los registros de la tabla tb_matricula donde el periodo y year sean iguales a los que se estan ingresando
-        $matriculas = tb_matricula::where('periodo', $periodo)->where('year', $year)->get();
-
-        //sumar el total de matriculas que se encuentran en la tabla tb_matricula
-        $totalMatriculas = 0;
-        foreach($matriculas as $matricula){
-            $totalMatriculas += $matricula->matricula;
-        }
-        $totalMatriculas += $matriculaNew;
-
-
-        if(count($matriculas) > 0){
-            for($i = 0; $i < count($matriculas); $i++){
-                $editMatriculas = tb_matricula::find($matriculas[$i]->id);
-                //sacar el porcentaje de matriculas que se encuentran en la tabla tb_matricula
-                $porcentaje = ($matriculas[$i]->matricula * 100) / $totalMatriculas;
-                //sacar el porcentaje de matriculas que se encuentran en la tabla tb_matricula
-                $editMatriculas->porcentaje = $porcentaje;
-                //actualizar el porcentaje de matriculas que se encuentran en la tabla tb_matricula
-                $editMatriculas->save();
-            }
-        }
-
         //sacar el porcentaje unicamente de la matricula que se esta ingresando
+
+        $totalMatriculas = $this->UpdatePorcentaje($periodo, $year, $matriculaNew, false);
+
         $porcentaje = ($matriculaNew * 100) / $totalMatriculas;
 
         //crear un nuevo registro en la tabla tb_matricula
@@ -68,21 +48,7 @@ class MatriculaController extends Controller
         $matricula = tb_matricula::findOrFail($id);
         $matricula->delete();
 
-        $matriculas = tb_matricula::where('periodo', $matricula->periodo)->where('year', $matricula->year)->get();
-
-        $totalMatriculas = 0;
-        foreach($matriculas as $matriculaSuma){
-            $totalMatriculas += $matriculaSuma->matricula;
-        }
-        for($i = 0; $i < count($matriculas); $i++){
-            $editMatriculas = tb_matricula::find($matriculas[$i]->id);
-            //sacar el porcentaje de matriculas que se encuentran en la tabla tb_matricula
-            $porcentaje = ($matriculas[$i]->matricula * 100) / $totalMatriculas;
-            //sacar el porcentaje de matriculas que se encuentran en la tabla tb_matricula
-            $editMatriculas->porcentaje = $porcentaje;
-            //actualizar el porcentaje de matriculas que se encuentran en la tabla tb_matricula
-            $editMatriculas->save();
-        }
+        $this->UpdatePorcentaje($matricula->periodo, $matricula->year, $matricula->matricula, true);
 
         return redirect()->route('usuario.matricula');
     }
@@ -166,10 +132,17 @@ class MatriculaController extends Controller
         $datosExcel = $request->input('datos');
 
         foreach ($datosExcel as $fila) {
+
+            $totalMatriculas = $this->UpdatePorcentaje($fila['periodo'], $fila['year'], $fila['matricula'], false);
+
+            //sacar el porcentaje unicamente de la matricula que se esta ingresando
+            $porcentaje = ($fila['matricula'] * 100) / $totalMatriculas;
+
+
             $matricula = new tb_matricula();
             $matricula->carrera = $fila['carrera'];
             $matricula->matricula = $fila['matricula'];
-            $matricula->porcentaje = $fila['porcentaje'];
+            $matricula->porcentaje = $porcentaje;
             $matricula->periodo = $fila['periodo'];
             $matricula->year = $fila['year'];
             $matricula->save();
@@ -207,5 +180,28 @@ class MatriculaController extends Controller
         $matricula->delete();
 
         return redirect()->route('usuario.matricula');
+    }
+
+    public function UpdatePorcentaje($periodo, $year, $matricula, $elim){
+        $matriculas = tb_matricula::where('periodo', $periodo)->where('year', $year)->get();
+
+        $totalMatriculas = 0;
+        foreach($matriculas as $matriculaSuma){
+            $totalMatriculas += $matriculaSuma->matricula;
+        }
+        if($elim == false) $totalMatriculas += $matricula;
+        
+
+        for($i = 0; $i < count($matriculas); $i++){
+            $editMatriculas = tb_matricula::find($matriculas[$i]->id);
+            //sacar el porcentaje de matriculas que se encuentran en la tabla tb_matricula
+            $porcentaje = ($matriculas[$i]->matricula * 100) / $totalMatriculas;
+            //sacar el porcentaje de matriculas que se encuentran en la tabla tb_matricula
+            $editMatriculas->porcentaje = $porcentaje;
+            //actualizar el porcentaje de matriculas que se encuentran en la tabla tb_matricula
+            $editMatriculas->save();
+        }
+        if($elim == false) return $totalMatriculas;
+
     }
 }
