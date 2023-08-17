@@ -1,7 +1,7 @@
 <script>
 // componentes
 import AppLayout from "@/Layouts/AppLayout.vue";
-import GraficaMatricula from "./GraficaMatricula.vue";
+import GraficaCambioCarrera from "@/Pages/menusComponentes/CambioCarrera/GraficaCambioCarrera.vue";
 // PrimeVue
 import DataTable from "primevue/datatable";
 import Column from "primevue/column";
@@ -19,7 +19,6 @@ import Dropdown from "primevue/dropdown";
 import InputNumber from "primevue/inputnumber";
 import axios from "axios";
 import readXlsxFile from "read-excel-file";
-import GraficaIngreso from "./../Ingreso/GraficaIngreso.vue";
 
 export default {
   components: {
@@ -37,12 +36,10 @@ export default {
     Toolbar,
     Dropdown,
     InputNumber,
-    GraficaMatricula,
+    GraficaCambioCarrera,
   },
   props: {
-    dataMatriculas: Array,
-    admisiones: Array,
-    datosCarrerasFiltro: Array,
+    dataCambioCarreras: Array,
   },
   methods: {
     filtrarCarreras() {
@@ -79,9 +76,12 @@ export default {
     },
     limpiarFiltros() {
       // limpia/eliminar los filtros realizados en la  tabla y volver a mostrar todos los datos
-      this.filters.carrera.value = null;
+      this.filters.carrera_actual.value = null;
+      this.filters.carrera_nueva.value = null;
       this.filters.periodo.value = null;
       this.filters.year.value = 0;
+      this.filters.matricula.value = null;
+      this.filters.grupo.value = null;
       this.$refs.dt.filter(this.filters, "carrera");
       this.$refs.dt.filter(this.filters, "Proceso");
       this.$refs.dt.filter(this.filters, "year");
@@ -98,7 +98,7 @@ export default {
       const grafica = contenedorGrafica.getElementsByTagName("canvas")[0];
       const imagen = grafica.toDataURL("image/png");
       const link = document.createElement("a");
-      link.download = "GraficaMatricula.png";
+      link.download = "GraficaCambioCarrera.png";
       link.href = imagen;
       link.click();
     },
@@ -134,34 +134,51 @@ export default {
       this.productDialog = false;
       this.submitted = false;
     },
-    registrarMatricula() {
+    registrarCambioCarrera() {
       this.submitted = true; // esto es para que se muestre el mensaje de error en el formulario
 
-      //verifica que no se pueda registrar si el la carrera ya esta registrada en el periodo y año seleccionado
-      if (this.dataMatriculas.length > 0) {
-        for (let i = 0; i < this.dataMatriculas.length; i++) {
+      //verifica que no se pueda registrar si el la matricula ya esta registrada
+      if (this.dataCambioCarreras.length > 0) {
+        for (let i = 0; i < this.dataCambioCarreras.length; i++) {
           if (
-            this.dataMatriculas[i].carrera == this.carreras &&
-            this.dataMatriculas[i].periodo == this.periodos &&
-            this.dataMatriculas[i].year == this.year
+            this.dataCambioCarreras[i].matricula == this.matriculas
           ) {
             this.$toast.add({
               severity: "error",
               summary: "Error",
-              detail: "Ya existe un registro con la carrera, periodo y año seleccionado",
+              detail: "Ya existe un registro con la matricula",
               life: 3000,
             });
             return false;
           }
         }
       }
+      //verificar que la carrera_actual y la carrera_nueva no sean la misma
+      if (this.carrera_actual == this.carrera_nueva) {
+        this.$toast.add({
+          severity: "error",
+          summary: "Error",
+          detail: "La carrera actual y la carrera nueva no pueden ser la misma",
+          life: 3000,
+        });
+        return false;
+      }
 
+      if (this.carrera_nueva == null) {
+        //se le de un valor por defecto a carrera_nueva
+        this.carrera_nueva = "Pendiente";
+      }
 
       if (
-        this.carreras == null ||
-        this.matriculas == 0 ||
         this.periodos == null ||
-        this.year == 0
+        this.year == 0 ||
+        this.nombres == null ||
+        this.matriculas == null ||
+        this.carrera_actual == null ||
+        this.carrera_nueva == null ||
+        this.dictamen == null ||
+        this.grupos == null ||
+        this.carga_kardex == null
       ) {
         // si alguno de los campos esta vacio, no enviar el formulario y mostrar un mensaje de error
         this.$toast.add({
@@ -173,18 +190,28 @@ export default {
         return false;
       } else {
         const data = {
-          carreras: this.carreras,
+          nombres: this.nombres,
           matriculas: this.matriculas,
+          carrera_actual: this.carrera_actual,
+          carrera_nueva: this.carrera_nueva,
+          dictamen: this.dictamen,
+          carga_kardex: this.carga_kardex,
+          grupos: this.grupos,
           periodos: this.periodos,
           year: this.year,
         };
-        this.$inertia.post("/registro-Matricula", data, {
+        this.$inertia.post("/registro-cambio-carrera", data, {
           preserveState: true,
           preserveScroll: true,
           onSuccess: () => {
             this.productDialog = false;
-            this.carreras = null;
-            this.matriculas = 0;
+            this.nombres = null;
+            this.matriculas = null;
+            this.carrera_actual = null;
+            this.carrera_nueva = null;
+            this.dictamen = null;
+            this.carga_kardex = null;
+            this.grupos = null;
             this.periodos = null;
             this.year = 0;
             this.$toast.add({
@@ -197,32 +224,47 @@ export default {
         });
       }
     },
-    editarMatricula() {
+    editarCambioCarrera() {
       // editarl usando el dialog de editar producto
       this.submitted = true; // esto es para que se muestre el mensaje de error en el formulario
-      //verifica que no se pueda editar si el la carrera ya esta registrada en el periodo y año seleccionado
+      //verifica que no se pueda editar si la matricula ya esta registrada
 
-      for (let i = 0; i < this.dataMatriculas.length; i++) {
+      for (let i = 0; i < this.dataCambioCarreras.length; i++) {
         if (
-          this.dataMatriculas[i].carrera == this.product.carrera &&
-          this.dataMatriculas[i].periodo == this.product.periodo &&
-          this.dataMatriculas[i].year == this.product.year &&
-          this.dataMatriculas[i].id != this.product.id
+          this.dataCambioCarreras[i].matricula == this.product.matricula
         ) {
           this.$toast.add({
             severity: "error",
             summary: "Error",
-            detail: "Ya existe un registro con la carrera, periodo y año seleccionado",
+            detail: "Ya existe un registro con la matricula",
             life: 3000,
           });
           return false;
         }
       }
+
+      //verificar que la carrera_actual y la carrera_nueva no sean la misma
+      if (this.product.carrera_actual == this.product.carrera_nueva) {
+        this.$toast.add({
+          severity: "error",
+          summary: "Error",
+          detail: "La carrera actual y la carrera nueva no pueden ser la misma",
+          life: 3000,
+        });
+        return false;
+      }
+
       if (
         this.product.id == 0 ||
-        this.product.matricula == 0 ||
         this.product.periodo == null ||
-        this.product.year == 0
+        this.product.year == null ||
+        this.product.nombre == null ||
+        this.product.matricula == null ||
+        this.product.carrera_actual == null ||
+        this.product.carrera_nueva == null ||
+        this.product.dictamen == null ||
+        this.product.grupo == null ||
+        this.product.carga_kardex == null
       ) {
         // si alguno de los campos esta vacio, no enviar el formulario y mostrar un mensaje de error
         this.$toast.add({
@@ -235,11 +277,18 @@ export default {
       } else {
         const data = {
           id: this.product.id,
-          matriculas: this.product.matricula,
+          nombres: this.product.nombre,
+          matricula: this.product.matricula,
+          carrera_actual: this.product.carrera_actual,
+          carrera_nueva: this.product.carrera_nueva,
+          dictamen: this.product.dictamen,
+          carga_kardex: this.product.carga_kardex,
+          grupos: this.product.grupo,
           periodo: this.product.periodo,
           year: this.product.year,
+
         };
-        this.$inertia.post(`/editar-Matricula/${this.product.id}`, data, {
+        this.$inertia.post(`/editar-cambio-carrera/${this.product.id}`, data, {
           preserveState: true,
           preserveScroll: true,
           onSuccess: () => {
@@ -267,7 +316,7 @@ export default {
       const data2 = {
         id: this.product.id,
       };
-      this.$inertia.post(`/eliminar-Matricula/${this.product.id}`, data2, {
+      this.$inertia.post(`/eliminar-cambio-carrera/${this.product.id}`, data2, {
         preserveState: true,
         preserveScroll: true,
         onSuccess: () => {
@@ -287,7 +336,7 @@ export default {
       const data = {
         id: this.selectedProducts.map((item) => item.id),
       };
-      this.$inertia.post("/eliminar-Matriculas", data, {
+      this.$inertia.post("/eliminar-cambios-carrera", data, {
         preserveState: true,
         preserveScroll: true,
         onSuccess: () => {
@@ -348,11 +397,15 @@ export default {
           console.log(this.columnasExcel)
 
           if (
-            this.columnasExcel[1] != "Carrera" ||
-            this.columnasExcel[2] != "Matricula" ||
-            this.columnasExcel[3] != "Porcentaje" ||
-            this.columnasExcel[4] != "Periodo" ||
-            this.columnasExcel[5] != "Año"
+            this.columnasExcel[1] != "Periodo" ||
+            this.columnasExcel[2] != "Año" ||
+            this.columnasExcel[3] != "Nombre" ||
+            this.columnasExcel[4] != "Matricula" ||
+            this.columnasExcel[5] != "Carrera Antigua" ||
+            this.columnasExcel[6] != "Carrera Nueva" ||
+            this.columnasExcel[7] != "Dictamen" ||
+            this.columnasExcel[8] != "Grupo" ||
+            this.columnasExcel[9] != "Carga Kardex"
           ) {
             this.wrongFormatExcel = true;
             this.$toast.add({
@@ -372,16 +425,14 @@ export default {
     importarExcel() {
 
 
-      //Verificar que no se pueda importar si el la carrera ya esta registrada en el periodo y año seleccionado
+      //Verificar que no se pueda importar si el la matricula ya esta registrada
       for (let i = 0; i < this.datosExcel.length; i++) {
-        for (let j = 0; j < this.dataMatriculas.length; j++) {
+        for (let j = 0; j < this.dataCambioCarreras.length; j++) {
           if (
-            this.datosExcel[i][1] == this.dataMatriculas[j].carrera &&
-            this.datosExcel[i][4] == this.dataMatriculas[j].periodo &&
-            this.datosExcel[i][5] == this.dataMatriculas[j].year
+            this.datosExcel[i][4] == this.dataCambioCarreras[j].matricula
           ) {
-            //Guarda todos los registros del excel en un array donde la carrera ya esta registrada en el periodo y año seleccionado
-            this.datosMostrar.push(this.dataMatriculas[j].carrera + " " + this.dataMatriculas[j].periodo + " " + this.dataMatriculas[j].year);
+            //Guarda todos los registros del excel en un array donde la matricula ya esta registrada
+            this.datosMostrar.push(this.dataCambioCarreras[j].matricula + " " );
             this.datosMostrarStatus = true;
           }
         }
@@ -391,7 +442,7 @@ export default {
         this.$toast.add({
           severity: "error",
           summary: "Error",
-          detail: "Ya existen registros con la carrera, periodo y año seleccionado, los cuales son los siguientes: " + this.datosMostrar,
+          detail: "Ya existen registros con la misma matricula " + this.datosMostrar,
           life: 5000,
         });
         this.datosMostrar = [];
@@ -402,11 +453,15 @@ export default {
       const datosInsertar = []
       for (let i = 0; i < this.datosExcel.length; i++) {
         datosInsertar.push({
-          carrera: this.datosExcel[i][1],
-          matricula: this.datosExcel[i][2],
-          porcentaje: this.datosExcel[i][3],
-          periodo: this.datosExcel[i][4],
-          year: this.datosExcel[i][5],
+          periodo: this.datosExcel[i][1],
+          year: this.datosExcel[i][2],
+          nombre: this.datosExcel[i][3],
+          matricula: this.datosExcel[i][4],
+          carrera_actual: this.datosExcel[i][5],
+          carrera_nueva: this.datosExcel[i][6],
+          dictamen: this.datosExcel[i][7],
+          grupo: this.datosExcel[i][8],
+          carga_kardex: this.datosExcel[i][9],
         });
       }
 
@@ -414,7 +469,7 @@ export default {
         datos: datosInsertar,
       };
 
-      this.$inertia.post("/importar-excel-matriculas", data, {
+      this.$inertia.post("/importar-excel-cambio-carrera", data, {
         preserveState: true,
         preserveScroll: true,
         onSuccess: () => {
@@ -429,17 +484,18 @@ export default {
       });
 
     },
-    hasPermission(permiso){
-      return this.$page.props.user.roles[0].permissions.some(permission => permission.name === permiso);
-    },
+
   },
   mounted() { },
   data() {
     return {
       filters: {
-        carrera: { value: null, matchMode: FilterMatchMode.IN },
+        carrera_actual: { value: null, matchMode: FilterMatchMode.IN },
+        carrera_nueva: { value: null, matchMode: FilterMatchMode.IN },
         periodo: { value: null, matchMode: FilterMatchMode.IN },
         year: { value: null, matchMode: FilterMatchMode.CONTAINS },
+        matricula: { value: null, matchMode: FilterMatchMode.CONTAINS },
+        grupo: { value: null, matchMode: FilterMatchMode.CONTAINS },
         globlal: { value: null, matchMode: FilterMatchMode.CONTAINS },
       },
       datosFiltrados: [],
@@ -458,6 +514,17 @@ export default {
         { name: "Pymes", code: "Pymes" },
         { name: "Sistemas", code: "Sistemas" },
         { name: "Telematica", code: "Telematica" },
+      ],
+
+      carrerasLista2: [
+        { name: "Manufactura", code: "Manufactura" },
+        { name: "Mecatronica", code: "Mecatronica" },
+        { name: "Negocios", code: "Negocios" },
+        { name: "Procesos", code: "Procesos" },
+        { name: "Pymes", code: "Pymes" },
+        { name: "Sistemas", code: "Sistemas" },
+        { name: "Telematica", code: "Telematica" },
+        { name: "Pendiente", code: "Pendiente"}
       ],
 
       periodosLista: [
@@ -480,18 +547,34 @@ export default {
       ],
       columnasPreviewExcel: [
         { name: "ID", code: "0" },
-        { name: "Carrera", code: "1" },
-        { name: "Aspirantes", code: "2" },
-        { name: "Examinados", code: "3" },
-        { name: "Hombres", code: "4" },
-        { name: "Mujeres", code: "5" },
-        { name: "Admitidos", code: "6" },
-        { name: "No Admitidos", code: "7" },
-        { name: "Periodo", code: "8" },
+        { name: "Periodo", code: "1" },
+        { name: "Año", code: "2" },
+        { name: "Nombre", code: "3" },
+        { name: "Matricula", code: "4" },
+        { name: "Carrera Antigua", code: "5" },
+        { name: "Carrera Nueva", code: "6" },
+        { name: "Dictamen", code: "7" },
+        { name: "Grupo", code: "8" },
+        { name: "Carga Kardex", code: "9" },
       ],
-      carreras: null,
+      carga_kardex_lista: [
+        { name: "EQUIVALENCIA CARGAGA", code: "EQUIVALENCIA CARGAGA" },
+        { name: "HABLAR A TICS", code: "HABLAR A TICS" },
+        { name: "PENDIENTE", code: "PENDIENTE" },
+      ],
+      dictamen_lista: [
+        { name: "APROBADO", code: "APROBADO" },
+        { name: "RECHAZADO", code: "RECHAZADO" },
+        { name: "PENDIENTE", code: "PENDIENTE" },
+      ],
+      nombres: null,
+      carrera_actual: null,
+      carrera_nueva: null,
+      dictamen: null,
+      carga_kardex: null,
+      grupos: null,
       periodos: null,
-      matriculas: 0,
+      matriculas: null,
       year: 0,
       productDialog: false,
       editDialog: false,
@@ -511,11 +594,8 @@ export default {
 <template>
   <Toolbar class="mb-4">
     <template #start>
-      <Button v-if="hasPermission('registrar_matricula')" label="Nuevo Registro" icon="pi pi-plus" class="p-button-success !mr-2" @click="openNew" />
-      <Button v-else disabled label="Nuevo Registro" icon="pi pi-plus" class="p-button-success !mr-2" @click="openNew" />
-      <Button v-if="hasPermission('eliminar_matricula')" label="Eliminar" icon="pi pi-trash" class="p-button-danger" @click="confirmDeleteSelected"
-        :disabled="!selectedProducts || !selectedProducts.length" />
-      <Button v-else disabled label="Eliminar" icon="pi pi-trash" class="p-button-danger" @click="confirmDeleteSelected"
+      <Button label="Nuevo Registro" icon="pi pi-plus" class="p-button-success !mr-2" @click="openNew" />
+      <Button label="Eliminar" icon="pi pi-trash" class="p-button-danger" @click="confirmDeleteSelected"
         :disabled="!selectedProducts || !selectedProducts.length" />
 
       <Button class="!ml-3" icon="pi pi-external-link" label="Exportar Excel" @click="exportCSV($event)" />
@@ -563,26 +643,54 @@ export default {
   <Dialog v-model:visible="productDialog" :breakpoits="{ '960px': '75vw', '640px': '85vw' }" :style="{ width: '25vw' }"
     header="Nuevo Registro" :modal="true" class="p-fluid">
     <div class="field">
-      <form @submit.prevent="registrarMatricula">
+      <form @submit.prevent="registrarCambioCarrera">
         <!-- select con opciones -->
-        <Dropdown v-model="carreras" :options="carrerasLista" optionLabel="name" optionValue="code" :filter="true"
-          placeholder="Carrera..." />
-
-        <div class="field col-12 md:col-3">
-          <label for="minmax">Matricula</label>
-          <InputNumber inputId="minmax" v-model="matriculas" mode="decimal" :min="0" :max="10000" :showButtons="true" />
-        </div>
-
         <div class="field col-12 md:col-3 mt-3">
+          <label for="minmax">Periodo</label>
           <Dropdown v-model="periodos" :options="periodosLista" optionLabel="name" optionValue="code"
             placeholder="Periodo" />
         </div>
 
-        <div class="field col-12 md:col-3">
+        <div class="field col-12 md:col-3 mt-3">
           <label for="minmax">Año</label>
-          <InputNumber inputId="minmax" v-model="year" mode="decimal" :min="0" :max="10000" :showButtons="true" />
+          <Dropdown v-model="year" :options="yearLista" optionLabel="name" optionValue="code" placeholder="Año" />
         </div>
 
+        <div class="field col-12 md:col-3 mt-3">
+          <label for="minmax">Nombre</label>
+          <InputText id="name" v-model.trim="nombres" />
+        </div>
+
+        <div class="field col-12 md:col-3 mt-3">
+          <label for="minmax">Matricula</label>
+          <InputText id="name" v-model.trim="matriculas" />
+        </div>
+
+        <div class="field col-12 md:col-3 mt-3">
+          <label for="minmax">Carrera Actual</label>
+          <Dropdown v-model="carrera_actual" :options="carrerasLista" optionLabel="name" optionValue="code" :filter="true"
+            placeholder="Carrera..." />
+        </div>
+
+        <div class="field col-12 md:col-3 mt-3">
+          <label for="minmax">Carrera A la que se cambia</label>
+          <Dropdown v-model="carrera_nueva" :options="carrerasLista" optionLabel="name" optionValue="code" :filter="true"
+            placeholder="Pendiente..." />
+        </div>
+        <div class="field col-12 md:col-3 mt-3">
+          <label for="minmax">Dictamen</label>
+          <Dropdown v-model="dictamen" :options="dictamen_lista" optionLabel="name" optionValue="code" :filter="true"
+            placeholder="Dictamen..." />
+        </div>
+        <div class="field col-12 md:col-3 mt-3">
+          <label for="minmax">Grupo</label>
+          <InputText id="name" v-model.trim="grupos" />
+        </div>
+        <div class="field col-12 md:col-3 mt-3">
+          <label for="minmax">Carga de kardex</label>
+          <Dropdown v-model="carga_kardex" :options="carga_kardex_lista" optionLabel="name" optionValue="code"
+            :filter="true" placeholder="Carga Kardex..." />
+        </div>
         <Button type="submit" id="btnRegisrar"
           class="flex items-center justify-center space-x-2 rounded-md border-2 border-blue-500 px-4 py-2 font-medium text-blue-600 transition hover:bg-blue-500 hover:text-white">
           <span> Registrar </span>
@@ -608,43 +716,45 @@ export default {
           <Button label="Grafica" icon="pi pi-chart-bar" @click="openResponsive" />
 
           <!-- Filtros -->
-          <MultiSelect v-model="filters.carrera.value" :options="carrerasLista" optionLabel="name" optionValue="code"
-            placeholder="Carrera" display="chip" @change="filtroCarreras($event)" />
+          <MultiSelect v-model="filters.carrera_actual.value" :options="carrerasLista" optionLabel="name"
+            optionValue="code" placeholder="Carrera Antigua" display="chip" @change="filtroCarreras($event)" />
+
+          <MultiSelect v-model="filters.carrera_nueva.value" :options="carrerasLista2" optionLabel="name" optionValue="code"
+            placeholder="Carrera Nueva" display="chip" @change="filtroCarreras($event)" />
 
           <MultiSelect v-model="filters.periodo.value" :options="periodosLista" optionLabel="name" optionValue="code"
             placeholder="Periodo" display="chip" />
 
-          <InputNumber v-model="filters.year.value" mode="decimal" :min="0" :max="10000" placeholder="Año" />
+          <MultiSelect v-model="filters.year.value" :options="yearLista" optionLabel="name" optionValue="code"
+            placeholder="Año" display="chip" />
+
+          <InputText v-model="filters.matricula.value" placeholder="Matricula" class="w-40" />
 
           <Button icon="pi pi-times" label="Limpiar" @click="limpiarFiltros()" />
         </div>
       </div>
 
-      <DataTable exportFilename="Matricula" :value="dataMatriculas" :paginator="true" class="p-datatable-customers"
+      <DataTable exportFilename="Cambio De Carrera" :value="dataCambioCarreras" :paginator="true" class="p-datatable-customers"
         :rows="7" ref="dt" v-model:filters="filters" v-model:selection="selectedProducts" :emptyMessage="noDataMessage"
         stripedRows sortMode="multiple" removableSort>
 
         <Column selectionMode="multiple" style="width: 3rem" :exportable="false"></Column>
 
         <Column field="id" header="ID" :sortable="true" hidden></Column>
-        <Column field="carrera" header="Carrera" :sortable="true"></Column>
-        <Column field="matricula" header="Matricula" :sortable="true"></Column>
-        <Column field="porcentaje" header="Porcentaje" :sortable="true">
-          <template #body="{ data }">
-            {{ data.porcentaje }}%
-          </template>
-        </Column>
         <Column field="periodo" header="Periodo" :sortable="true"></Column>
         <Column field="year" header="Año" :sortable="true"></Column>
+        <Column field="nombre" header="Nombre" :sortable="true"></Column>
+        <Column field="matricula" header="Matricula" :sortable="true"></Column>
+        <Column field="carrera_actual" header="Carrera Antigua" :sortable="true"></Column>
+        <Column field="carrera_nueva" header="Carrera Nueva" :sortable="true"></Column>
+        <Column field="dictamen" header="Dictamen" :sortable="true"></Column>
+        <Column field="grupo" header="Grupo" :sortable="true"></Column>
+        <Column field="carga_kardex" header="Carga Kardex" :sortable="true"></Column>
         <Column :exportable="false" style="min-width: 8rem" class="p-6">
           <template #body="slotProps">
-            <Button v-if="hasPermission('editar_matricula')" icon="pi pi-pencil" class="p-button-rounded p-button-success !mr-2"
+            <Button icon="pi pi-pencil" class="p-button-rounded p-button-success !mr-2"
               @click="editProduct(slotProps.data)" />
-            <Button v-else disabled icon="pi pi-pencil" class="p-button-rounded p-button-success !mr-2"
-              @click="editProduct(slotProps.data)" />
-            <Button v-if="hasPermission('eliminar_matricula')" icon="pi pi-trash" class="p-button-rounded p-button-warning"
-              @click="confirmDeleteProduct(slotProps.data)" />
-            <Button v-else disabled icon="pi pi-trash" class="p-button-rounded p-button-warning"
+            <Button icon="pi pi-trash" class="p-button-rounded p-button-warning"
               @click="confirmDeleteProduct(slotProps.data)" />
           </template>
         </Column>
@@ -663,7 +773,7 @@ export default {
         :breakpoints="{ '960px': '75vw', '75vw': '90vw' }" :style="{ width: '70vw' }">
         <!-- contenido del dialog/model desde aqui... -->
         <div class="w-full" id="contenedorGrafica">
-          <GraficaMatricula :data="selectedProducts" />
+          <GraficaCambioCarrera :data="selectedProducts" />
         </div>
         <template #footer>
           <Button label="Cerrar" icon="pi pi-check" @click="closeResponsive" autofocus />
@@ -676,25 +786,55 @@ export default {
       <Dialog header="Editar Matricula" v-model:visible="editDialog" :breakpoints="{ '960px': '75vw', '75vw': '85vw' }"
         :style="{ width: '25vw' }" :modal="true" :closable="true" :dismissableMask="false">
         <div class="p-fluid p-formgrid p-grid">
-          <form @submit.prevent="editarMatricula">
+          <form @submit.prevent="editarCambioCarrera">
             <InputText id="id" v-model.trim="product.id" hidden />
 
             <div class="p-field p-col-12 p-md-6">
-              <label for="carrera">Carrera (Solo lectura)</label>
-              <InputText id="name" v-model.trim="product.carrera" readonly="" />
+              <label for="periodo">Periodo</label>
+              <InputText id="name" v-model.trim="product.periodo" required="true" /> 
             </div>
+
+            <div class="p-field p-col-12 p-md-6">
+              <label for="year">Año</label>
+              <InputNumber inputId="minmax" v-model="product.year" mode="decimal" :min="0" :max="10000"
+                :showButtons="true" />
+            </div>
+
+            <div class="p-field p-col-12 p-md-6">
+              <label for="name">Nombre</label>
+              <InputText id="name" v-model.trim="product.nombre" required="true" />
+            </div>
+
             <div class="p-field p-col-12 p-md-6">
               <label for="matricula">Matricula</label>
-              <InputText id="name" v-model.trim="product.matricula" />
+              <InputText id="name" v-model.trim="product.matricula" required="true" />
             </div>
+
             <div class="p-field p-col-12 p-md-6">
-              <label for="periodo">Periodo</label>
-              <InputText id="name" v-model.trim="product.periodo" required="true" />
+              <label for="carrera_actual">Carrera Actual</label>
+              <InputText id="name" v-model.trim="product.carrera_actual" required="true" />
             </div>
+
             <div class="p-field p-col-12 p-md-6">
-              <label for="año">Año</label>
-              <InputText id="name" v-model.trim="product.year" required="true" />
+              <label for="carrera_nueva">Carrera A la que se cambia</label>
+              <InputText id="name" v-model.trim="product.carrera_nueva" required="true" />
             </div>
+
+            <div class="p-field p-col-12 p-md-6">
+              <label for="dictamen">Dictamen</label>
+              <InputText id="name" v-model.trim="product.dictamen" required="true" />
+            </div>
+
+            <div class="p-field p-col-12 p-md-6">
+              <label for="grupo">Grupo</label>
+              <InputText id="name" v-model.trim="product.grupo" required="true" />
+            </div>
+
+            <div class="p-field p-col-12 p-md-6">
+              <label for="carga_kardex">Carga de kardex</label>
+              <InputText id="name" v-model.trim="product.carga_kardex" required="true" />
+            </div>
+
 
             <Button type="submit" label="Guardar" icon="pi pi-check" class="!mt-3" />
           </form>
@@ -705,7 +845,8 @@ export default {
       <Dialog v-model:visible="deleteProductDialog" :style="{ width: '450px' }" header="Confirmar" :modal="true">
         <div class="confirmation-content flex justify-center items-center">
           <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem" />
-          <span v-if="product">¿Confirma eliminar el registro <b>{{ product.carrera }}</b>?</span>
+          <span v-if="product">¿Confirma eliminar el registro <b>{{ product.nombre }} </b> con matricula <b> {{
+            product.matricula }}</b>?</span>
         </div>
         <template #footer>
           <Button label="No" icon="pi pi-times" class="p-button-text" @click="deleteProductDialog = false" />

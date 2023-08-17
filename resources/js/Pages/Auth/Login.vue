@@ -69,7 +69,7 @@ const submit = () => {
               </h1>
       
               <p class="mt-4 leading-relaxed text-gray-500">
-                Lorem ipsum, dolor sit amet consectetur adipisicing elit. Exercitationem aperiam perferendis accusantium repellat ex architecto reiciendis laborum, maxime!
+                Bienvenidos a la plataforma integral de Servicios Estudiantiles: su aliado indispensable para optimizar y potenciar sus actividades académicas.
               </p>
               <form @submit.prevent="submit" class="mt-8 grid grid-cols-6 gap-6">
                 
@@ -109,9 +109,6 @@ const submit = () => {
                   </PrimaryButton> 
       
                   <p class="mt-4 text-sm text-gray-500 sm:mt-0">
-                        <Link v-if="canResetPassword" :href="route('register')" class="text-gray-700 underline">
-                            Registrarse
-                        </Link>
                   </p>
                   <p class="mt-4 text-sm text-gray-500 sm:mt-0">
                         <Link v-if="canResetPassword" :href="route('password.request')" class="text-gray-700 underline">
