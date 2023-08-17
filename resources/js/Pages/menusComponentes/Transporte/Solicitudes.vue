@@ -349,7 +349,10 @@ export default {
       });
 
     },
+    hasPermission(permiso){
+      return this.$page.props.user.roles[0].permissions.some(permission => permission.name === permiso);
     },
+  },
     data(){
         return {
             filters: {
@@ -412,13 +415,26 @@ export default {
 <template>
     <Toolbar class="mb-4">
         <template #start>
-            <Button
+            <Button v-if="hasPermission('registrar_transporte')"
                 label="Nuevo Registro"
                 icon="pi pi-plus"
                 class="p-button-success !mr-2"
                 @click="openNew"
             />
-            <Button
+            <Button v-else disabled
+                label="Nuevo Registro"
+                icon="pi pi-plus"
+                class="p-button-success !mr-2"
+                @click="openNew"
+            />
+            <Button v-if="hasPermission('eliminar_transporte')"
+                label="Eliminar"
+                icon="pi pi-trash"
+                class="p-button-danger !mr-2"
+                @click="confirmDeleteSelected"
+                :disabled="!selectedProducts || !selectedProducts.length"
+            />
+            <Button v-else disabled
                 label="Eliminar"
                 icon="pi pi-trash"
                 class="p-button-danger !mr-2"
@@ -513,9 +529,13 @@ export default {
         <Column field="turno" header="Turno" :sortable="true"></Column>
         <Column :exportable="false" style="min-width: 8rem" class="p-6">
           <template #body="slotProps">
-            <Button icon="pi pi-pencil" class="p-button-rounded p-button-success !mr-2"
+            <Button v-if="hasPermission('editar_transporte')" icon="pi pi-pencil" class="p-button-rounded p-button-success !mr-2"
               @click="editProduct(slotProps.data)" />
-            <Button icon="pi pi-trash" class="p-button-rounded p-button-warning"
+            <Button v-else disabled icon="pi pi-pencil" class="p-button-rounded p-button-success !mr-2"
+              @click="editProduct(slotProps.data)" />
+            <Button v-if="hasPermission('eliminar_transporte')" icon="pi pi-trash" class="p-button-rounded p-button-warning"
+              @click="confirmDeleteProduct(slotProps.data)" />
+            <Button v-else disabled icon="pi pi-trash" class="p-button-rounded p-button-warning"
               @click="confirmDeleteProduct(slotProps.data)" />
           </template>
         </Column>

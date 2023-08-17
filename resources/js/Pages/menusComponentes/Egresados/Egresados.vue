@@ -406,6 +406,9 @@ export default {
       // cada que se abra se resetea el valor del array de datosExcel para que no se repitan los datos
       this.datosExcel = [];
     },
+    hasPermission(permiso){
+      return this.$page.props.user.roles[0].permissions.some(permission => permission.name === permiso);
+    },
   },
   components: {
     AppLayout,
@@ -437,13 +440,26 @@ export default {
   
     <Toolbar class="mb-4">
       <template #start>
-        <Button
+        <Button v-if="hasPermission('registrar_egresados')"
           label="Nuevo Registro"
           icon="pi pi-plus"
           class="p-button-success !mr-2"
           @click="openNew"
         />
-        <Button
+        <Button v-else disabled
+          label="Nuevo Registro"
+          icon="pi pi-plus"
+          class="p-button-success !mr-2"
+          @click="openNew"
+        />
+        <Button v-if="hasPermission('eliminar_egresados')"
+          label="Eliminar"
+          icon="pi pi-trash"
+          class="p-button-danger"
+          @click="confirmDeleteSelected"
+          :disabled="!selectedProducts || !selectedProducts.length"
+        />
+        <Button v-else disabled
           label="Eliminar"
           icon="pi pi-trash"
           class="p-button-danger"
@@ -673,12 +689,22 @@ export default {
           
           <Column :exportable="false" style="min-width: 8rem" class="p-6">
             <template #body="slotProps">
-              <Button
+              <Button v-if="hasPermission('editar_egresados')"
                 icon="pi pi-pencil"
                 class="p-button-rounded p-button-success !mr-2"
                 @click="editProduct(slotProps.data)"
               />
-              <Button
+              <Button v-else disabled
+                icon="pi pi-pencil"
+                class="p-button-rounded p-button-success !mr-2"
+                @click="editProduct(slotProps.data)"
+              />
+              <Button v-if="hasPermission('eliminar_egresados')"
+                icon="pi pi-trash"
+                class="p-button-rounded p-button-warning"
+                @click="confirmDeleteProduct(slotProps.data)"
+              />
+              <Button v-else disabled
                 icon="pi pi-trash"
                 class="p-button-rounded p-button-warning"
                 @click="confirmDeleteProduct(slotProps.data)"

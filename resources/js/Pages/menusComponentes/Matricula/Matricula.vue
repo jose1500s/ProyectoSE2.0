@@ -19,6 +19,7 @@ import Dropdown from "primevue/dropdown";
 import InputNumber from "primevue/inputnumber";
 import axios from "axios";
 import readXlsxFile from "read-excel-file";
+import GraficaIngreso from "./../Ingreso/GraficaIngreso.vue";
 
 export default {
   components: {
@@ -428,7 +429,9 @@ export default {
       });
 
     },
-
+    hasPermission(permiso){
+      return this.$page.props.user.roles[0].permissions.some(permission => permission.name === permiso);
+    },
   },
   mounted() { },
   data() {
@@ -508,8 +511,11 @@ export default {
 <template>
   <Toolbar class="mb-4">
     <template #start>
-      <Button label="Nuevo Registro" icon="pi pi-plus" class="p-button-success !mr-2" @click="openNew" />
-      <Button label="Eliminar" icon="pi pi-trash" class="p-button-danger" @click="confirmDeleteSelected"
+      <Button v-if="hasPermission('registrar_matricula')" label="Nuevo Registro" icon="pi pi-plus" class="p-button-success !mr-2" @click="openNew" />
+      <Button v-else disabled label="Nuevo Registro" icon="pi pi-plus" class="p-button-success !mr-2" @click="openNew" />
+      <Button v-if="hasPermission('eliminar_matricula')" label="Eliminar" icon="pi pi-trash" class="p-button-danger" @click="confirmDeleteSelected"
+        :disabled="!selectedProducts || !selectedProducts.length" />
+      <Button v-else disabled label="Eliminar" icon="pi pi-trash" class="p-button-danger" @click="confirmDeleteSelected"
         :disabled="!selectedProducts || !selectedProducts.length" />
 
       <Button class="!ml-3" icon="pi pi-external-link" label="Exportar Excel" @click="exportCSV($event)" />
@@ -632,9 +638,13 @@ export default {
         <Column field="year" header="Año" :sortable="true"></Column>
         <Column :exportable="false" style="min-width: 8rem" class="p-6">
           <template #body="slotProps">
-            <Button icon="pi pi-pencil" class="p-button-rounded p-button-success !mr-2"
+            <Button v-if="hasPermission('editar_matricula')" icon="pi pi-pencil" class="p-button-rounded p-button-success !mr-2"
               @click="editProduct(slotProps.data)" />
-            <Button icon="pi pi-trash" class="p-button-rounded p-button-warning"
+            <Button v-else disabled icon="pi pi-pencil" class="p-button-rounded p-button-success !mr-2"
+              @click="editProduct(slotProps.data)" />
+            <Button v-if="hasPermission('eliminar_matricula')" icon="pi pi-trash" class="p-button-rounded p-button-warning"
+              @click="confirmDeleteProduct(slotProps.data)" />
+            <Button v-else disabled icon="pi pi-trash" class="p-button-rounded p-button-warning"
               @click="confirmDeleteProduct(slotProps.data)" />
           </template>
         </Column>
