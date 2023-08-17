@@ -36,18 +36,17 @@ class DefaultDataSeeder extends Seeder
         // Se definen y se crean los permisos necesarios
         $data = [
             ["consultar_ingreso","registrar_ingreso","editar_ingreso","eliminar_ingreso"],
+            ["consultar_matricula","registrar_matricula","editar_matricula","eliminar_matricula"],
             ["consultar_bajas","registrar_bajas","editar_bajas","eliminar_bajas"],
             ["consultar_egresados","registrar_egresados","editar_egresados","eliminar_egresados"],
             ["consultar_titulados","registrar_titulados","editar_titulados","eliminar_titulados"],
-            ["consultar_matricula","registrar_matricula","editar_matricula","eliminar_matricula"],
             ["consultar_becas","registrar_becas","editar_becas","eliminar_becas"],
             ["consultar_transporte","registrar_transporte","editar_transporte","eliminar_transporte"],
-            ["consultar_equivalencias","registrar_equivalencias","editar_equivalencias","eliminar_equivalencias"],
             ["consultar_cambio_de_carrera","registrar_cambio_de_carrera","editar_cambio_de_carrera","eliminar_cambio_de_carrera"]
         ];
         
         for($i = 0; $i < count($data); $i++){
-            for($j = 0; $j < count($data); $j++){
+            for($j = 0; $j < count($data[$i]); $j++){
                 Permission::create([
                     "name" => $data[$i][$j]
                 ]);
@@ -56,12 +55,12 @@ class DefaultDataSeeder extends Seeder
 
         // Se obtienen los modulos y permisos
         $modules = Modules::all();
-        $permissions = Modules::all();
+        $permissions = Permission::all();
 
         // Se iteran los IDs de los modulos y permisos para relacionarlos en una tabla
         foreach($modules as $module){
             foreach($permissions as $permission){
-                if(strpos($permission->name, $module->name) == true){
+                if(strpos($permission->name, str_replace(' ', '_', strtolower($module->name)))){
                     Module_Has_Permissions::create([
                         "module_id" => $module->id,
                         "permission_id" => $permission->id
