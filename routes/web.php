@@ -16,6 +16,7 @@ use App\Http\Controllers\BecasController;
 use App\Http\Controllers\Ingreso\admisionGraficasController;
 use App\Http\Controllers\MatriculaController;
 use App\Http\Controllers\WelcomeController;
+use App\Http\Controllers\CambioCarreraController;
 
 
 /*
@@ -37,7 +38,6 @@ Route::get('/', function () {
     }else{
         return Inertia::render('Auth/Login', [
         'canResetPassword' => Route::has('password.request'),
-        'canRegister' => Route::has('register'),
         'laravelVersion' => Application::VERSION,
         'phpVersion' => PHP_VERSION,
     ]);
@@ -76,7 +76,7 @@ Route::middleware([
     Route::get('/transporte', [TransporteController::class, 'transporte'])->name('usuario.transporte');
 
     // Ruta para abrir el menu de cambio de carrera
-    Route::get('/cambio-de-carrera', [main::class, 'cambioDeCarrera'])->name('usuario.cambio_de_carrera');
+    Route::get('/cambio-de-carrera', [CambioCarreraController::class, 'cambioDeCarrera'])->name('usuario.cambio_de_carrera');
 
     // Ruta para abrir el menu de seguro facultativo
     Route::get('/equivalencia', [main::class, 'equivalencia'])->name('usuario.equivalencia');
@@ -107,7 +107,7 @@ Route::middleware([
 
     Route::post('/editar-Matricula/{id}', [MatriculaController::class, 'editarMatricula']);
 
-    Route::post('/importar-excel-matriculas', [MatriculaController::class, 'importarDataExcelMatriculas']);
+    
 
     // ---------- FIN TAB MATRICULA ------------
 
@@ -228,6 +228,19 @@ Route::middleware([
     Route::post('eliminar-ruta', [TransporteController::class, 'eliminarTranspRuta']);
 
     // --------------------------- FIN TRANSPORTE -----------------------
+
+    // --------------------------- CAMBIO CARRERA -----------------------
+
+    Route::post('/registro-cambio-carrera', [CambioCarreraController::class, 'registrarCambioCarrera']);
+
+    Route::post('/editar-cambio-carrera/{id}', [CambioCarreraController::class, 'editarCambioCarrera']);
+
+    Route::post('/eliminar-cambio-carrera/{id}', [CambioCarreraController::class, 'eliminarCambioCarrera']);
+
+    Route::post('/eliminar-cambios-carrera', [CambioCarreraController::class, 'eliminarCambiosCarrera']);
+    
+
+     // --------------------------- FIN CAMBIO CARRERA -----------------------
 
     // --------------------------- BECAS -----------------------
     Route::post('/importar-excel-becas', [BecasController::class, 'importarDataExcelBecas']);
@@ -371,6 +384,10 @@ Route::middleware([
     Route::post('/importar-excel-equivalencias', [IngresoController::class, 'importarDataExcelEquivalencias']);
 
     Route::post('/importar-excel-maestrias', [IngresoController::class, 'importarDataExcelMaestrias']);
+
+    Route::post('/importar-excel-matriculas', [MatriculaController::class, 'importarDataExcelMatriculas']);
+
+    Route::post('/importar-excel-cambio-carrera', [CambioCarreraController::class, 'importarDataExcelCambioCarrera']);
 
     //--------------------Exportar Plantilla Excel--------------------
 

@@ -499,7 +499,7 @@ export default defineComponent({
             ">
           <div class="flex flex-col items-center flex-shrink-0 px-4">
             <Link href="/dashboard" class="px-8 text-left focus:outline-none">
-            <img src="https://visionindustrial.com.mx/wp-content/uploads/2016/08/UPQ-logo.jpg" alt="LogoUPQ" />
+            <img src="https://www.upq.mx/assets/logos/logo.svg" alt="LogoUPQ" />
             </Link>
             <button class="hidden rounded-lg focus:outline-none focus:shadow-outline">
               <svg fill="currentColor" viewBox="0 0 20 20" class="w-6 h-6">
