@@ -6,11 +6,18 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\tb_cambio_carrera;
 use Illuminate\Console\View\Components\Alert;
+use Illuminate\Support\Facades\Auth;
 
 class CambioCarreraController extends Controller
 {
     //Traer todos los registros de la tabla tb_cambio_carrera
     public function cambioDeCarrera(){
+        $roles = Auth::user()->roles;
+        
+        foreach($roles as $rol){
+            $rol->permissions;
+        }
+
         $cambioCarrera = tb_cambio_carrera::all();
         return Inertia::render('menusComponentes/CambioCarrera/TabMenuCC', ['dataCambioCarreras' => $cambioCarrera]);
     }
