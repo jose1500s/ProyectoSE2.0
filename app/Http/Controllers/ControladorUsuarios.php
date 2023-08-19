@@ -114,12 +114,26 @@ class ControladorUsuarios extends Controller
     }
 
     public function eliminarRoles(Request $request){
-        $id = $request->input('id');
+        $id = $request->id;
 
         $rol = Role::whereIn('id', $id);
         $rol->delete();
 
         return redirect()->route('usuario.usuarios');
+    }
+
+    public function verificarRol(Request $request){
+        $id = $request->id;
+
+        $rol = Role::find($id);
+
+        $usuarios_asociados = $rol->users;
+
+        if($usuarios_asociados->isEmpty()){
+            return True;
+        } else {
+            return false;
+        }
     }
 
     public function agregarPermiso(Request $request){
