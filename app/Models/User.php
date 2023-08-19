@@ -21,9 +21,7 @@ class User extends Authenticatable
     use TwoFactorAuthenticatable;
     use HasRoles;
     use HasPermissions;
-
-    protected array $guard_name = ['sanctum','web'];
-
+    
     /**
      * The attributes that are mass assignable.
      *
