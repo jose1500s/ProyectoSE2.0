@@ -138,7 +138,28 @@ export default {
     },
     confirmDeleteProduct(product) {
       this.product = product;
-      this.deleteProductDialog = true;
+
+      const data = {
+        id: this.product.id,
+      }
+
+      axios.post('verificar-Rol', data, {
+        preserveState: true,
+        preserveScroll: true,
+      }).then(response => {
+        //this.mensajeRolVerificado = response.data;
+        if(response.data){
+          this.deleteProductDialog = true;
+        } else {
+            this.product = {};
+            this.$toast.add({
+              severity: "warn",
+              summary: "Advertencia",
+              detail: "No se puede eliminar el rol, ya que tiene un usuario asociado",
+              life: 3000,
+            });
+        }
+      });
     },
     eliminarRol() {
       const data = {
@@ -154,6 +175,7 @@ export default {
             severity: "success",
             summary: "Exitoso",
             detail: "Eliminado exitosamente",
+            life: 3000,
           });
         },
       });

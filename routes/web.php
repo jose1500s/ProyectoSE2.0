@@ -49,7 +49,7 @@ Route::get('/', function () {
 });
 
 Route::middleware([
-    'auth:sanctum',
+    'auth:web',
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
@@ -431,7 +431,8 @@ Route::middleware([
 
     Route::post('/remover-Permiso', [ControladorUsuarios::class, 'removerPermiso']);
 
-    Route::get('/exportar-plantilla-becas', [WelcomeController::class, 'exportExcelBecas']);
+    Route::post('/verificar-Rol', [ControladorUsuarios::class, 'verificarRol']);
 
+    Route::get('/exportar-plantilla-becas', [WelcomeController::class, 'exportExcelBecas']);
 
 });
