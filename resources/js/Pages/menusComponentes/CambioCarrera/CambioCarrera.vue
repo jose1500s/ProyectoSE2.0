@@ -228,23 +228,25 @@ export default {
       // editarl usando el dialog de editar producto
       this.submitted = true; // esto es para que se muestre el mensaje de error en el formulario
       //verifica que no se pueda editar si la matricula ya esta registrada
-
-      for (let i = 0; i < this.dataCambioCarreras.length; i++) {
-        if (
-          this.dataCambioCarreras[i].matricula == this.product.matricula
-        ) {
-          this.$toast.add({
-            severity: "error",
-            summary: "Error",
-            detail: "Ya existe un registro con la matricula",
-            life: 3000,
-          });
-          return false;
+      if (this.Amatricula != this.product.matricula){
+        for (let i = 0; i < this.dataCambioCarreras.length; i++) {
+          if (
+            this.dataCambioCarreras[i].matricula == this.product.matricula
+          ) {
+            this.$toast.add({
+              severity: "error",
+              summary: "Error",
+              detail: "Ya existe un registro con la matricula",
+              life: 3000,
+            });
+            return false;
+          }
         }
       }
 
+
       //verificar que la carrera_actual y la carrera_nueva no sean la misma
-      if (this.product.carrera_actual == this.product.carrera_nueva) {
+      if (this.Ecarrera_actual == this.Ecarrera_nueva) {
         this.$toast.add({
           severity: "error",
           summary: "Error",
@@ -256,15 +258,15 @@ export default {
 
       if (
         this.product.id == 0 ||
-        this.product.periodo == null ||
-        this.product.year == null ||
+        this.Eperiodo == null ||
+        this.Eyear == 0 ||
         this.product.nombre == null ||
         this.product.matricula == null ||
-        this.product.carrera_actual == null ||
-        this.product.carrera_nueva == null ||
-        this.product.dictamen == null ||
+        this.Ecarrera_actual == null ||
+        this.Ecarrera_nueva == null ||
+        this.Edictamen == null ||
         this.product.grupo == null ||
-        this.product.carga_kardex == null
+        this.Ecarga_kardex == null
       ) {
         // si alguno de los campos esta vacio, no enviar el formulario y mostrar un mensaje de error
         this.$toast.add({
@@ -279,13 +281,13 @@ export default {
           id: this.product.id,
           nombres: this.product.nombre,
           matricula: this.product.matricula,
-          carrera_actual: this.product.carrera_actual,
-          carrera_nueva: this.product.carrera_nueva,
-          dictamen: this.product.dictamen,
-          carga_kardex: this.product.carga_kardex,
+          carrera_actual: this.Ecarrera_actual,
+          carrera_nueva: this.Ecarrera_nueva,
+          dictamen: this.Edictamen,
+          carga_kardex: this.Ecarga_kardex,
           grupos: this.product.grupo,
-          periodo: this.product.periodo,
-          year: this.product.year,
+          periodo: this.Eperiodo,
+          year: this.Eyear,
 
         };
         this.$inertia.post(`/editar-cambio-carrera/${this.product.id}`, data, {
@@ -306,6 +308,13 @@ export default {
     },
     editProduct(product) {
       this.product = { ...product }; // esto es para que se muestre los datos del producto en el formulario
+      this.Eperiodo = product.periodo;
+      this.Eyear = product.year;
+      this.Ecarrera_actual = product.carrera_actual;
+      this.Ecarrera_nueva = product.carrera_nueva;
+      this.Edictamen = product.dictamen;
+      this.Ecarga_kardex = product.carga_kardex;
+      this.Amatricula = product.matricula;
       this.editDialog = true;
     },
     confirmDeleteProduct(product) {
@@ -586,6 +595,13 @@ export default {
       file: null,
       fileContent: null,
       selectedProductsForChart: null,
+      Eperiodo: null,
+      Eyear: null,
+      Ecarrera_actual: null,
+      Ecarrera_nueva: null,
+      Edictamen: null,
+      Ecarga_kardex : null,
+      Amatricula: null,
     };
   },
 };
@@ -791,13 +807,13 @@ export default {
 
             <div class="p-field p-col-12 p-md-6">
               <label for="periodo">Periodo</label>
-              <InputText id="name" v-model.trim="product.periodo" required="true" /> 
+              <Dropdown v-model="Eperiodo" :options="periodosLista" optionLabel="name" optionValue="code"
+                placeholder="Periodo" />
             </div>
 
             <div class="p-field p-col-12 p-md-6">
               <label for="year">Año</label>
-              <InputNumber inputId="minmax" v-model="product.year" mode="decimal" :min="0" :max="10000"
-                :showButtons="true" />
+              <Dropdown v-model="Eyear" :options="yearLista" optionLabel="name" optionValue="code" placeholder="Año" />
             </div>
 
             <div class="p-field p-col-12 p-md-6">
@@ -812,17 +828,20 @@ export default {
 
             <div class="p-field p-col-12 p-md-6">
               <label for="carrera_actual">Carrera Actual</label>
-              <InputText id="name" v-model.trim="product.carrera_actual" required="true" />
+              <Dropdown v-model="Ecarrera_actual" :options="carrerasLista" optionLabel="name" optionValue="code"
+                placeholder="Carrera..." />
             </div>
 
             <div class="p-field p-col-12 p-md-6">
               <label for="carrera_nueva">Carrera A la que se cambia</label>
-              <InputText id="name" v-model.trim="product.carrera_nueva" required="true" />
+              <Dropdown v-model="Ecarrera_nueva" :options="carrerasLista" optionLabel="name" optionValue="code"
+                placeholder="Pendiente..." />
             </div>
 
             <div class="p-field p-col-12 p-md-6">
               <label for="dictamen">Dictamen</label>
-              <InputText id="name" v-model.trim="product.dictamen" required="true" />
+              <Dropdown v-model="Edictamen" :options="dictamen_lista" optionLabel="name" optionValue="code"
+                placeholder="Dictamen..." />
             </div>
 
             <div class="p-field p-col-12 p-md-6">
@@ -832,7 +851,8 @@ export default {
 
             <div class="p-field p-col-12 p-md-6">
               <label for="carga_kardex">Carga de kardex</label>
-              <InputText id="name" v-model.trim="product.carga_kardex" required="true" />
+              <Dropdown v-model="Ecarga_kardex" :options="carga_kardex_lista" optionLabel="name" optionValue="code"
+                placeholder="Carga Kardex..." />
             </div>
 
 

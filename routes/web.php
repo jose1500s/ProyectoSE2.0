@@ -235,7 +235,7 @@ Route::middleware([
     
     Route::post('/editar-rutas/{id}', [TransporteController::class, 'editarTranspRutas']);
 
-    Route::post('eliminar-ruta', [TransporteController::class, 'eliminarTranspRuta']);
+    Route::post('/eliminar-ruta', [TransporteController::class, 'eliminarTranspRuta']);
 
     // --------------------------- FIN TRANSPORTE -----------------------
 
@@ -400,6 +400,9 @@ Route::middleware([
 
     Route::post('/importar-excel-cambio-carrera', [CambioCarreraController::class, 'importarDataExcelCambioCarrera']);
 
+    Route::post('/importar-excel-solicitudes', [TransporteController::class, 'importarDataExcelSolicitudes']);
+
+    Route::post('/importar-excel-rutas', [TransporteController::class, 'importarDataExcelRutas']);
     //--------------------Exportar Plantilla Excel--------------------
 
     // -------------------------- Ruta para la gestión de usuarios, roles y permisos ----------------------------

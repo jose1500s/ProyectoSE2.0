@@ -70,6 +70,8 @@ export default defineComponent({
 
           return this.$page.props.user.roles[0];
         } else {
+          //Se desloguea si no tiene roles
+          router.post(route("logout"));
           console.log("No existen roles para este usuario");
         } 
       
