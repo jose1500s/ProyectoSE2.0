@@ -433,6 +433,8 @@ Route::middleware([
 
     Route::post('/verificar-Rol', [ControladorUsuarios::class, 'verificarRol']);
 
+    Route::get('/user/roles-permisos', [ControladorUsuarios::class, 'obtenerRolesPermisos']);
+
     Route::get('/exportar-plantilla-becas', [WelcomeController::class, 'exportExcelBecas']);
 
 });
