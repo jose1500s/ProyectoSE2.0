@@ -135,11 +135,11 @@ export default {
     registrarEquivalencia() {
       this.submitted = true; // esto es para que se muestre el mensaje de error en el formulario
       // validar los campos del formulario, que no esten vacios y si estan mandar un mensaje y no enviar el formulario, los campos son: carrerasModel, aspirantes, examinados, noAdmitidos y selectedPeriodo
-      if(this.hombres == 0 && this.mujeres == 0){
+      if (this.hombres == 0 && this.mujeres == 0) {
         this.$toast.add({
           severity: "error",
           summary: "Error",
-          detail: "No se puede editar un reingreso con 0 hombres y 0 mujeres, ingrese un numero de solicitudes valido en hombres y/o mujeres",
+          detail: "No se puede registrar un reingreso con 0 hombres y 0 mujeres, ingrese un numero de solicitudes valido en hombres y/o mujeres",
           life: 3000,
         });
         return false;
@@ -165,7 +165,7 @@ export default {
           aspirantes: this.aspirantes,
           examinados: this.examinados,
           hombres: this.hombres,
-          mujeres: this.mujeres,          
+          mujeres: this.mujeres,
           noAdmitidos: this.noAdmitidos,
           periodos: this.periodos,
         };
@@ -188,7 +188,7 @@ export default {
       // editarl usando el dialog de editar producto
       this.submitted = true; // esto es para que se muestre el mensaje de error en el formulario
       // validar los campos del formulario, que no esten vacios y si estan mandar un mensaje y no enviar el formulario, los campos son: carrerasModel, aspirantes, examinados, noAdmitidos y selectedPeriodo
-      if(this.product.hombres == 0 && this.product.mujeres == 0){
+      if (this.product.hombres == 0 && this.product.mujeres == 0) {
         this.$toast.add({
           severity: "error",
           summary: "Error",
@@ -199,11 +199,11 @@ export default {
       }
       if (
         this.product.id == 0 ||
-        this.product.carrera == null ||
+        this.Ecarrera == null ||
         this.product.aspirantes == 0 ||
         this.product.examinados == 0 ||
         this.product.no_admitidos == 0 ||
-        this.product.periodo == null
+        this.Eperiodo == null
       ) {
         // si alguno de los campos esta vacio, no enviar el formulario y mostrar un mensaje de error
         this.$toast.add({
@@ -216,13 +216,13 @@ export default {
       } else {
         const data = {
           id: this.product.id,
-          carrera: this.product.carrera,
+          carrera: this.Ecarrera,
           aspirantes: this.product.aspirantes,
           examinados: this.product.examinados,
           hombres: this.product.hombres,
-          mujeres: this.product.mujeres,          
+          mujeres: this.product.mujeres,
           no_admitidos: this.product.no_admitidos,
-          periodo: this.product.periodo,
+          periodo: this.Eperiodo,
         };
         this.$inertia.post(`/editar-Equivalencia/${this.product.id}`, data, {
           preserveState: true,
@@ -241,6 +241,8 @@ export default {
     },
     editProduct(product) {
       this.product = { ...product }; // esto es para que se muestre los datos del producto en el formulario
+      this.Ecarrera = product.carrera;
+      this.Eperiodo = product.periodo;
       this.editDialog = true;
     },
     confirmDeleteProduct(product) {
@@ -269,7 +271,7 @@ export default {
     deleteSelectedProducts() {
       // tomar el id de todos los productos seleccionados
       const data = {
-        id: this.selectedProducts.map((item) => item.id), 
+        id: this.selectedProducts.map((item) => item.id),
       };
       this.$inertia.post(`/eliminar-Equivalencias/${this.product.id}`, data, {
         preserveState: true,
@@ -289,7 +291,7 @@ export default {
     confirmDeleteSelected() {
       this.deleteProductsDialog = true;
     },
-    hasPermission(permiso){
+    hasPermission(permiso) {
       return this.$page.props.user.roles[0].permissions.some(permission => permission.name === permiso);
     },
     subirExcel() {
@@ -392,8 +394,8 @@ export default {
       ],
       periodosLista: [
         { name: "SEP-DIC " + new Date().getFullYear(), code: "SEP-DIC" + new Date().getFullYear() },
-        { name: "ENE-ABR " + new Date().getFullYear(), code: "ENE-MAR" + new Date().getFullYear() },
-        { name: "MAY-AGO " + new Date().getFullYear(), code: "ABR-JUN" + new Date().getFullYear() },
+        { name: "ENE-ABR " + new Date().getFullYear(), code: "ENE-ABR" + new Date().getFullYear() },
+        { name: "MAY-AGO " + new Date().getFullYear(), code: "MAY-AGO" + new Date().getFullYear() },
       ],
       carreras: null,
       periodos: null,
@@ -422,8 +424,10 @@ export default {
       ],
       importExcelDialog: false,
       wrongFormatExcel: false,
+      Ecarrera: null,
+      Eperiodo: null,
     };
-    
+
   },
 };
 </script>
@@ -431,10 +435,11 @@ export default {
 <template>
   <Toolbar class="mb-4">
     <template #start>
-      <Button v-if="hasPermission('registrar_ingreso')" label="Nuevo Registro" icon="pi pi-plus" class="p-button-success !mr-2" @click="openNew" />
+      <Button v-if="hasPermission('registrar_ingreso')" label="Nuevo Registro" icon="pi pi-plus"
+        class="p-button-success !mr-2" @click="openNew" />
       <Button v-else disabled label="Nuevo Registro" icon="pi pi-plus" class="p-button-success !mr-2" @click="openNew" />
-      <Button v-if="hasPermission('eliminar_ingreso')" label="Eliminar" icon="pi pi-trash" class="p-button-danger" @click="confirmDeleteSelected"
-        :disabled="!selectedProducts || !selectedProducts.length" />
+      <Button v-if="hasPermission('eliminar_ingreso')" label="Eliminar" icon="pi pi-trash" class="p-button-danger"
+        @click="confirmDeleteSelected" :disabled="!selectedProducts || !selectedProducts.length" />
       <Button v-else disabled label="Eliminar" icon="pi pi-trash" class="p-button-danger" @click="confirmDeleteSelected"
         :disabled="!selectedProducts || !selectedProducts.length" />
       <Button class="!ml-3" icon="pi pi-external-link" label="Exportar Excel" @click="exportCSV($event)" />
@@ -548,9 +553,9 @@ export default {
         </div>
       </div>
 
-      <DataTable exportFilename="Equivalencia" :value="equivalencias" :paginator="true" class="p-datatable-customers" :rows="7" ref="dt"
-        v-model:filters="filters" v-model:selection="selectedProducts" :emptyMessage="noDataMessage" stripedRows
-        sortMode="multiple" removableSort>
+      <DataTable exportFilename="Equivalencia" :value="equivalencias" :paginator="true" class="p-datatable-customers"
+        :rows="7" ref="dt" v-model:filters="filters" v-model:selection="selectedProducts" :emptyMessage="noDataMessage"
+        stripedRows sortMode="multiple" removableSort>
         <Column selectionMode="multiple" style="width: 3rem" :exportable="false"></Column>
 
         <Column field="id" header="ID" :sortable="true" hidden></Column>
@@ -564,8 +569,8 @@ export default {
         <Column field="periodo" header="Periodo" :sortable="true"></Column>
         <Column :exportable="false" style="min-width: 8rem" class="p-6">
           <template #body="slotProps">
-            <Button v-if="hasPermission('editar_ingreso')" icon="pi pi-pencil" class="p-button-rounded p-button-success !mr-2"
-              @click="editProduct(slotProps.data)" />
+            <Button v-if="hasPermission('editar_ingreso')" icon="pi pi-pencil"
+              class="p-button-rounded p-button-success !mr-2" @click="editProduct(slotProps.data)" />
             <Button v-else disabled icon="pi pi-pencil" class="p-button-rounded p-button-success !mr-2"
               @click="editProduct(slotProps.data)" />
             <Button v-if="hasPermission('eliminar_ingreso')" icon="pi pi-trash" class="p-button-rounded p-button-warning"
@@ -601,11 +606,12 @@ export default {
         :style="{ width: '25vw' }" :modal="true" :closable="true" :dismissableMask="false">
         <div class="p-fluid p-formgrid p-grid">
           <form @submit.prevent="editarEquivalencia">
-            <InputText id="id" v-model.trim="product.id" hidden/>
+            <InputText id="id" v-model.trim="product.id" hidden />
 
             <div class="p-field p-col-12 p-md-6">
               <label for="carrera">Carrera</label>
-              <InputText id="name" v-model.trim="product.carrera" />
+              <Dropdown v-model="Ecarrera" :options="carrerasLista" optionLabel="name" optionValue="code" :filter="true"
+                placeholder="Carrera..." class="!mt-3" />
             </div>
             <div class="p-field p-col-12 p-md-6">
               <label for="aspirantes">Aspirantes</label>
@@ -615,7 +621,7 @@ export default {
               <label for="examinados">Examinados</label>
               <InputText inputId="minmax" v-model.trim="product.examinados" mode="decimal" :min="0" :max="10000"
                 :showButtons="true" />
-            </div>            
+            </div>
             <div class="p-field p-col-12 p-md-6">
               <label for="hombres">Hombres</label>
               <InputText inputId="minmax" v-model.trim="product.hombres" mode="decimal" :min="0" :max="10000"
@@ -633,7 +639,8 @@ export default {
             </div>
             <div class="p-field p-col-12 p-md-6">
               <label for="periodo">Periodo</label>
-              <InputText id="name" v-model.trim="product.periodo" required="true" />
+              <Dropdown v-model="Eperiodo" :options="periodosLista" optionLabel="name" optionValue="code"
+                placeholder="Periodo" class="!mt-3" />
             </div>
             <Button type="submit" label="Guardar" icon="pi pi-check" class="!mt-3" />
           </form>
@@ -674,17 +681,19 @@ export default {
 .p-multiselect-label-container {
   max-width: 170px;
 }
+
 .p-dialog-footer {
   display: flex;
   justify-content: center;
   align-items: center;
 }
+
 div#contenedorGrafica canvas {
   width: 100% !important;
   height: auto !important;
 }
+
 #btnRegisrar {
   margin-top: 1.5rem;
   font-size: 1.1rem;
-}
-</style>
+}</style>

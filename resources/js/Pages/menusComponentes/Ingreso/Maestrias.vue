@@ -140,7 +140,7 @@ export default {
         this.$toast.add({
           severity: "error",
           summary: "Error",
-          detail: "No se puede editar un reingreso con 0 hombres y 0 mujeres, ingrese un numero de solicitudes valido en hombres y/o mujeres",
+          detail: "No se puede registrar un reingreso con 0 hombres y 0 mujeres, ingrese un numero de solicitudes valido en hombres y/o mujeres",
           life: 3000,
         });
         return false;
@@ -200,11 +200,11 @@ export default {
       }
       if (
         this.product.id == 0 ||
-        this.product.carrera == null ||
+        this.Ecarrera == null ||
         this.product.aspirantes == 0 ||
         this.product.examinados == 0 ||
         this.product.no_admitidos == 0 ||
-        this.product.periodo == null
+        this.Eperiodo == null
       ) {
         // si alguno de los campos esta vacio, no enviar el formulario y mostrar un mensaje de error
         this.$toast.add({
@@ -217,13 +217,13 @@ export default {
       } else {
         const data = {
           id: this.product.id,
-          carrera: this.product.carrera,
+          carrera: this.Ecarrera,
           aspirantes: this.product.aspirantes,
           examinados: this.product.examinados,
           hombres: this.product.hombres,
           mujeres: this.product.mujeres,
           no_admitidos: this.product.no_admitidos,
-          periodo: this.product.periodo,
+          periodo: this.Eperiodo,
         };
         this.$inertia.post(`/editar-Maestria/${this.product.id}`, data, {
           preserveState: true,
@@ -242,6 +242,8 @@ export default {
     },
     editProduct(product) {
       this.product = { ...product }; // esto es para que se muestre los datos del producto en el formulario
+      this.Ecarrera = product.carrera;
+      this.Eperiodo = product.periodo;
       this.editDialog = true;
     },
     confirmDeleteProduct(product) {
@@ -393,8 +395,8 @@ export default {
       ],
       periodosLista: [
         { name: "SEP-DIC " + new Date().getFullYear(), code: "SEP-DIC" + new Date().getFullYear() },
-        { name: "ENE-ABR " + new Date().getFullYear(), code: "ENE-MAR" + new Date().getFullYear() },
-        { name: "MAY-AGO " + new Date().getFullYear(), code: "ABR-JUN" + new Date().getFullYear() },
+        { name: "ENE-ABR " + new Date().getFullYear(), code: "ENE-ABR" + new Date().getFullYear() },
+        { name: "MAY-AGO " + new Date().getFullYear(), code: "MAY-AGO" + new Date().getFullYear() },
       ],
       carreras: null,
       periodos: null,
@@ -423,6 +425,8 @@ export default {
       ],
       importExcelDialog: false,
       wrongFormatExcel: false,
+      Ecarrera: null,
+      Eperiodo: null,
     };
   },
 };
@@ -606,7 +610,8 @@ export default {
 
             <div class="p-field p-col-12 p-md-6">
               <label for="carrera">Carrera</label>
-              <InputText id="name" v-model.trim="product.carrera" />
+              <Dropdown v-model="Ecarrera" :options="carrerasLista" optionLabel="name" optionValue="code" :filter="true"
+                placeholder="Carrera..." />
             </div>
             <div class="p-field p-col-12 p-md-6">
               <label for="aspirantes">Aspirantes</label>
@@ -634,7 +639,8 @@ export default {
             </div>
             <div class="p-field p-col-12 p-md-6">
               <label for="periodo">Periodo</label>
-              <InputText id="name" v-model.trim="product.periodo" required="true" />
+              <Dropdown v-model="Eperiodo" :options="periodosLista" optionLabel="name" optionValue="code"
+                placeholder="Periodo" />
             </div>
             <Button type="submit" label="Guardar" icon="pi pi-check" class="!mt-3" />
           </form>

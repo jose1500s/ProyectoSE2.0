@@ -446,27 +446,27 @@ export default defineComponent({
 
             <li v-if="this.RolUsuario.name == 'Administrador'">
                   <Link class="
-                      inline-flex
-                      items-center
-                      w-full
-                      px-4
-                      py-2
-                      mt-1
-                      text-base text-gray-900
-                      transition
-                      duration-500
-                      ease-in-out
-                      transform
-                      rounded-lg
-                      bg-gray-50
-                      hover:bg-gray-200
-                      focus:shadow-outline
-                      hover:cursor-pointer
+                  inline-flex
+                  items-center
+                  w-full
+                  px-4
+                  py-2
+                  mt-1
+                  text-base text-gray-900
+                  transition
+                  duration-500
+                  ease-in-out
+                  transform
+                  rounded-lg
+                  bg-gray-50
+                  hover:bg-gray-200
+                  focus:shadow-outline
+                  hover:cursor-pointer
                     " white="" :href="route('usuario.usuarios')">
                   <!-- :href="route('posts.index')" :active="route().current('post.index')" -->
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="" />
-                 </svg>
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-6 h-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14s2-2.5 2-4a2 2 0 00-4 0c0 1.5 2 4 2 4zM2 12s3-3.5 3-6a3 3 0 016 0c0 2.5 3 6 3 6M18 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  </svg>
                   <span class="ml-4"> Usuarios</span>
                   </Link>
                 </li>
@@ -823,9 +823,9 @@ export default defineComponent({
                       hover:cursor-pointer
                     " white="" :href="route('usuario.usuarios')">
                   <!-- :href="route('posts.index')" :active="route().current('post.index')" -->
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="" />
-                 </svg>
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-6 h-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14s2-2.5 2-4a2 2 0 00-4 0c0 1.5 2 4 2 4zM2 12s3-3.5 3-6a3 3 0 016 0c0 2.5 3 6 3 6M18 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  </svg>
                   <span class="ml-4"> Usuarios</span>
                   </Link>
                 </li>

@@ -154,6 +154,10 @@ export default {
     },
     editProduct(product) {
       this.product = { ...product }; // esto es para que se muestre los datos del producto en el formulario
+      this.Ecarrera = product.carrera;
+      this.Ecuatrimestre = product.cuatrimestre;
+      this.Ebajas = product.tipo_baja;
+      this.Eperiodo = product.periodo;
       this.editDialog = true;
     },
     confirmDeleteProduct(product) {
@@ -173,7 +177,7 @@ export default {
     },
     registrarRIngreso() {
       this.submitted = true;
-      if(this.RIhombres == 0 && this.RImujeres == 0){
+      if (this.RIhombres == 0 && this.RImujeres == 0) {
         this.$toast.add({
           severity: "error",
           summary: "Error",
@@ -197,7 +201,7 @@ export default {
           life: 3000,
         });
         return false;
-      } else{
+      } else {
         const data = {
           carrera: this.RIcarrera,
           cuatrimestre: this.RIcuatrimestre,
@@ -224,7 +228,7 @@ export default {
     },
     editarRIngreso() {
       this.submitted = true;
-      if(this.product.hombres == 0 && this.product.mujeres == 0){
+      if (this.product.hombres == 0 && this.product.mujeres == 0) {
         this.$toast.add({
           severity: "error",
           summary: "Error",
@@ -235,11 +239,11 @@ export default {
       }
       if (
         this.product.id == null ||
-        this.product.carrera == null ||
-        this.product.cuatrimestre == null ||
+        this.Ecarrera == null ||
+        this.Ecuatrimestre == null ||
         this.product.generacion == 0 ||
-        this.product.tipo_baja == null ||
-        this.product.periodo == null 
+        this.Ebajas == null ||
+        this.Eperiodo == null
 
       ) {
         // si alguno de los campos esta vacio, no enviar el formulario y mostrar un mensaje de error
@@ -253,13 +257,13 @@ export default {
       } else {
         const data = {
           id: this.product.id,
-          carrera: this.product.carrera,
-          cuatrimestre: this.product.cuatrimestre,
+          carrera: this.Ecarrera,
+          cuatrimestre: this.Ecuatrimestre,
           hombres: this.product.hombres,
           mujeres: this.product.mujeres,
           generacion: this.product.generacion,
-          bajas: this.product.tipo_baja,
-          periodo: this.product.periodo,
+          bajas: this.Ebajas,
+          periodo: this.Eperiodo,
 
         };
         this.$inertia.post(`/editar-RIngresos/${this.product.id}`, data, {
@@ -318,7 +322,7 @@ export default {
         },
       });
     },
-    hasPermission(permiso){
+    hasPermission(permiso) {
       return this.$page.props.user.roles[0].permissions.some(permission => permission.name === permiso);
     },
     subirExcel() {
@@ -425,11 +429,6 @@ export default {
         { name: "Masculino", code: "Masculino" },
         { name: "Femenino", code: "Femenino" },
       ],
-      periodosLista: [
-        { name: "SEP-DIC " + new Date().getFullYear(), code: "SEP-DIC" + new Date().getFullYear() },
-        { name: "ENE-ABR " + new Date().getFullYear(), code: "ENE-MAR" + new Date().getFullYear() },
-        { name: "MAY-AGO " + new Date().getFullYear(), code: "ABR-JUN" + new Date().getFullYear() },
-      ],
       procesosLista: [
         { name: "1er Proceso", code: "1er Proceso" },
         { name: "2do Proceso", code: "2do Proceso" },
@@ -437,8 +436,8 @@ export default {
       ],
       periodosLista: [
         { name: "SEP-DIC " + new Date().getFullYear(), code: "SEP-DIC" + new Date().getFullYear() },
-        { name: "ENE-ABR " + new Date().getFullYear(), code: "ENE-MAR" + new Date().getFullYear() },
-        { name: "MAY-AGO " + new Date().getFullYear(), code: "ABR-JUN" + new Date().getFullYear() },
+        { name: "ENE-ABR " + new Date().getFullYear(), code: "ENE-ABR" + new Date().getFullYear() },
+        { name: "MAY-AGO " + new Date().getFullYear(), code: "MAY-AGO" + new Date().getFullYear() },
       ],
       cuatrimestresLista: [
         { name: 1, code: 1 },
@@ -468,6 +467,10 @@ export default {
       RIperiodo: null,
       RIhombres: 0,
       RImujeres: 0,
+      Ecarrera: null,
+      Ecuatrimestre: null,
+      Ebajas: null,
+      Eperiodo: null,
       editDialog: false,
       deleteProductDialog: false,
       selectedProducts: null,
@@ -494,10 +497,11 @@ export default {
   <!-- new button -->
   <Toolbar class="mb-4">
     <template #start>
-      <Button v-if="hasPermission('registrar_ingreso')" label="Nuevo Registro" icon="pi pi-plus" class="p-button-success !mr-2" @click="openNew" />
+      <Button v-if="hasPermission('registrar_ingreso')" label="Nuevo Registro" icon="pi pi-plus"
+        class="p-button-success !mr-2" @click="openNew" />
       <Button v-else disabled label="Nuevo Registro" icon="pi pi-plus" class="p-button-success !mr-2" @click="openNew" />
-      <Button v-if="hasPermission('eliminar_ingreso')" label="Eliminar" icon="pi pi-trash" class="p-button-danger" @click="confirmDeleteSelected"
-        :disabled="!selectedProducts || !selectedProducts.length" />
+      <Button v-if="hasPermission('eliminar_ingreso')" label="Eliminar" icon="pi pi-trash" class="p-button-danger"
+        @click="confirmDeleteSelected" :disabled="!selectedProducts || !selectedProducts.length" />
       <Button v-else disabled label="Eliminar" icon="pi pi-trash" class="p-button-danger" @click="confirmDeleteSelected"
         :disabled="!selectedProducts || !selectedProducts.length" />
 
@@ -576,8 +580,8 @@ export default {
         <Column field="periodo" header="Periodo" :sortable="true"></Column>
         <Column :exportable="false" style="min-width: 8rem" class="p-6">
           <template #body="slotProps">
-            <Button v-if="hasPermission('editar_ingreso')" icon="pi pi-pencil" class="p-button-rounded p-button-success !mr-2"
-              @click="editProduct(slotProps.data)" />
+            <Button v-if="hasPermission('editar_ingreso')" icon="pi pi-pencil"
+              class="p-button-rounded p-button-success !mr-2" @click="editProduct(slotProps.data)" />
             <Button v-else disabled icon="pi pi-pencil" class="p-button-rounded p-button-success !mr-2"
               @click="editProduct(slotProps.data)" />
             <Button v-if="hasPermission('eliminar_ingreso')" icon="pi pi-trash" class="p-button-rounded p-button-warning"
@@ -614,24 +618,26 @@ export default {
           <form @submit.prevent="registrarRIngreso">
             <div class="field col-12 md:col-3 !mt-3">
               <label for="minmax">Carrera</label>
-            <Dropdown v-model="RIcarrera" :options="carrerasLista" optionLabel="name" optionValue="code" :filter="true"
-              placeholder="Carrera..." class="!mt-3" />
+              <Dropdown v-model="RIcarrera" :options="carrerasLista" optionLabel="name" optionValue="code" :filter="true"
+                placeholder="Carrera..." class="!mt-3" />
             </div>
 
             <div class="field col-12 md:col-3 !mt-3">
               <label for="minmax">Cuatrimestre</label>
-            <Dropdown v-model="RIcuatrimestre" :options="cuatrimestresLista" optionLabel="name" optionValue="code"
-              placeholder="Cuatrimestre..." class="!mt-3" />
+              <Dropdown v-model="RIcuatrimestre" :options="cuatrimestresLista" optionLabel="name" optionValue="code"
+                placeholder="Cuatrimestre..." class="!mt-3" />
             </div>
-            
+
             <div class="field col-12 md:col-3">
               <label for="minmax">Hombres</label>
-              <InputNumber inputId="minmax" v-model="RIhombres" mode="decimal" :min="0" :max="10000" :showButtons="true" />
+              <InputNumber inputId="minmax" v-model="RIhombres" mode="decimal" :min="0" :max="10000"
+                :showButtons="true" />
             </div>
 
             <div class="field col-12 md:col-3">
               <label for="minmax">Mujeres</label>
-              <InputNumber inputId="minmax" v-model="RImujeres" mode="decimal" :min="0" :max="10000" :showButtons="true" />
+              <InputNumber inputId="minmax" v-model="RImujeres" mode="decimal" :min="0" :max="10000"
+                :showButtons="true" />
             </div>
 
 
@@ -643,14 +649,14 @@ export default {
 
             <div class="field col-12 md:col-3 !mt-3">
               <label for="minmax">Tipo de baja</label>
-            <Dropdown v-model="RIbajas" :options="listaBajas" optionLabel="name" optionValue="code"
-              placeholder="Tipo de baja..." class="!mt-3" />
+              <Dropdown v-model="RIbajas" :options="listaBajas" optionLabel="name" optionValue="code"
+                placeholder="Tipo de baja..." class="!mt-3" />
             </div>
 
             <div class="field col-12 md:col-3 !mt-3">
               <label for="minmax">Periodo</label>
-            <Dropdown v-model="RIperiodo" :options="periodosLista" optionLabel="name" optionValue="code"
-              placeholder="Periodo..." class="!mt-3" />
+              <Dropdown v-model="RIperiodo" :options="periodosLista" optionLabel="name" optionValue="code"
+                placeholder="Periodo..." class="!mt-3" />
             </div>
             <Button type="submit" id="btnRegisrar"
               class="flex items-center justify-center space-x-2 rounded-md border-2 border-blue-500 px-4 py-2 font-medium text-blue-600 transition hover:bg-blue-500 hover:text-white">
@@ -687,12 +693,14 @@ export default {
 
             <div class="p-field p-col-12 p-md-12">
               <label for="carrera">Carrera</label>
-              <InputText id="carrera" v-model="product.carrera" />
+              <Dropdown v-model="Ecarrera" :options="carrerasLista" optionLabel="name" optionValue="code" :filter="true"
+                placeholder="Carrera..." class="!mt-3" />
             </div>
 
             <div class="p-field p-col-12 p-md-12">
               <label for="carrera">Cuatrimestre</label>
-              <InputText id="cuatrimestre" v-model="product.cuatrimestre" />
+              <Dropdown v-model="Ecuatrimestre" :options="cuatrimestresLista" optionLabel="name" optionValue="code"
+                placeholder="Cuatrimestre..." class="!mt-3" />
             </div>
 
             <div class="p-field p-col-12 p-md-12">
@@ -712,12 +720,14 @@ export default {
 
             <div class="p-field p-col-12 p-md-12">
               <label for="carrera">Tipo de Baja</label>
-              <InputText id="tipo_baja" v-model="product.tipo_baja" />
+              <Dropdown v-model="Ebajas" :options="listaBajas" optionLabel="name" optionValue="code"
+                placeholder="Tipo de baja..." class="!mt-3" />
             </div>
 
             <div class="p-field p-col-12 p-md-12">
               <label for="carrera">Periodo</label>
-              <InputText id="periodo" v-model="product.periodo" />
+              <Dropdown v-model="Eperiodo" :options="periodosLista" optionLabel="name" optionValue="code"
+                placeholder="Periodo..." class="!mt-3" />
             </div>
 
             <Button type="submit" label="Guardar" icon="pi pi-check" class="!mt-3" />
