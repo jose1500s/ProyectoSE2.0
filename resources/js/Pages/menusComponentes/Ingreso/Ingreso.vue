@@ -133,7 +133,7 @@ export default {
     registrarAdmision() {
       this.submitted = true; // esto es para que se muestre el mensaje de error en el formulario
       // validar los campos del formulario, que no esten vacios y si estan mandar un mensaje y no enviar el formulario, los campos son: carrerasModel, aspirantes, examinados, hombres, mujeres, noAdmitidos y selectedPeriodo
-      if(this.hombres == 0 && this.mujeres == 0){
+      if (this.hombres == 0 && this.mujeres == 0) {
         this.$toast.add({
           severity: "error",
           summary: "Error",
@@ -186,7 +186,7 @@ export default {
       // editarl usando el dialog de editar producto
       this.submitted = true; // esto es para que se muestre el mensaje de error en el formulario
       // validar los campos del formulario, que no esten vacios y si estan mandar un mensaje y no enviar el formulario, los campos son: carrerasModel, aspirantes, examinados, hombres, mujeres, noAdmitidos y selectedPeriodo
-      if(this.product.hombres == 0 && this.product.mujeres == 0){
+      if (this.product.hombres == 0 && this.product.mujeres == 0) {
         this.$toast.add({
           severity: "error",
           summary: "Error",
@@ -214,13 +214,13 @@ export default {
       } else {
         const data = {
           id: this.product.id,
-          carrera: this.product.carrera,
+          carrera: this.Ecarrera,
           aspirantes: this.product.aspirantes,
           examinados: this.product.examinados,
           hombres: this.product.hombres,
           mujeres: this.product.mujeres,
           no_admitidos: this.product.no_admitidos,
-          periodo: this.product.periodo,
+          periodo: this.Eperiodo,
         };
         this.$inertia.post(`/editar-Admision/${this.product.id}`, data, {
           preserveState: true,
@@ -239,6 +239,8 @@ export default {
     },
     editProduct(product) {
       this.product = { ...product }; // esto es para que se muestre los datos del producto en el formulario
+      this.Ecarrera = this.product.carrera;
+      this.Eperiodo = this.product.periodo;
       this.editDialog = true;
     },
     confirmDeleteProduct(product) {
@@ -286,7 +288,7 @@ export default {
     confirmDeleteSelected() {
       this.deleteProductsDialog = true;
     },
-    hasPermission(permiso){
+    hasPermission(permiso) {
       return this.$page.props.user.roles[0].permissions.some(permission => permission.name === permiso);
     },
     openImportExcel() {
@@ -417,8 +419,8 @@ export default {
 
       periodosLista: [
         { name: "SEP-DIC " + new Date().getFullYear(), code: "SEP-DIC" + new Date().getFullYear() },
-        { name: "ENE-ABR " + new Date().getFullYear(), code: "ENE-MAR" + new Date().getFullYear() },
-        { name: "MAY-AGO " + new Date().getFullYear(), code: "ABR-JUN" + new Date().getFullYear() },
+        { name: "ENE-ABR " + new Date().getFullYear(), code: "ENE-ABR" + new Date().getFullYear() },
+        { name: "MAY-AGO " + new Date().getFullYear(), code: "MAY-AGO" + new Date().getFullYear() },
       ],
       columnasPreviewExcel: [
         { name: "ID", code: "0" },
@@ -448,6 +450,8 @@ export default {
       file: null,
       fileContent: null,
       selectedProductsForChart: null,
+      Ecarrera: null,
+      Eperiodo: null,
     };
   },
 };
@@ -456,10 +460,11 @@ export default {
 <template>
   <Toolbar class="mb-4">
     <template #start>
-      <Button v-if="hasPermission('registrar_ingreso')" label="Nuevo Registro" icon="pi pi-plus" class="p-button-success !mr-2" @click="openNew" />
+      <Button v-if="hasPermission('registrar_ingreso')" label="Nuevo Registro" icon="pi pi-plus"
+        class="p-button-success !mr-2" @click="openNew" />
       <Button v-else disabled label="Nuevo Registro" icon="pi pi-plus" class="p-button-success !mr-2" @click="openNew" />
-      <Button v-if="hasPermission('eliminar_ingreso')" label="Eliminar" icon="pi pi-trash" class="p-button-danger" @click="confirmDeleteSelected"
-        :disabled="!selectedProducts || !selectedProducts.length" />
+      <Button v-if="hasPermission('eliminar_ingreso')" label="Eliminar" icon="pi pi-trash" class="p-button-danger"
+        @click="confirmDeleteSelected" :disabled="!selectedProducts || !selectedProducts.length" />
       <Button v-else disabled label="Eliminar" icon="pi pi-trash" class="p-button-danger" @click="confirmDeleteSelected"
         :disabled="!selectedProducts || !selectedProducts.length" />
 
@@ -576,7 +581,7 @@ export default {
 
           <Button icon="pi pi-times" label="Limpiar" @click="limpiarFiltros()" />
         </div>
-      </div>  
+      </div>
 
       <DataTable exportFilename="Admisiones" :value="ingresos" :paginator="true" class="p-datatable-customers" :rows="7"
         ref="dt" v-model:filters="filters" v-model:selection="selectedProducts" :emptyMessage="noDataMessage" stripedRows
@@ -595,8 +600,8 @@ export default {
         <Column field="periodo" header="Periodo" :sortable="true"></Column>
         <Column :exportable="false" style="min-width: 8rem" class="p-6">
           <template #body="slotProps">
-            <Button v-if="hasPermission('editar_ingreso')" icon="pi pi-pencil" class="p-button-rounded p-button-success !mr-2"
-              @click="editProduct(slotProps.data)" />
+            <Button v-if="hasPermission('editar_ingreso')" icon="pi pi-pencil"
+              class="p-button-rounded p-button-success !mr-2" @click="editProduct(slotProps.data)" />
             <Button v-else disabled icon="pi pi-pencil" class="p-button-rounded p-button-success !mr-2"
               @click="editProduct(slotProps.data)" />
             <Button v-if="hasPermission('eliminar_ingreso')" icon="pi pi-trash" class="p-button-rounded p-button-warning"
@@ -638,7 +643,8 @@ export default {
 
             <div class="p-field p-col-12 p-md-6">
               <label for="carrera">Carrera</label>
-              <InputText id="name" v-model.trim="product.carrera" />
+              <Dropdown v-model="Ecarrera" :options="carrerasLista" optionLabel="name" optionValue="code"
+                placeholder="Carrera..." />
             </div>
             <div class="p-field p-col-12 p-md-6">
               <label for="aspirantes">Aspirantes</label>
@@ -669,9 +675,10 @@ export default {
             </div>
             <div class="p-field p-col-12 p-md-6">
               <label for="periodo">Periodo</label>
-              <InputText id="name" v-model.trim="product.periodo" required="true"/>
+              <Dropdown v-model="Eperiodo" :options="periodosLista" optionLabel="name" optionValue="code"
+                placeholder="Periodo" />
             </div>
-            
+
             <Button type="submit" label="Guardar" icon="pi pi-check" class="!mt-3" />
           </form>
         </div>

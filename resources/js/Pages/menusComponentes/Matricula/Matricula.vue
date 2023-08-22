@@ -205,7 +205,7 @@ export default {
       for (let i = 0; i < this.dataMatriculas.length; i++) {
         if (
           this.dataMatriculas[i].carrera == this.product.carrera &&
-          this.dataMatriculas[i].periodo == this.product.periodo &&
+          this.dataMatriculas[i].periodo == this.Eperiodo &&
           this.dataMatriculas[i].year == this.product.year &&
           this.dataMatriculas[i].id != this.product.id
         ) {
@@ -221,7 +221,7 @@ export default {
       if (
         this.product.id == 0 ||
         this.product.matricula == 0 ||
-        this.product.periodo == null ||
+        this.Eperiodo == null ||
         this.product.year == 0
       ) {
         // si alguno de los campos esta vacio, no enviar el formulario y mostrar un mensaje de error
@@ -236,7 +236,7 @@ export default {
         const data = {
           id: this.product.id,
           matriculas: this.product.matricula,
-          periodo: this.product.periodo,
+          periodo: this.Eperiodo,
           year: this.product.year,
         };
         this.$inertia.post(`/editar-Matricula/${this.product.id}`, data, {
@@ -257,6 +257,7 @@ export default {
     },
     editProduct(product) {
       this.product = { ...product }; // esto es para que se muestre los datos del producto en el formulario
+      this.Eperiodo = product.periodo;
       this.editDialog = true;
     },
     confirmDeleteProduct(product) {
@@ -429,7 +430,7 @@ export default {
       });
 
     },
-    hasPermission(permiso){
+    hasPermission(permiso) {
       return this.$page.props.user.roles[0].permissions.some(permission => permission.name === permiso);
     },
   },
@@ -481,13 +482,10 @@ export default {
       columnasPreviewExcel: [
         { name: "ID", code: "0" },
         { name: "Carrera", code: "1" },
-        { name: "Aspirantes", code: "2" },
-        { name: "Examinados", code: "3" },
-        { name: "Hombres", code: "4" },
-        { name: "Mujeres", code: "5" },
-        { name: "Admitidos", code: "6" },
-        { name: "No Admitidos", code: "7" },
-        { name: "Periodo", code: "8" },
+        { name: "Matricula", code: "2" },
+        { name: "Porcentaje", code: "3" },
+        { name: "Periodo", code: "4" },
+        { name: "Año", code: "5" },
       ],
       carreras: null,
       periodos: null,
@@ -503,6 +501,7 @@ export default {
       file: null,
       fileContent: null,
       selectedProductsForChart: null,
+      Eperiodo: null,
     };
   },
 };
@@ -511,10 +510,11 @@ export default {
 <template>
   <Toolbar class="mb-4">
     <template #start>
-      <Button v-if="hasPermission('registrar_matricula')" label="Nuevo Registro" icon="pi pi-plus" class="p-button-success !mr-2" @click="openNew" />
+      <Button v-if="hasPermission('registrar_matricula')" label="Nuevo Registro" icon="pi pi-plus"
+        class="p-button-success !mr-2" @click="openNew" />
       <Button v-else disabled label="Nuevo Registro" icon="pi pi-plus" class="p-button-success !mr-2" @click="openNew" />
-      <Button v-if="hasPermission('eliminar_matricula')" label="Eliminar" icon="pi pi-trash" class="p-button-danger" @click="confirmDeleteSelected"
-        :disabled="!selectedProducts || !selectedProducts.length" />
+      <Button v-if="hasPermission('eliminar_matricula')" label="Eliminar" icon="pi pi-trash" class="p-button-danger"
+        @click="confirmDeleteSelected" :disabled="!selectedProducts || !selectedProducts.length" />
       <Button v-else disabled label="Eliminar" icon="pi pi-trash" class="p-button-danger" @click="confirmDeleteSelected"
         :disabled="!selectedProducts || !selectedProducts.length" />
 
@@ -569,7 +569,7 @@ export default {
           placeholder="Carrera..." />
 
         <div class="field col-12 md:col-3">
-          <label for="minmax">Matricula</label>
+          <label for="minmax">Cantidad Matriculas</label>
           <InputNumber inputId="minmax" v-model="matriculas" mode="decimal" :min="0" :max="10000" :showButtons="true" />
         </div>
 
@@ -628,7 +628,7 @@ export default {
 
         <Column field="id" header="ID" :sortable="true" hidden></Column>
         <Column field="carrera" header="Carrera" :sortable="true"></Column>
-        <Column field="matricula" header="Matricula" :sortable="true"></Column>
+        <Column field="matricula" header="Cantidad Matriculas" :sortable="true"></Column>
         <Column field="porcentaje" header="Porcentaje" :sortable="true">
           <template #body="{ data }">
             {{ data.porcentaje }}%
@@ -638,12 +638,12 @@ export default {
         <Column field="year" header="Año" :sortable="true"></Column>
         <Column :exportable="false" style="min-width: 8rem" class="p-6">
           <template #body="slotProps">
-            <Button v-if="hasPermission('editar_matricula')" icon="pi pi-pencil" class="p-button-rounded p-button-success !mr-2"
-              @click="editProduct(slotProps.data)" />
+            <Button v-if="hasPermission('editar_matricula')" icon="pi pi-pencil"
+              class="p-button-rounded p-button-success !mr-2" @click="editProduct(slotProps.data)" />
             <Button v-else disabled icon="pi pi-pencil" class="p-button-rounded p-button-success !mr-2"
               @click="editProduct(slotProps.data)" />
-            <Button v-if="hasPermission('eliminar_matricula')" icon="pi pi-trash" class="p-button-rounded p-button-warning"
-              @click="confirmDeleteProduct(slotProps.data)" />
+            <Button v-if="hasPermission('eliminar_matricula')" icon="pi pi-trash"
+              class="p-button-rounded p-button-warning" @click="confirmDeleteProduct(slotProps.data)" />
             <Button v-else disabled icon="pi pi-trash" class="p-button-rounded p-button-warning"
               @click="confirmDeleteProduct(slotProps.data)" />
           </template>
@@ -684,16 +684,18 @@ export default {
               <InputText id="name" v-model.trim="product.carrera" readonly="" />
             </div>
             <div class="p-field p-col-12 p-md-6">
-              <label for="matricula">Matricula</label>
-              <InputText id="name" v-model.trim="product.matricula" />
+              <label for="matricula">Cantidad Matriculas</label>
+              <InputText id="name" v-model="product.matricula" />
             </div>
-            <div class="p-field p-col-12 p-md-6">
-              <label for="periodo">Periodo</label>
-              <InputText id="name" v-model.trim="product.periodo" required="true" />
+
+            <div class="field col-12 md:col-3 mt-3">
+              <Dropdown v-model="Eperiodo" :options="periodosLista" optionLabel="name" optionValue="code"
+                placeholder="Periodo" />
             </div>
+
             <div class="p-field p-col-12 p-md-6">
               <label for="año">Año</label>
-              <InputText id="name" v-model.trim="product.year" required="true" />
+              <InputText id="name" v-model="product.year" required="true" />
             </div>
 
             <Button type="submit" label="Guardar" icon="pi pi-check" class="!mt-3" />

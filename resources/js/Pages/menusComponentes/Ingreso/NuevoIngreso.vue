@@ -148,11 +148,11 @@ export default {
     },
     registrarNIngreso() {
       this.submitted = true;
-      if(this.NIhombres == 0 && this.NImujeres == 0){
+      if (this.NIhombres == 0 && this.NImujeres == 0) {
         this.$toast.add({
           severity: "error",
           summary: "Error",
-          detail: "No se puede editar un reingreso con 0 hombres y 0 mujeres, ingrese un numero de solicitudes valido en hombres y/o mujeres",
+          detail: "No se puede registrar un reingreso con 0 hombres y 0 mujeres, ingrese un numero de solicitudes valido en hombres y/o mujeres",
           life: 3000,
         });
         return false;
@@ -201,7 +201,7 @@ export default {
     },
     editarNIngreso() {
       this.submitted = true;
-      if(this.product.hombres == 0 && this.product.mujeres == 0){
+      if (this.product.hombres == 0 && this.product.mujeres == 0) {
         this.$toast.add({
           severity: "error",
           summary: "Error",
@@ -212,11 +212,11 @@ export default {
       }
       if (
         this.product.id == null ||
-        this.product.carrera == null ||
+        this.Ecarrera == null ||
         this.product.total_ingresos == 0 ||
         this.product.generacion == 0 ||
         this.product.inscritos == 0 ||
-        this.product.proceso == null
+        this.Eproceso == null
       ) {
         // si alguno de los campos esta vacio, no enviar el formulario y mostrar un mensaje de error
         this.$toast.add({
@@ -229,14 +229,14 @@ export default {
       } else {
         const data = {
           id: this.product.id,
-          carrera: this.product.carrera,
+          carrera: this.Ecarrera,
           totalIngresos: this.product.total_ingresos,
           examinados: this.product.examinados,
           generacion: this.product.generacion,
           hombres: this.product.hombres,
           mujeres: this.product.mujeres,
           inscritos: this.product.inscritos,
-          procesos: this.product.proceso,
+          procesos: this.Eproceso,
         };
         this.$inertia.post(`/editar-NIngreso/${this.product.id}`, data, {
           preserveState: true,
@@ -255,6 +255,8 @@ export default {
     },
     editProduct(product) {
       this.product = { ...product }; // esto es para que se muestre los datos del producto en el formulario
+      this.Ecarrera = product.carrera;
+      this.Eproceso = product.proceso;
       this.editDialog = true;
     },
     confirmDeleteProduct(product) {
@@ -304,7 +306,7 @@ export default {
     confirmDeleteSelected() {
       this.deleteProductsDialog = true;
     },
-    hasPermission(permiso){
+    hasPermission(permiso) {
       return this.$page.props.user.roles[0].permissions.some(permission => permission.name === permiso);
     },
     openImportExcel() {
@@ -421,7 +423,7 @@ export default {
       },
       datosFiltrados: [],
       datosExcel: [],
-      columnasExcel: [],  
+      columnasExcel: [],
       carrerasLista: [
         { name: "Manufactura", code: "Manufactura" },
         { name: "Mecatronica", code: "Mecatronica" },
@@ -456,6 +458,8 @@ export default {
       selectedProducts: null,
       deleteProductsDialog: false,
       importExcelDialog: false,
+      Ecarrera: null,
+      Eproceso: null,
       columnasPreviewExcel: [
         { name: "ID", code: "0" },
         { name: "Carrera", code: "1" },
@@ -482,10 +486,11 @@ export default {
   <!-- new button -->
   <Toolbar class="mb-4">
     <template #start>
-      <Button v-if="hasPermission('registrar_ingreso')" label="Nuevo Registro" icon="pi pi-plus" class="p-button-success !mr-2" @click="openNew" />
+      <Button v-if="hasPermission('registrar_ingreso')" label="Nuevo Registro" icon="pi pi-plus"
+        class="p-button-success !mr-2" @click="openNew" />
       <Button v-else disabled label="Nuevo Registro" icon="pi pi-plus" class="p-button-success !mr-2" @click="openNew" />
-      <Button v-if="hasPermission('eliminar_ingreso')" label="Eliminar" icon="pi pi-trash" class="p-button-danger" @click="confirmDeleteSelected"
-        :disabled="!selectedProducts || !selectedProducts.length" />
+      <Button v-if="hasPermission('eliminar_ingreso')" label="Eliminar" icon="pi pi-trash" class="p-button-danger"
+        @click="confirmDeleteSelected" :disabled="!selectedProducts || !selectedProducts.length" />
       <Button v-else disabled label="Eliminar" icon="pi pi-trash" class="p-button-danger" @click="confirmDeleteSelected"
         :disabled="!selectedProducts || !selectedProducts.length" />
 
@@ -547,9 +552,9 @@ export default {
         </div>
       </div>
 
-      <DataTable exportFilename="Nuevo Ingresos" :value="ningresos" :paginator="true" class="p-datatable-customers" :rows="7" ref="dt"
-        v-model:filters="filters" v-model:selection="selectedProducts" :emptyMessage="noDataMessage" stripedRows
-        sortMode="multiple" removableSort>
+      <DataTable exportFilename="Nuevo Ingresos" :value="ningresos" :paginator="true" class="p-datatable-customers"
+        :rows="7" ref="dt" v-model:filters="filters" v-model:selection="selectedProducts" :emptyMessage="noDataMessage"
+        stripedRows sortMode="multiple" removableSort>
         <Column selectionMode="multiple" style="width: 3rem" :exportable="false"></Column>
         <Column field="id" header="ID" :sortable="true" hidden></Column>
         <Column field="carrera" header="Carrera" :sortable="true"></Column>
@@ -563,8 +568,8 @@ export default {
         <Column field="periodo" header="Periodo" :sortable="true"></Column>
         <Column :exportable="false" style="min-width: 8rem" class="p-6">
           <template #body="slotProps">
-            <Button v-if="hasPermission('editar_ingreso')" icon="pi pi-pencil" class="p-button-rounded p-button-success !mr-2"
-              @click="editProduct(slotProps.data)" />
+            <Button v-if="hasPermission('editar_ingreso')" icon="pi pi-pencil"
+              class="p-button-rounded p-button-success !mr-2" @click="editProduct(slotProps.data)" />
             <Button v-else disabled icon="pi pi-pencil" class="p-button-rounded p-button-success !mr-2"
               @click="editProduct(slotProps.data)" />
             <Button v-if="hasPermission('eliminar_ingreso')" icon="pi pi-trash" class="p-button-rounded p-button-warning"
@@ -680,7 +685,8 @@ export default {
 
             <div class="p-field p-col-12 p-md-12">
               <label for="carrera">Carrera</label>
-              <InputText id="carrera" v-model.trim="product.carrera" />
+              <Dropdown v-model="Ecarrera" :options="carrerasLista" optionLabel="name" optionValue="code" :filter="true"
+                placeholder="Carrera..." class="!mt-3" />
             </div>
 
 
@@ -711,7 +717,8 @@ export default {
 
             <div class="p-field p-col-12 p-md-12">
               <label for="total_ingresos">Proceso</label>
-              <InputText id="total_ingresos" v-model="product.proceso" />
+              <Dropdown v-model="Eproceso" :options="procesosLista" optionLabel="name" optionValue="code"
+              placeholder="Proceso" class="!mt-3" />
             </div>
 
             <Button type="submit" label="Guardar" icon="pi pi-check" class="!mt-3" />
