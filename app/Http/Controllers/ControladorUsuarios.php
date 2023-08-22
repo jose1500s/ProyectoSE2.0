@@ -256,4 +256,14 @@ class ControladorUsuarios extends Controller
 
         return $modulos;
     }
+
+    public function obtenerRolesPermisos(){
+        $rol = Auth::user()->roles[0];
+        $permisos = Auth::user()->roles[0]->permissions;
+
+        return response()->json([
+            'permissions' => $permisos,
+            'role' => $rol
+        ]);
+    }
 }

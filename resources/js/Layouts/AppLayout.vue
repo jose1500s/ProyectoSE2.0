@@ -22,6 +22,8 @@ export default defineComponent({
   data() {
     return {
       visibleLeft: false,
+      PermisosUsuario: [],
+      RolUsuario: [],
     };
   },
   components: {
@@ -58,24 +60,19 @@ export default defineComponent({
       console.log('Hola');
     },
     hasPermission(permiso){
-      return this.Rol.permissions.some(permission => permission.name === permiso);
+      return this.PermisosUsuario.some(permission => permission.name === permiso);
     },
     routeWithParameter(ruta, permiso){
       return ruta + encodeURIComponent(permiso);
     }
   },
-  computed: {
-    Rol(){
-          if(this.$page.props.user.roles.length > 0){
-
-          return this.$page.props.user.roles[0];
-        } else {
-          //Se desloguea si no tiene roles
-          router.post(route("logout"));
-          console.log("No existen roles para este usuario");
-        } 
-      
-    }
+  mounted() {
+    axios.get('/user/roles-permisos').then(response => {
+      this.PermisosUsuario = response.data.permissions;
+      this.RolUsuario = response.data.role;
+    }).catch(error => {
+      console.error("Error al encontrar permisos de usuario", error);
+    });
   },
   setup() {
     const confirm = useConfirm();
@@ -447,7 +444,7 @@ export default defineComponent({
               </Link>
             </li>
 
-            <li v-if="this.Rol.name == 'Administrador'">
+            <li v-if="this.RolUsuario.name == 'Administrador'">
                   <Link class="
                   inline-flex
                   items-center
@@ -806,7 +803,7 @@ export default defineComponent({
                   </Link>
                 </li>
 
-                <li v-if="this.Rol.name == 'Administrador'">
+                <li v-if="this.RolUsuario.name == 'Administrador'">
                   <Link class="
                       inline-flex
                       items-center
