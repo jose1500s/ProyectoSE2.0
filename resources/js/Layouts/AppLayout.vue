@@ -67,12 +67,17 @@ export default defineComponent({
     }
   },
   mounted() {
-    axios.get('/user/roles-permisos').then(response => {
-      this.PermisosUsuario = response.data.permissions;
-      this.RolUsuario = response.data.role;
-    }).catch(error => {
-      console.error("Error al encontrar permisos de usuario", error);
-    });
+    if(this.$page.props.user.roles){
+      this.PermisosUsuario = this.$page.props.user.roles[0].permissions;
+      this.RolUsuario = this.$page.props.user.roles[0];
+    } else {
+      axios.get('/user/roles-permisos').then(response => {
+        this.PermisosUsuario = response.data.permissions;
+        this.RolUsuario = response.data.role;
+      }).catch(error => {
+        console.error("Error al encontrar permisos de usuario", error);
+      });
+    }
   },
   setup() {
     const confirm = useConfirm();

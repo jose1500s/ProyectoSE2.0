@@ -466,7 +466,7 @@ export default {
         <Column field="total" header="Total" :sortable="true"></Column>
         <Column :exportable="false" style="min-width: 8rem" class="p-6">
           <template #body="slotProps">
-            <Button v-if="hasPerission('editar_titulados')" icon="pi pi-pencil" class="p-button-rounded p-button-success !mr-2"
+            <Button v-if="hasPermission('editar_titulados')" icon="pi pi-pencil" class="p-button-rounded p-button-success !mr-2"
               @click="editProduct(slotProps.data)" />
             <Button v-else disabled icon="pi pi-pencil" class="p-button-rounded p-button-success !mr-2"
               @click="editProduct(slotProps.data)" />
