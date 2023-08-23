@@ -129,7 +129,6 @@ export default {
 
 <style scoped>
 .p-chart {
-    max-height: 420px !important;
-    max-width: 100% !important;
+    height: 500px !important;
 }
 </style>
