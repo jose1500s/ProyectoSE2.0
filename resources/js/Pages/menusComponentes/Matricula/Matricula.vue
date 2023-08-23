@@ -19,7 +19,6 @@ import Dropdown from "primevue/dropdown";
 import InputNumber from "primevue/inputnumber";
 import axios from "axios";
 import readXlsxFile from "read-excel-file";
-import GraficaIngreso from "./../Ingreso/GraficaIngreso.vue";
 
 export default {
   components: {

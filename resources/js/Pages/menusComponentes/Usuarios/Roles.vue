@@ -147,7 +147,6 @@ export default {
         preserveState: true,
         preserveScroll: true,
       }).then(response => {
-        //this.mensajeRolVerificado = response.data;
         if(response.data){
           this.deleteProductDialog = true;
         } else {
@@ -155,7 +154,7 @@ export default {
             this.$toast.add({
               severity: "warn",
               summary: "Advertencia",
-              detail: "No se puede eliminar el rol, ya que tiene un usuario asociado",
+              detail: "No se puede eliminar el rol, ya que tiene uno o más usuarios asociados",
               life: 3000,
             });
         }
@@ -204,15 +203,10 @@ export default {
     async PermissionProduct(product) {
       this.product = { ...product };
 
-      // console.log(product.name);
-
       var contador = 0;
       
-      // const rol = this.$page.props.roles[contador];
-
       this.$page.props.roles.forEach((rol) => {
         if(product.id == rol.id){
-          // console.log(rol.name);
 
           const permiso = contador;
 
@@ -227,17 +221,6 @@ export default {
       const data = {
         id: product.id,
       };
-      //   const respuesta = await this.$inertia.post(`/obtener-Permisos`, data, {
-      //     preserveState: true,
-      //     preserveScroll: true
-      //   })
-      // try{
-      //   const modulos = respuesta.data;
-      //   console.log(modulos);
-      //   this.PermisosActivos = modulos;
-      // } catch(error){
-      //   console.error(error);
-      // }
       
       axios.post('/obtener-Permisos', data, {
         preserveState: true,
