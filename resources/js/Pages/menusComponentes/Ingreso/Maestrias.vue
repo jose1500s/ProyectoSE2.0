@@ -36,6 +36,7 @@ export default {
     InputNumber,
   },
   props: {
+    // permisos: Array,
     maestrias: Array,
   },
   setup() {
@@ -126,6 +127,18 @@ export default {
     registrarMaestria() {
       this.submitted = true; // esto es para que se muestre el mensaje de error en el formulario
       // validar los campos del formulario, que no esten vacios y si estan mandar un mensaje y no enviar el formulario, los campos son: carrerasModel, aspirantes, examinados, noAdmitidos y selectedPeriodo
+<<<<<<< HEAD
+=======
+      if(this.hombres == 0 && this.mujeres == 0){
+        this.$toast.add({
+          severity: "error",
+          summary: "Error",
+          detail: "No se puede registrar un reingreso con 0 hombres y 0 mujeres, ingrese un numero de solicitudes valido en hombres y/o mujeres",
+          life: 3000,
+        });
+        return false;
+      }
+>>>>>>> 110d6c1665173eac4f7eaa1c4347a0e9cf341702
       if (
         this.carreras == null ||
         this.aspirantes == 0 ||
@@ -170,11 +183,11 @@ export default {
       // validar los campos del formulario, que no esten vacios y si estan mandar un mensaje y no enviar el formulario, los campos son: carrerasModel, aspirantes, examinados, noAdmitidos y selectedPeriodo
       if (
         this.product.id == 0 ||
-        this.product.carrera == null ||
+        this.Ecarrera == null ||
         this.product.aspirantes == 0 ||
         this.product.examinados == 0 ||
         this.product.no_admitidos == 0 ||
-        this.product.periodo == null
+        this.Eperiodo == null
       ) {
         // si alguno de los campos esta vacio, no enviar el formulario y mostrar un mensaje de error
         this.$toast.add({
@@ -187,11 +200,11 @@ export default {
       } else {
         const data = {
           id: this.product.id,
-          carrera: this.product.carrera,
+          carrera: this.Ecarrera,
           aspirantes: this.product.aspirantes,
           examinados: this.product.examinados,
           no_admitidos: this.product.no_admitidos,
-          periodo: this.product.periodo,
+          periodo: this.Eperiodo,
         };
         this.$inertia.post(`/editar-Maestria/${this.product.id}`, data, {
           preserveState: true,
@@ -210,6 +223,8 @@ export default {
     },
     editProduct(product) {
       this.product = { ...product }; // esto es para que se muestre los datos del producto en el formulario
+      this.Ecarrera = product.carrera;
+      this.Eperiodo = product.periodo;
       this.editDialog = true;
     },
     confirmDeleteProduct(product) {
@@ -258,6 +273,92 @@ export default {
     confirmDeleteSelected() {
       this.deleteProductsDialog = true;
     },
+<<<<<<< HEAD
+=======
+    hasPermission(permiso){
+      return this.$page.props.user.roles[0].permissions.some(permission => permission.name === permiso);
+    },
+    subirExcel() {
+      const input = document.getElementById("inputExcel");
+
+      // si el archivo no es .xlsx no se sube y mandar un mensaje de error
+      if (input.files[0].type != "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet") {
+        this.$toast.add({
+          severity: "error",
+          summary: "Error",
+          detail: "El archivo debe ser .xlsx",
+          life: 6000,
+        });
+        return false;
+      } else {
+        readXlsxFile(input.files[0]).then((rows) => {
+          //mandar a datosExcel los datos apartir de la psicion 1 del array
+          this.datosExcel = rows.slice(1);
+          // mandar a columnasExcel las columnas del archivo
+          this.columnasExcel = rows[0];
+          console.log(this.datosExcel)
+          console.log(this.columnasExcel)
+          // si el archivo no tiene las columnas 'carrera', 'aspirantes', 'examinados', 'hombres', 'mujeres', 'admitidos', 'no admitidos' y 'periodo' no se sube y mandar un mensaje de error
+          if (
+            this.columnasExcel[1] != "Carrera" ||
+            this.columnasExcel[2] != "Aspirantes" ||
+            this.columnasExcel[3] != "Examinados" ||
+            this.columnasExcel[4] != "Hombres" ||
+            this.columnasExcel[5] != "Mujeres" ||
+            this.columnasExcel[6] != "Admitidos" ||
+            this.columnasExcel[7] != "No Admitidos" ||
+            this.columnasExcel[8] != "Periodo"
+          ) {
+            this.wrongFormatExcel = true;
+            this.$toast.add({
+              severity: "error",
+              summary: "Error",
+              detail: "Formato de archivo incorrecto",
+              life: 5000,
+            });
+            return false;
+          } else {
+            this.wrongFormatExcel = false;
+          }
+
+        });
+      }
+    },
+    importarExcel() {
+      const datosInsertar = []
+      for (let i = 0; i < this.datosExcel.length; i++) {
+        datosInsertar.push({
+          carrera: this.datosExcel[i][1],
+          aspirantes: this.datosExcel[i][2],
+          examinados: this.datosExcel[i][3],
+          hombres: this.datosExcel[i][4],
+          mujeres: this.datosExcel[i][5],
+          admitidos: this.datosExcel[i][6],
+          no_admitidos: this.datosExcel[i][7],
+          periodo: this.datosExcel[i][8],
+        });
+      }
+
+      const data = {
+        datos: datosInsertar,
+      };
+
+      this.$inertia.post("/importar-excel-maestrias", data, {
+        preserveState: true,
+        preserveScroll: true,
+        onSuccess: () => {
+          this.importExcelDialog = false;
+          this.$toast.add({
+            severity: "success",
+            summary: "Exito",
+            detail: "Importado exitosamente",
+            life: 3000,
+          });
+        },
+      });
+
+    },
+>>>>>>> 110d6c1665173eac4f7eaa1c4347a0e9cf341702
   },
   data() {
     return {
@@ -277,7 +378,15 @@ export default {
         { name: "Sistemas", code: "Sistemas" },
         { name: "Telematica", code: "Telematica" },
       ],
+<<<<<<< HEAD
       periodosLista: [{ name: "SEP-DIC", code: "SEP-DIC" }],
+=======
+      periodosLista: [
+        { name: "SEP-DIC " + new Date().getFullYear(), code: "SEP-DIC" + new Date().getFullYear() },
+        { name: "ENE-ABR " + new Date().getFullYear(), code: "ENE-ABR" + new Date().getFullYear() },
+        { name: "MAY-AGO " + new Date().getFullYear(), code: "MAY-AGO" + new Date().getFullYear() },
+      ],
+>>>>>>> 110d6c1665173eac4f7eaa1c4347a0e9cf341702
       carreras: null,
       periodos: null,
       aspirantes: 0,
@@ -288,6 +397,26 @@ export default {
       deleteProductDialog: false,
       selectedProducts: null,
       deleteProductsDialog: false,
+<<<<<<< HEAD
+=======
+      datosExcel: [],
+      columnasExcel: [],
+      columnasPreviewExcel: [
+        { name: "ID", code: "0" },
+        { name: "Carrera", code: "1" },
+        { name: "Aspirantes", code: "2" },
+        { name: "Examinados", code: "3" },
+        { name: "Hombres", code: "4" },
+        { name: "Mujeres", code: "5" },
+        { name: "Admitidos", code: "6" },
+        { name: "No Admitidos", code: "7" },
+        { name: "Periodo", code: "8" },
+      ],
+      importExcelDialog: false,
+      wrongFormatExcel: false,
+      Ecarrera: null,
+      Eperiodo: null,
+>>>>>>> 110d6c1665173eac4f7eaa1c4347a0e9cf341702
     };
   },
 };
@@ -296,9 +425,20 @@ export default {
 <template>
   <Toolbar class="mb-4">
     <template #start>
-      <Button label="Nuevo Registro" icon="pi pi-plus" class="p-button-success !mr-2" @click="openNew" />
-      <Button label="Eliminar" icon="pi pi-trash" class="p-button-danger" @click="confirmDeleteSelected"
+      <Button v-if="hasPermission('registrar_ingreso')" label="Nuevo Registro" icon="pi pi-plus" class="p-button-success !mr-2" @click="openNew" />
+      <Button v-else disabled label="Nuevo Registro" icon="pi pi-plus" class="p-button-success !mr-2" @click="openNew" />
+      <Button v-if="hasPermission('eliminar_ingreso')" label="Eliminar" icon="pi pi-trash" class="p-button-danger" @click="confirmDeleteSelected"
         :disabled="!selectedProducts || !selectedProducts.length" />
+<<<<<<< HEAD
+=======
+      <Button v-else disabled label="Eliminar" icon="pi pi-trash" class="p-button-danger" @click="confirmDeleteSelected"
+        :disabled="!selectedProducts || !selectedProducts.length" />
+        
+      <Button class="!ml-3" icon="pi pi-external-link" label="Exportar Excel" @click="exportCSV($event)" />
+
+      <!-- button dialog para importar excel-->
+      <Button label="Importar Excel" icon="pi pi-upload" class="!ml-2" @click="openImportExcel" />
+>>>>>>> 110d6c1665173eac4f7eaa1c4347a0e9cf341702
     </template>
   </Toolbar>
 
@@ -395,9 +535,13 @@ export default {
         <Column field="periodo" header="Periodo" :sortable="true"></Column>
         <Column :exportable="false" style="min-width: 8rem" class="p-6">
           <template #body="slotProps">
-            <Button icon="pi pi-pencil" class="p-button-rounded p-button-success !mr-2"
+            <Button v-if="hasPermission('editar_ingreso')" icon="pi pi-pencil" class="p-button-rounded p-button-success !mr-2"
               @click="editProduct(slotProps.data)" />
-            <Button icon="pi pi-trash" class="p-button-rounded p-button-warning"
+            <Button v-else disabled icon="pi pi-pencil" class="p-button-rounded p-button-success !mr-2"
+              @click="editProduct(slotProps.data)" />
+            <Button v-if="hasPermission('eliminar_ingreso')" icon="pi pi-trash" class="p-button-rounded p-button-warning"
+              @click="confirmDeleteProduct(slotProps.data)" />
+            <Button v-else disabled icon="pi pi-trash" class="p-button-rounded p-button-warning"
               @click="confirmDeleteProduct(slotProps.data)" />
           </template>
         </Column>
@@ -419,7 +563,8 @@ export default {
 
             <div class="p-field p-col-12 p-md-6">
               <label for="carrera">Carrera</label>
-              <InputText id="name" v-model.trim="product.carrera" />
+              <Dropdown v-model="Ecarrera" :options="carrerasLista" optionLabel="name" optionValue="code" :filter="true"
+                placeholder="Carrera..." />
             </div>
             <div class="p-field p-col-12 p-md-6">
               <label for="aspirantes">Aspirantes</label>
@@ -437,7 +582,8 @@ export default {
             </div>
             <div class="p-field p-col-12 p-md-6">
               <label for="periodo">Periodo</label>
-              <InputText id="name" v-model.trim="product.periodo" required="true" />
+              <Dropdown v-model="Eperiodo" :options="periodosLista" optionLabel="name" optionValue="code"
+                placeholder="Periodo" />
             </div>
             <Button type="submit" label="Guardar" icon="pi pi-check" class="!mt-3" />
           </form>

@@ -95,3 +95,9 @@ export default {
         <chart type="line" :data="chartData" :options="chartOptions" />
     </div>
 </template>
+
+<style scoped>
+.p-chart {
+    height: 500px !important;
+}
+</style>

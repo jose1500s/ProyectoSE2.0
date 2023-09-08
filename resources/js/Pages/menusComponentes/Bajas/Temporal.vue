@@ -363,6 +363,9 @@ export default {
       // cada que se abra se resetea el valor del array de datosExcel para que no se repitan los datos
       this.datosExcel = [];
     },
+    hasPermission(permiso){
+      return this.$page.props.user.roles[0].permissions.some(permission => permission.name === permiso);
+    },
   },
   components: {
     AppLayout,
@@ -391,12 +394,50 @@ export default {
 </script>
 
 <template>
+<<<<<<< HEAD
   <Toolbar class="mb-4">
     <template #start>
       <Button label="Nuevo Registro" icon="pi pi-plus" class="p-button-success !mr-2" @click="openNew" />
       <Button label="Eliminar" icon="pi pi-trash" class="p-button-danger" @click="confirmDeleteSelected"
         :disabled="!selectedProducts || !selectedProducts.length" />
       <Button class="!ml-2" icon="pi pi-external-link" label="Exportar Excel" @click="exportCSV($event)" />
+=======
+  
+    <Toolbar class="mb-4">
+      <template #start>
+        <Button v-if="hasPermission('registrar_bajas')"
+          label="Nuevo Registro"
+          icon="pi pi-plus"
+          class="p-button-success !mr-2"
+          @click="openNew"
+        />
+        <Button v-else disabled
+          label="Nuevo Registro"
+          icon="pi pi-plus"
+          class="p-button-success !mr-2"
+          @click="openNew"
+        />
+        <Button v-if="hasPermission('eliminar_bajas')"
+          label="Eliminar"
+          icon="pi pi-trash"
+          class="p-button-danger"
+          @click="confirmDeleteSelected"
+          :disabled="!selectedProducts || !selectedProducts.length"
+        />
+        <Button v-else disabled
+          label="Eliminar"
+          icon="pi pi-trash"
+          class="p-button-danger"
+          @click="confirmDeleteSelected"
+          :disabled="!selectedProducts || !selectedProducts.length"
+        />
+        <Button
+        class ="!ml-2"
+          icon="pi pi-external-link"
+          label="Exportar Excel"
+          @click="exportCSV($event)"
+        />
+>>>>>>> 110d6c1665173eac4f7eaa1c4347a0e9cf341702
 
       <!-- button dialog para importar excel-->
       <Button label="Importar Excel" icon="pi pi-upload" class="!ml-2" @click="openImportExcel" />
@@ -596,6 +637,7 @@ export default {
           <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem" />
           <span> ¿Confirma eliminar los registros seleccionados? </span>
         </div>
+<<<<<<< HEAD
         <template #footer>
           <Button label="No" icon="pi pi-times" class="p-button-text" @click="deleteProductsDialog = false" />
           <Button label="Yes" icon="pi pi-check" class="p-button-text" @click="deleteSelectedProducts" />
@@ -615,6 +657,194 @@ export default {
       <Button label="Guardar" icon="pi pi-save" @click="saveImage" />
     </template>
   </Dialog>
+=======
+
+        <DataTable
+          :value="temporal"
+          :paginator="true"
+          class="p-datatable-customers"
+          :rows="7"
+          ref="dt"
+          v-model:filters="filters"
+          v-model:selection="selectedProducts"
+          :emptyMessage="noDataMessage"
+          stripedRows
+          sortMode="multiple"
+          removableSort
+        >
+          <Column
+            selectionMode="multiple"
+            style="width: 3rem"
+            :exportable="false"
+          ></Column>
+
+          <Column field="id" header="ID" :sortable="true" hidden ></Column>
+          <Column field="periodo_con_año" header="Periodo" :sortable="true"></Column>
+          <Column field="carrera" header="Carrera" :sortable="true"></Column>
+          <Column field="hombres" header="Hombres" :sortable="true"></Column>
+          <Column field="mujeres" header="Mujeres" :sortable="true"></Column>
+          <Column field="total" header="Total" :sortable="true" ></Column>
+          
+          <Column :exportable="false" style="min-width: 8rem" class="p-6">
+            <template #body="slotProps">
+              <Button v-if="hasPermission('editar_bajas')"
+                icon="pi pi-pencil"
+                class="p-button-rounded p-button-success !mr-2"
+                @click="editProduct(slotProps.data)"
+              />
+              <Button v-else disabled
+                icon="pi pi-pencil"
+                class="p-button-rounded p-button-success !mr-2"
+                @click="editProduct(slotProps.data)"
+              />
+              <Button v-if="hasPermission('eliminar_bajas')"
+                icon="pi pi-trash"
+                class="p-button-rounded p-button-warning"
+                @click="confirmDeleteProduct(slotProps.data)"
+              />
+              <Button v-else disabled
+                icon="pi pi-trash"
+                class="p-button-rounded p-button-warning"
+                @click="confirmDeleteProduct(slotProps.data)"
+              />
+            </template>
+          </Column>
+
+          <!-- mensaje de no hay datos -->
+          <template #empty>
+            <div class="flex justify-center align-middle text-xl">
+              <h2>No se encontraron datos</h2>
+            </div>
+          </template>
+        </DataTable>
+
+        <!-- Dialog para editar el producto toma los valores del producto seleccionado -->
+        <Dialog
+          header="Editar Baja"
+          v-model:visible="editDialog"
+          :breakpoints="{ '960px': '75vw', '75vw': '85vw' }"
+          :style="{ width: '25vw' }"
+          :modal="true"
+          :closable="true"
+          :dismissableMask="false"
+        >
+          <div class="p-fluid p-formgrid p-grid">
+            <form @submit.prevent="editarTemporal">
+              <InputText id="id" v-model.trim="product.id" required="true" hidden/>
+
+              <div class="field col-12 md:col-3 mt-3">
+          <label for="minmax">Periodo</label>
+          <Dropdown
+            v-model="BTperiodo"
+            :options="cuatriLista"
+            optionLabel="name"
+            optionValue="code"
+            placeholder="Seleccione"
+          />
+        </div>
+        <div class="field col-12 md:col-3">
+          <label for="minmax">Año</label>
+          <InputNumber inputId="minmax" v-model="BTaño" mode="decimal" :min="0" :max="10000" :showButtons="true" />
+        </div>
+
+
+          <div class="field col-12 md:col-3">
+            <label for="minmax">Carrera</label>
+            <Dropdown
+              v-model="BTcarrera"
+              :options="carrerasLista"
+              optionLabel="name"
+              optionValue="code"
+              :filter="true"
+              placeholder="Seleccione"
+            />
+          </div>
+
+        <div class="field col-12 md:col-3">
+          <label for="minmax">Hombres</label>
+          <InputNumber inputId="minmax" v-model="BThombres" mode="decimal" :min="0" :max="10000" :showButtons="true" />
+        </div>
+
+        <div class="field col-12 md:col-3">
+          <label for="minmax">Mujeres</label>
+          <InputNumber inputId="minmax" v-model="BTmujeres" mode="decimal" :min="0" :max="10000" :showButtons="true" />
+        </div>
+              <Button
+                type="submit"
+                label="Guardar"
+                icon="pi pi-check"
+                class="!mt-3"
+              />
+            </form>
+          </div>
+        </Dialog>
+
+        <!-- Dialog para eliminar un registro -->
+        <Dialog
+          v-model:visible="deleteProductDialog"
+          :style="{ width: '450px' }"
+          header="Confirmar"
+          :modal="true"
+        >
+          <div class="confirmation-content flex justify-center items-center">
+            <i
+              class="pi pi-exclamation-triangle mr-3"
+              style="font-size: 2rem"
+            />
+            <span v-if="product"
+              >¿Confirma eliminar el registro <b>{{ product.carrera }}</b
+              >?</span
+            >
+          </div>
+          <template #footer>
+            <Button
+              label="No"
+              icon="pi pi-times"
+              class="p-button-text"
+              @click="deleteProductDialog = false"
+            />
+            <Button
+              label="Si"
+              icon="pi pi-check"
+              class="p-button-text"
+              @click="deleteProduct"
+            />
+          </template>
+        </Dialog>
+
+        <!-- Dialog para eliminar el/los productos seleccionados de la tabla -->
+        <Dialog
+          v-model:visible="deleteProductsDialog"
+          :style="{ width: '550px' }"
+          header="Confirm"
+          :modal="true"
+        >
+          <div class="confirmation-content flex items-center justify-center">
+            <i
+              class="pi pi-exclamation-triangle mr-3"
+              style="font-size: 2rem"
+            />
+            <span> ¿Confirma eliminar los registros seleccionados? </span>
+          </div>
+          <template #footer>
+            <Button
+              label="No"
+              icon="pi pi-times"
+              class="p-button-text"
+              @click="deleteProductsDialog = false"
+            />
+            <Button
+              label="Yes"
+              icon="pi pi-check"
+              class="p-button-text"
+              @click="deleteSelectedProducts"
+            />
+          </template>
+        </Dialog>
+      </div>
+    </section>
+  
+>>>>>>> 110d6c1665173eac4f7eaa1c4347a0e9cf341702
 </template>
 
 <style scoped>

@@ -330,6 +330,9 @@ export default {
       // cada que se abra se resetea el valor del array de datosExcel para que no se repitan los datos
       this.datosExcel = [];
     },
+    hasPermission(permiso){
+      return this.$page.props.user.roles[0].permissions.some(permission => permission.name === permiso);
+    },
   },
   mounted() {},
   data() {
@@ -389,10 +392,13 @@ export default {
 <template>
   <Toolbar class="mb-4">
     <template #start>
-      <Button label="Nuevo Registro" icon="pi pi-plus" class="p-button-success !mr-2" @click="openNew" />
-      <Button label="Eliminar" icon="pi pi-trash" class="p-button-danger" @click="confirmDeleteSelected" 
+      <Button v-if="hasPermission('registrar_becas')" label="Nuevo Registro" icon="pi pi-plus" class="p-button-success !mr-2" @click="openNew" />
+      <Button v-else disabled label="Nuevo Registro" icon="pi pi-plus" class="p-button-success !mr-2" @click="openNew" />
+      <Button v-if="hasPermission('eliminar_becas')" label="Eliminar" icon="pi pi-trash" class="p-button-danger" @click="confirmDeleteSelected" 
         :disabled="!selectedProducts || !selectedProducts.length" />
-        
+      <Button v-else disabled label="Eliminar" icon="pi pi-trash" class="p-button-danger" @click="confirmDeleteSelected" 
+        :disabled="!selectedProducts || !selectedProducts.length" />
+
       <Button class ="!ml-2" icon="pi pi-external-link" label="Exportar Excel" @click="exportCSV($event)" />
 
       <!-- button dialog para importar excel-->
@@ -491,7 +497,7 @@ export default {
             <Toast />
           </div>
           <!-- model para abrir grafica -->
-          <Button label="Gráfica" icon="pi pi-chart-bar" @click="openResponsive" />
+          <Button label="Grafica" icon="pi pi-chart-bar" @click="openResponsive" />
           <!-- Filtros -->
                 
           <MultiSelect v-model="filters.periodo.value" :options="filtrarPeriodo()"
@@ -523,8 +529,10 @@ export default {
           
         <Column :exportable="false" style="min-width: 8rem" class="p-6">
           <template #body="slotProps">
-            <Button icon="pi pi-pencil" class="p-button-rounded p-button-success !mr-2" @click="editProduct(slotProps.data)" />
-            <Button icon="pi pi-trash" class="p-button-rounded p-button-warning" @click="confirmDeleteProduct(slotProps.data)" />
+            <Button v-if="hasPermission('editar_becas')" icon="pi pi-pencil" class="p-button-rounded p-button-success !mr-2" @click="editProduct(slotProps.data)" />
+            <Button v-else disabled icon="pi pi-pencil" class="p-button-rounded p-button-success !mr-2" @click="editProduct(slotProps.data)" />
+            <Button v-if="hasPermission('eliminar_becas')" icon="pi pi-trash" class="p-button-rounded p-button-warning" @click="confirmDeleteProduct(slotProps.data)" />
+            <Button v-else disabled icon="pi pi-trash" class="p-button-rounded p-button-warning" @click="confirmDeleteProduct(slotProps.data)" />
           </template>
         </Column>
 

@@ -82,9 +82,6 @@ export default {
                 },
                 indexAxis: this.orientacionGrafica,
             };
-            console.log(this.chartOptions);
-            console.log(this.orientacionGrafica);
-            console.log("acabo la funcion actualizar") 
         },
 
     },
@@ -132,6 +129,6 @@ export default {
 
 <style scoped>
 .p-chart {
-    max-height: 420px !important;
+    height: 500px !important;
 }
 </style>

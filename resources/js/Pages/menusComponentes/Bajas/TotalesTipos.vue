@@ -1,6 +1,10 @@
 <script>
 import AppLayout from "@/Layouts/AppLayout.vue";
+<<<<<<< HEAD:resources/js/Pages/menusComponentes/Bajas/TotalesTipos.vue
 import GraficaTipos from "./GraficaTipos.vue";
+=======
+import GraficaMatricula from "./GraficaMatricula.vue";
+>>>>>>> 110d6c1665173eac4f7eaa1c4347a0e9cf341702:resources/js/Pages/menusComponentes/Matricula/Matricula.vue
 // PrimeVue
 import DataTable from "primevue/datatable";
 import Column from "primevue/column";
@@ -19,6 +23,7 @@ import InputNumber from "primevue/inputnumber";
 import axios from "axios";
 import readXlsxFile from "read-excel-file";
 export default {
+<<<<<<< HEAD:resources/js/Pages/menusComponentes/Bajas/TotalesTipos.vue
   data() {
     return {
       filters: {
@@ -66,6 +71,29 @@ export default {
       BThombres: 0,
       BTmujeres: 0,
     };
+=======
+  components: {
+    AppLayout,
+    DataTable,
+    Column,
+    InputText,
+    Row,
+    Button,
+    MultiSelect,
+    Chart,
+    Dialog,
+    Toast,
+    ConfirmDialog,
+    Toolbar,
+    Dropdown,
+    InputNumber,
+    GraficaMatricula,
+  },
+  props: {
+    dataMatriculas: Array,
+    admisiones: Array,
+    datosCarrerasFiltro: Array,
+>>>>>>> 110d6c1665173eac4f7eaa1c4347a0e9cf341702:resources/js/Pages/menusComponentes/Matricula/Matricula.vue
   },
   created() { },
   mounted() { },
@@ -98,13 +126,41 @@ export default {
       const grafica = contenedorGrafica.getElementsByTagName("canvas")[0];
       const imagen = grafica.toDataURL("image/png");
       const link = document.createElement("a");
+<<<<<<< HEAD:resources/js/Pages/menusComponentes/Bajas/TotalesTipos.vue
       link.download = "Gráfica Egresados.png";
+=======
+      link.download = "GraficaMatricula.png";
+>>>>>>> 110d6c1665173eac4f7eaa1c4347a0e9cf341702:resources/js/Pages/menusComponentes/Matricula/Matricula.vue
       link.href = imagen;
       link.click();
     },
     registrarTemporal() {
       this.submitted = true; // esto es para que se muestre el mensaje de error en el formulario
+<<<<<<< HEAD:resources/js/Pages/menusComponentes/Bajas/TotalesTipos.vue
       // validar los campos del formulario, que no esten vacios y si estan mandar un mensaje y no enviar el formulario, los campos son: carrerasModel, aspirantes, examinados, noAdmitidos y selectedPeriodo
+=======
+
+      //verifica que no se pueda registrar si el la carrera ya esta registrada en el periodo y año seleccionado
+      if (this.dataMatriculas.length > 0) {
+        for (let i = 0; i < this.dataMatriculas.length; i++) {
+          if (
+            this.dataMatriculas[i].carrera == this.carreras &&
+            this.dataMatriculas[i].periodo == this.periodos &&
+            this.dataMatriculas[i].year == this.year
+          ) {
+            this.$toast.add({
+              severity: "error",
+              summary: "Error",
+              detail: "Ya existe un registro con la carrera, periodo y año seleccionado",
+              life: 3000,
+            });
+            return false;
+          }
+        }
+      }
+
+
+>>>>>>> 110d6c1665173eac4f7eaa1c4347a0e9cf341702:resources/js/Pages/menusComponentes/Matricula/Matricula.vue
       if (
         this.BTperiodo == null ||
         this.BTaño == 0 ||
@@ -132,6 +188,10 @@ export default {
           preserveScroll: true,
           onSuccess: () => {
             this.productDialog = false;
+            this.carreras = null;
+            this.matriculas = 0;
+            this.periodos = null;
+            this.year = 0;
             this.$toast.add({
               severity: "success",
               summary: "Exito",
@@ -147,11 +207,37 @@ export default {
     editarTemporal() {
       // editarl usando el dialog de editar producto
       this.submitted = true; // esto es para que se muestre el mensaje de error en el formulario
+<<<<<<< HEAD:resources/js/Pages/menusComponentes/Bajas/TotalesTipos.vue
       // validar los campos del formulario, que no esten vacios y si estan mandar un mensaje y no enviar el formulario, los campos son: carrerasModel, aspirantes, examinados, noAdmitidos y selectedPeriodo
       if (
         this.BTperiodo == null ||
         this.BTaño == 0 ||
         this.BTcarrera == null
+=======
+      //verifica que no se pueda editar si el la carrera ya esta registrada en el periodo y año seleccionado
+
+      for (let i = 0; i < this.dataMatriculas.length; i++) {
+        if (
+          this.dataMatriculas[i].carrera == this.product.carrera &&
+          this.dataMatriculas[i].periodo == this.Eperiodo &&
+          this.dataMatriculas[i].year == this.product.year &&
+          this.dataMatriculas[i].id != this.product.id
+        ) {
+          this.$toast.add({
+            severity: "error",
+            summary: "Error",
+            detail: "Ya existe un registro con la carrera, periodo y año seleccionado",
+            life: 3000,
+          });
+          return false;
+        }
+      }
+      if (
+        this.product.id == 0 ||
+        this.product.matricula == 0 ||
+        this.Eperiodo == null ||
+        this.product.year == 0
+>>>>>>> 110d6c1665173eac4f7eaa1c4347a0e9cf341702:resources/js/Pages/menusComponentes/Matricula/Matricula.vue
       ) {
         // si alguno de los campos esta vacio, no enviar el formulario y mostrar un mensaje de error
         this.$toast.add({
@@ -165,17 +251,24 @@ export default {
       else {
         const data2 = {
           id: this.product.id,
+<<<<<<< HEAD:resources/js/Pages/menusComponentes/Bajas/TotalesTipos.vue
           periodo: this.BTperiodo,
           año: this.BTaño,
           tipo_baja: this.BTcarrera,
           hombres: this.BThombres,
           mujeres: this.BTmujeres
+=======
+          matriculas: this.product.matricula,
+          periodo: this.Eperiodo,
+          year: this.product.year,
+>>>>>>> 110d6c1665173eac4f7eaa1c4347a0e9cf341702:resources/js/Pages/menusComponentes/Matricula/Matricula.vue
         };
         this.$inertia.post(`/editar-baja-total-tipos/${this.product.id}`, data2, {
           preserveState: true,
           preserveScroll: true,
           onSuccess: () => {
             this.editDialog = false;
+            this.product = {};
             this.$toast.add({
               severity: "success",
               summary: "Exito",
@@ -193,12 +286,16 @@ export default {
 
     editProduct(product) {
       this.product = { ...product }; // esto es para que se muestre los datos del producto en el formulario
+<<<<<<< HEAD:resources/js/Pages/menusComponentes/Bajas/TotalesTipos.vue
       //this.EGRaño_egreso = this.product.año_egreso;
       this.BTperiodo = this.product.periodo;
       this.BTaño = this.product.año;
       this.BTcarrera = this.product.tipo_baja;
       this.BThombres = this.product.hombres;
       this.BTmujeres = this.product.mujeres;
+=======
+      this.Eperiodo = product.periodo;
+>>>>>>> 110d6c1665173eac4f7eaa1c4347a0e9cf341702:resources/js/Pages/menusComponentes/Matricula/Matricula.vue
       this.editDialog = true;
     },
     confirmDeleteProduct(product) {
@@ -316,6 +413,35 @@ export default {
       }
     },
     importarExcel() {
+
+
+      //Verificar que no se pueda importar si el la carrera ya esta registrada en el periodo y año seleccionado
+      for (let i = 0; i < this.datosExcel.length; i++) {
+        for (let j = 0; j < this.dataMatriculas.length; j++) {
+          if (
+            this.datosExcel[i][1] == this.dataMatriculas[j].carrera &&
+            this.datosExcel[i][4] == this.dataMatriculas[j].periodo &&
+            this.datosExcel[i][5] == this.dataMatriculas[j].year
+          ) {
+            //Guarda todos los registros del excel en un array donde la carrera ya esta registrada en el periodo y año seleccionado
+            this.datosMostrar.push(this.dataMatriculas[j].carrera + " " + this.dataMatriculas[j].periodo + " " + this.dataMatriculas[j].year);
+            this.datosMostrarStatus = true;
+          }
+        }
+      }
+
+      if (this.datosMostrarStatus) {
+        this.$toast.add({
+          severity: "error",
+          summary: "Error",
+          detail: "Ya existen registros con la carrera, periodo y año seleccionado, los cuales son los siguientes: " + this.datosMostrar,
+          life: 5000,
+        });
+        this.datosMostrar = [];
+        this.datosMostrarStatus = false;
+        return false;
+      }
+
       const datosInsertar = []
       for (let i = 0; i < this.datosExcel.length; i++) {
         datosInsertar.push({
@@ -346,6 +472,7 @@ export default {
       });
 
     },
+<<<<<<< HEAD:resources/js/Pages/menusComponentes/Bajas/TotalesTipos.vue
     openImportExcel() {
       this.importExcelDialog = true;
       // cada que se abra se resetea el valor del array de datosExcel para que no se repitan los datos
@@ -374,6 +501,81 @@ export default {
   },
   setup() {
     //use
+=======
+    hasPermission(permiso) {
+      return this.$page.props.user.roles[0].permissions.some(permission => permission.name === permiso);
+    },
+  },
+  mounted() { },
+  data() {
+    return {
+      filters: {
+        carrera: { value: null, matchMode: FilterMatchMode.IN },
+        periodo: { value: null, matchMode: FilterMatchMode.IN },
+        year: { value: null, matchMode: FilterMatchMode.CONTAINS },
+        globlal: { value: null, matchMode: FilterMatchMode.CONTAINS },
+      },
+      datosFiltrados: [],
+      datosExcel: [],
+      columnasExcel: [],
+      datosMostrar: [],
+      datosMostrarStatus: false,
+      admisionesTodosLosRegistros: [],
+      noDataMessage: "No se encontraron datos",
+      displayResponsive: false,
+      carrerasLista: [
+        { name: "Manufactura", code: "Manufactura" },
+        { name: "Mecatronica", code: "Mecatronica" },
+        { name: "Negocios", code: "Negocios" },
+        { name: "Procesos", code: "Procesos" },
+        { name: "Pymes", code: "Pymes" },
+        { name: "Sistemas", code: "Sistemas" },
+        { name: "Telematica", code: "Telematica" },
+      ],
+
+      periodosLista: [
+        { name: "SEP-DIC ", code: "SEP-DIC" },
+        { name: "ENE-ABR ", code: "ENE-ABR" },
+        { name: "MAY-AGO ", code: "MAY-AGO" },
+      ],
+      yearLista: [
+        { name: new Date().getFullYear() - 5, code: new Date().getFullYear() - 5 },
+        { name: new Date().getFullYear() - 4, code: new Date().getFullYear() - 4 },
+        { name: new Date().getFullYear() - 3, code: new Date().getFullYear() - 3 },
+        { name: new Date().getFullYear() - 2, code: new Date().getFullYear() - 2 },
+        { name: new Date().getFullYear() - 1, code: new Date().getFullYear() - 1 },
+        { name: new Date().getFullYear(), code: new Date().getFullYear() },
+        { name: new Date().getFullYear() + 1, code: new Date().getFullYear() + 1 },
+        { name: new Date().getFullYear() + 2, code: new Date().getFullYear() + 2 },
+        { name: new Date().getFullYear() + 3, code: new Date().getFullYear() + 3 },
+        { name: new Date().getFullYear() + 4, code: new Date().getFullYear() + 4 },
+        { name: new Date().getFullYear() + 5, code: new Date().getFullYear() + 5 },
+      ],
+      columnasPreviewExcel: [
+        { name: "ID", code: "0" },
+        { name: "Carrera", code: "1" },
+        { name: "Matricula", code: "2" },
+        { name: "Porcentaje", code: "3" },
+        { name: "Periodo", code: "4" },
+        { name: "Año", code: "5" },
+      ],
+      carreras: null,
+      periodos: null,
+      matriculas: 0,
+      year: 0,
+      productDialog: false,
+      editDialog: false,
+      deleteProductDialog: false,
+      selectedProducts: null,
+      deleteProductsDialog: false,
+      importExcelDialog: false,
+      wrongFormatExcel: false,
+      file: null,
+      fileContent: null,
+      selectedProductsForChart: null,
+      Eperiodo: null,
+    };
+>>>>>>> 110d6c1665173eac4f7eaa1c4347a0e9cf341702:resources/js/Pages/menusComponentes/Matricula/Matricula.vue
   },
 };
 </script>
@@ -381,8 +583,12 @@ export default {
 <template>
   <Toolbar class="mb-4">
     <template #start>
-      <Button label="Nuevo Registro" icon="pi pi-plus" class="p-button-success !mr-2" @click="openNew" />
-      <Button label="Eliminar" icon="pi pi-trash" class="p-button-danger" @click="confirmDeleteSelected"
+      <Button v-if="hasPermission('registrar_matricula')" label="Nuevo Registro" icon="pi pi-plus"
+        class="p-button-success !mr-2" @click="openNew" />
+      <Button v-else disabled label="Nuevo Registro" icon="pi pi-plus" class="p-button-success !mr-2" @click="openNew" />
+      <Button v-if="hasPermission('eliminar_matricula')" label="Eliminar" icon="pi pi-trash" class="p-button-danger"
+        @click="confirmDeleteSelected" :disabled="!selectedProducts || !selectedProducts.length" />
+      <Button v-else disabled label="Eliminar" icon="pi pi-trash" class="p-button-danger" @click="confirmDeleteSelected"
         :disabled="!selectedProducts || !selectedProducts.length" />
       <Button class="!ml-2" icon="pi pi-external-link" label="Exportar Excel" @click="exportCSV($event)" />
 
@@ -442,6 +648,7 @@ export default {
 
 
         <div class="field col-12 md:col-3">
+<<<<<<< HEAD:resources/js/Pages/menusComponentes/Bajas/TotalesTipos.vue
           <label for="minmax">Tipo de Baja</label>
           <Dropdown v-model="BTcarrera" :options="carrerasLista" optionLabel="name" optionValue="code" :filter="true"
             placeholder="Seleccione" />
@@ -455,6 +662,10 @@ export default {
         <div class="field col-12 md:col-3">
           <label for="minmax">Mujeres</label>
           <InputNumber inputId="minmax" v-model="BTmujeres" mode="decimal" :min="0" :max="10000" :showButtons="true" />
+=======
+          <label for="minmax">Cantidad Matriculas</label>
+          <InputNumber inputId="minmax" v-model="matriculas" mode="decimal" :min="0" :max="10000" :showButtons="true" />
+>>>>>>> 110d6c1665173eac4f7eaa1c4347a0e9cf341702:resources/js/Pages/menusComponentes/Matricula/Matricula.vue
         </div>
 
         <div class="field col-12 md:col-3 mt-3">
@@ -504,17 +715,33 @@ export default {
         <Column selectionMode="multiple" style="width: 3rem" :exportable="false"></Column>
 
         <Column field="id" header="ID" :sortable="true" hidden></Column>
+<<<<<<< HEAD:resources/js/Pages/menusComponentes/Bajas/TotalesTipos.vue
         <Column field="periodo_con_año" header="Periodo" :sortable="true"></Column>
         <Column field="tipo_baja" header="Tipo de Baja" :sortable="true"></Column>
         <Column field="hombres" header="Hombres" :sortable="true"></Column>
         <Column field="mujeres" header="Mujeres" :sortable="true"></Column>
         <Column field="total" header="Total" :sortable="true"></Column>
 
+=======
+        <Column field="carrera" header="Carrera" :sortable="true"></Column>
+        <Column field="matricula" header="Cantidad Matriculas" :sortable="true"></Column>
+        <Column field="porcentaje" header="Porcentaje" :sortable="true">
+          <template #body="{ data }">
+            {{ data.porcentaje }}%
+          </template>
+        </Column>
+        <Column field="periodo" header="Periodo" :sortable="true"></Column>
+        <Column field="year" header="Año" :sortable="true"></Column>
+>>>>>>> 110d6c1665173eac4f7eaa1c4347a0e9cf341702:resources/js/Pages/menusComponentes/Matricula/Matricula.vue
         <Column :exportable="false" style="min-width: 8rem" class="p-6">
           <template #body="slotProps">
-            <Button icon="pi pi-pencil" class="p-button-rounded p-button-success !mr-2"
+            <Button v-if="hasPermission('editar_matricula')" icon="pi pi-pencil"
+              class="p-button-rounded p-button-success !mr-2" @click="editProduct(slotProps.data)" />
+            <Button v-else disabled icon="pi pi-pencil" class="p-button-rounded p-button-success !mr-2"
               @click="editProduct(slotProps.data)" />
-            <Button icon="pi pi-trash" class="p-button-rounded p-button-warning"
+            <Button v-if="hasPermission('eliminar_matricula')" icon="pi pi-trash"
+              class="p-button-rounded p-button-warning" @click="confirmDeleteProduct(slotProps.data)" />
+            <Button v-else disabled icon="pi pi-trash" class="p-button-rounded p-button-warning"
               @click="confirmDeleteProduct(slotProps.data)" />
           </template>
         </Column>
@@ -527,6 +754,22 @@ export default {
         </template>
       </DataTable>
 
+<<<<<<< HEAD:resources/js/Pages/menusComponentes/Bajas/TotalesTipos.vue
+=======
+      <Dialog header="Gráfica dinámica" v-model:visible="displayResponsive"
+        :breakpoints="{ '960px': '75vw', '75vw': '90vw' }" :style="{ width: '70vw' }">
+        <!-- contenido del dialog/model desde aqui... -->
+        <div class="w-full" id="contenedorGrafica">
+          <GraficaMatricula :data="selectedProducts" />
+        </div>
+        <template #footer>
+          <Button label="Cerrar" icon="pi pi-check" @click="closeResponsive" autofocus />
+          <!-- boton para guardar la grafica como img -->
+          <Button label="Guardar" icon="pi pi-save" @click="saveImage" />
+        </template>
+      </Dialog>
+
+>>>>>>> 110d6c1665173eac4f7eaa1c4347a0e9cf341702:resources/js/Pages/menusComponentes/Matricula/Matricula.vue
       <!-- Dialog para editar el producto toma los valores del producto seleccionado -->
       <Dialog header="Editar Baja" v-model:visible="editDialog" :breakpoints="{ '960px': '75vw', '75vw': '85vw' }"
         :style="{ width: '25vw' }" :modal="true" :closable="true" :dismissableMask="false">
@@ -539,9 +782,25 @@ export default {
               <Dropdown v-model="BTperiodo" :options="cuatriLista" optionLabel="name" optionValue="code"
                 placeholder="Seleccione" />
             </div>
+<<<<<<< HEAD:resources/js/Pages/menusComponentes/Bajas/TotalesTipos.vue
             <div class="field col-12 md:col-3">
               <label for="minmax">Año</label>
               <InputNumber inputId="minmax" v-model="BTaño" mode="decimal" :min="0" :max="10000" :showButtons="true" />
+=======
+            <div class="p-field p-col-12 p-md-6">
+              <label for="matricula">Cantidad Matriculas</label>
+              <InputText id="name" v-model="product.matricula" />
+            </div>
+
+            <div class="field col-12 md:col-3 mt-3">
+              <Dropdown v-model="Eperiodo" :options="periodosLista" optionLabel="name" optionValue="code"
+                placeholder="Periodo" />
+            </div>
+
+            <div class="p-field p-col-12 p-md-6">
+              <label for="año">Año</label>
+              <InputText id="name" v-model="product.year" required="true" />
+>>>>>>> 110d6c1665173eac4f7eaa1c4347a0e9cf341702:resources/js/Pages/menusComponentes/Matricula/Matricula.vue
             </div>
 
 

@@ -22,6 +22,8 @@ export default defineComponent({
   data() {
     return {
       visibleLeft: false,
+      PermisosUsuario: [],
+      RolUsuario: [],
     };
   },
   components: {
@@ -43,6 +45,7 @@ export default defineComponent({
   props: {
     users: Array,
     title: String,
+    // permisos: Array,
   },
   // metodo para cerrar sesion
   methods: {
@@ -53,6 +56,28 @@ export default defineComponent({
     showProfile() {
       router.get(route("profile.show"));
     },
+    ImprimirRoles(){
+      console.log('Hola');
+    },
+    hasPermission(permiso){
+      return this.PermisosUsuario.some(permission => permission.name === permiso);
+    },
+    routeWithParameter(ruta, permiso){
+      return ruta + encodeURIComponent(permiso);
+    }
+  },
+  mounted() {
+    if(this.$page.props.user.roles){
+      this.PermisosUsuario = this.$page.props.user.roles[0].permissions;
+      this.RolUsuario = this.$page.props.user.roles[0];
+    } else {
+      axios.get('/user/roles-permisos').then(response => {
+        this.PermisosUsuario = response.data.permissions;
+        this.RolUsuario = response.data.role;
+      }).catch(error => {
+        console.error("Error al encontrar permisos de usuario", error);
+      });
+    }
   },
   setup() {
     const confirm = useConfirm();
@@ -181,13 +206,13 @@ export default defineComponent({
       <Button icon="pi pi-arrow-right" @click="visibleLeft = true" class="mr-2" />
       <Sidebar v-model:visible="visibleLeft" :baseZIndex="10000">
         <Link href="/dashboard" class="px-8 text-left focus:outline-none">
-        <img src="https://visionindustrial.com.mx/wp-content/uploads/2016/08/UPQ-logo.jpg" alt="LogoUPQ"
+        <img src="images/UPQ-logo.jpg" alt="LogoUPQ"
           class="h-20 mx-auto" />
         </Link>
         <div class="menus">
           <ul>
 
-            <li>
+            <li v-if="hasPermission('consultar_ingreso')">
               <Link class="
                         inline-flex
                         items-center
@@ -215,7 +240,7 @@ export default defineComponent({
               </Link>
             </li>
 
-            <li>
+            <li v-if="hasPermission('consultar_matricula')">
               <Link class="
                         inline-flex
                         items-center
@@ -242,7 +267,7 @@ export default defineComponent({
               </Link>
             </li>
 
-            <li>
+            <li v-if="hasPermission('consultar_bajas')">
               <Link class="
                         inline-flex
                         items-center
@@ -271,7 +296,7 @@ export default defineComponent({
               </Link>
             </li>
 
-            <li>
+            <li v-if="hasPermission('consultar_egresados')">
               <Link class="
                         inline-flex
                         items-center
@@ -300,7 +325,8 @@ export default defineComponent({
               <span class="ml-4"> Egresados</span>
               </Link>
             </li>
-            <li>
+
+            <li v-if="hasPermission('consultar_titulados')">
               <Link class="
                         inline-flex
                         items-center
@@ -334,7 +360,7 @@ export default defineComponent({
               </Link>
             </li>
 
-            <li>
+            <li v-if="hasPermission('consultar_becas')">
               <Link class="
                         inline-flex
                         items-center
@@ -363,7 +389,7 @@ export default defineComponent({
               </Link>
             </li>
 
-            <li>
+            <li v-if="hasPermission('consultar_transporte')">
               <Link class="
                         inline-flex
                         items-center
@@ -393,7 +419,7 @@ export default defineComponent({
               </Link>
             </li>
 
-            <li>
+            <li v-if="hasPermission('consultar_cambio_de_carrera')">
               <Link class="
                         inline-flex
                         items-center
@@ -422,6 +448,33 @@ export default defineComponent({
               <span class="ml-4"> Cambio de carrera</span>
               </Link>
             </li>
+
+            <li v-if="this.RolUsuario.name == 'Administrador'">
+                  <Link class="
+                  inline-flex
+                  items-center
+                  w-full
+                  px-4
+                  py-2
+                  mt-1
+                  text-base text-gray-900
+                  transition
+                  duration-500
+                  ease-in-out
+                  transform
+                  rounded-lg
+                  bg-gray-50
+                  hover:bg-gray-200
+                  focus:shadow-outline
+                  hover:cursor-pointer
+                    " white="" :href="route('usuario.usuarios')">
+                  <!-- :href="route('posts.index')" :active="route().current('post.index')" -->
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-6 h-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14s2-2.5 2-4a2 2 0 00-4 0c0 1.5 2 4 2 4zM2 12s3-3.5 3-6a3 3 0 016 0c0 2.5 3 6 3 6M18 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  </svg>
+                  <span class="ml-4"> Usuarios</span>
+                  </Link>
+                </li>
           </ul>
         </div>
 
@@ -499,7 +552,7 @@ export default defineComponent({
             ">
           <div class="flex flex-col items-center flex-shrink-0 px-4">
             <Link href="/dashboard" class="px-8 text-left focus:outline-none">
-            <img src="https://visionindustrial.com.mx/wp-content/uploads/2016/08/UPQ-logo.jpg" alt="LogoUPQ" />
+            <img src="https://www.upq.mx/assets/logos/logo.svg" alt="LogoUPQ" />
             </Link>
             <button class="hidden rounded-lg focus:outline-none focus:shadow-outline">
               <svg fill="currentColor" viewBox="0 0 20 20" class="w-6 h-6">
@@ -516,7 +569,9 @@ export default defineComponent({
             <nav class="flex-1 space-y-1 bg-white">
               <ul>
 
-                <li>
+                <!-- <li v-if="$page.props.user.name == 'Administrador'"> -->
+                  <li v-if="hasPermission('consultar_ingreso')">
+                    
                   <Link class="
                         inline-flex
                         items-center
@@ -544,7 +599,7 @@ export default defineComponent({
                   </Link>
                 </li>
 
-                <li>
+                <li v-if="hasPermission('consultar_matricula')">
                   <Link class="
                         inline-flex
                         items-center
@@ -572,7 +627,7 @@ export default defineComponent({
                   </Link>
                 </li>
 
-                <li>
+                <li v-if="hasPermission('consultar_bajas')">
                   <Link class="
                         inline-flex
                         items-center
@@ -601,7 +656,7 @@ export default defineComponent({
                   </Link>
                 </li>
 
-                <li>
+                <li v-if="hasPermission('consultar_egresados')">
                   <Link class="
                         inline-flex
                         items-center
@@ -630,7 +685,7 @@ export default defineComponent({
                   <span class="ml-4"> Egresados</span>
                   </Link>
                 </li>
-                <li>
+                <li v-if="hasPermission('consultar_titulados')">
                   <Link class="
                         inline-flex
                         items-center
@@ -664,7 +719,7 @@ export default defineComponent({
                   </Link>
                 </li>
 
-                <li>
+                <li v-if="hasPermission('consultar_becas')">
                   <Link class="
                         inline-flex
                         items-center
@@ -693,7 +748,7 @@ export default defineComponent({
                   </Link>
                 </li>
 
-                <li>
+                <li v-if="hasPermission('consultar_transporte')">
                   <Link class="
                         inline-flex
                         items-center
@@ -723,7 +778,7 @@ export default defineComponent({
                   </Link>
                 </li>
 
-                <li>
+                <li v-if="hasPermission('consultar_cambio_de_carrera')">
                   <Link class="
                         inline-flex
                         items-center
@@ -752,6 +807,34 @@ export default defineComponent({
                   <span class="ml-4"> Cambio de carrera</span>
                   </Link>
                 </li>
+
+                <li v-if="this.RolUsuario.name == 'Administrador'">
+                  <Link class="
+                      inline-flex
+                      items-center
+                      w-full
+                      px-4
+                      py-2
+                      mt-1
+                      text-base text-gray-900
+                      transition
+                      duration-500
+                      ease-in-out
+                      transform
+                      rounded-lg
+                      bg-gray-50
+                      hover:bg-gray-200
+                      focus:shadow-outline
+                      hover:cursor-pointer
+                    " white="" :href="route('usuario.usuarios')">
+                  <!-- :href="route('posts.index')" :active="route().current('post.index')" -->
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-6 h-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14s2-2.5 2-4a2 2 0 00-4 0c0 1.5 2 4 2 4zM2 12s3-3.5 3-6a3 3 0 016 0c0 2.5 3 6 3 6M18 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  </svg>
+                  <span class="ml-4"> Usuarios</span>
+                  </Link>
+                </li>
+
               </ul>
               <div class="w-[95%] h-auto !mt-12">
                 <div class="avatar flex justify-center">

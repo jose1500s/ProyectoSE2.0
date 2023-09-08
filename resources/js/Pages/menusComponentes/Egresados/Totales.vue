@@ -222,8 +222,107 @@ export default {
     confirmDeleteSelected() {
       this.deleteProductsDialog = true;
     },
+<<<<<<< HEAD
+
+=======
+    resetearVariables(){
+      this.TOTcuatri = null;
+      this.TOTaño = 0;
+      this.TOTcarrera = null;
+      this.TOThombres = 0;
+      this.TOTmujeres = 0;
+      this.TOTtitulados = 0;
+    },
+    subirExcel() {
+      const input = document.getElementById("inputExcel");
+
+      // si el archivo no es .xlsx no se sube y mandar un mensaje de error
+      if (input.files[0].type != "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet") {
+        this.$toast.add({
+          severity: "error",
+          summary: "Error",
+          detail: "El archivo debe ser .xlsx",
+          life: 6000,
+        });
+        return false;
+      } else {
+        readXlsxFile(input.files[0]).then((rows) => {
+          //mandar a datosExcel los datos apartir de la psicion 1 del array
+          this.datosExcel = rows.slice(1);
+          // mandar a columnasExcel las columnas del archivo
+          this.columnasExcel = rows[0];
+          console.log(this.datosExcel);
+          console.log(this.columnasExcel);
+          // si el archivo no tiene las columnas 'carrera', 'aspirantes', 'examinados', 'no admitidos' y 'periodo' no se sube y mandar un mensaje de error
+          if (
+            this.columnasExcel[1] != "Periodo" ||
+            this.columnasExcel[2] != "Año" ||
+            this.columnasExcel[3] != "Carrera" ||
+            this.columnasExcel[4] != "Hombres" ||
+            this.columnasExcel[5] != "Mujeres" ||
+            this.columnasExcel[6] != "Egresados" ||
+            this.columnasExcel[7] != "Titulados" ||
+            this.columnasExcel[8] != "No Titulados"
+          ) {
+            this.wrongFormatExcel = true;
+            this.$toast.add({
+              severity: "error",
+              summary: "Error",
+              detail: "Formato de archivo incorrecto",
+              life: 5000,
+            });
+            return false;
+          } else {
+            this.wrongFormatExcel = false;
+          }
+
+        });
+      }
+    },
+    importarExcel() {
+      const datosInsertar = []
+      for (let i = 0; i < this.datosExcel.length; i++) {
+        datosInsertar.push({
+          periodo: this.datosExcel[i][1],
+          año: this.datosExcel[i][2],
+          carrera: this.datosExcel[i][3],
+          hombres: this.datosExcel[i][4],
+          mujeres: this.datosExcel[i][5],
+          egresados: this.datosExcel[i][6],
+          titulados: this.datosExcel[i][7],
+          no_titulados: this.datosExcel[i][8],
+        })
+      }
+
+      const data = {
+        datos: datosInsertar,
+      };
+
+      this.$inertia.post("/importar-excel-egresados-Totales", data, {
+        preserveState: true,
+        preserveScroll: true,
+        onSuccess: () => {
+          this.importExcelDialog = false;
+          this.$toast.add({
+            severity: "success",
+            summary: "Exito",
+            detail: "Importado exitosamente",
+            life: 3000,
+          });
+        },
+      });
 
     },
+    openImportExcel() {
+      this.importExcelDialog = true;
+      // cada que se abra se resetea el valor del array de datosExcel para que no se repitan los datos
+      this.datosExcel = [];
+    },
+    hasPermission(permiso){
+      return this.$page.props.user.roles[0].permissions.some(permission => permission.name === permiso);
+>>>>>>> 110d6c1665173eac4f7eaa1c4347a0e9cf341702
+    },
+  },
     data(){
         return{
             filters: {
@@ -276,13 +375,26 @@ export default {
 <template>
     <Toolbar class="mb-4">
       <template #start>
-        <Button
+        <Button v-if="hasPermission('registrar_egresados')"
           label="Nuevo Registro"
           icon="pi pi-plus"
           class="p-button-success !mr-2"
           @click="openNew"
         />
-        <Button
+        <Button v-else disabled
+          label="Nuevo Registro"
+          icon="pi pi-plus"
+          class="p-button-success !mr-2"
+          @click="openNew"
+        />
+        <Button v-if="hasPermission('eliminar_egresados')"
+          label="Eliminar"
+          icon="pi pi-trash"
+          class="p-button-danger"
+          @click="confirmDeleteSelected"
+          :disabled="!selectedProducts || !selectedProducts.length"
+        />
+        <Button v-else disabled
           label="Eliminar"
           icon="pi pi-trash"
           class="p-button-danger"
@@ -360,9 +472,13 @@ export default {
         <Column field="anio" header="Año de egreso" :sortable="true"></Column>
         <Column :exportable="false" style="min-width: 8rem" class="p-6">
           <template #body="slotProps">
-            <Button icon="pi pi-pencil" class="p-button-rounded p-button-success !mr-2"
+            <Button v-if="hasPermission('editar_egresados')" icon="pi pi-pencil" class="p-button-rounded p-button-success !mr-2"
               @click="editProduct(slotProps.data)" />
-            <Button icon="pi pi-trash" class="p-button-rounded p-button-warning"
+            <Button v-else disabled icon="pi pi-pencil" class="p-button-rounded p-button-success !mr-2"
+              @click="editProduct(slotProps.data)" />
+            <Button v-if="hasPermission('eliminar_egresados')" icon="pi pi-trash" class="p-button-rounded p-button-warning"
+              @click="confirmDeleteProduct(slotProps.data)" />
+            <Button v-else disabled icon="pi pi-trash" class="p-button-rounded p-button-warning"
               @click="confirmDeleteProduct(slotProps.data)" />
           </template>
         </Column>

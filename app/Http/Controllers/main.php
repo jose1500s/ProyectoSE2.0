@@ -10,6 +10,7 @@ use App\Models\tb_maestria;
 use App\Models\tb_equivalencia;
 use App\Models\tb_nuevo_ingreso;
 use App\Models\tb_re_ingreso;
+<<<<<<< HEAD
 use App\Models\tb_indicador_equivalencia;
 use App\Models\tb_indicador_titulados;
 use App\Models\tb_transporte_lugares;
@@ -17,10 +18,32 @@ use App\Models\tb_transporte_solicitudes_seleccionados;
 use App\Models\tb_egresados;
 use App\Models\tb_egresados_totales;
 
+=======
+use Illuminate\Support\Facades\Auth;
+use App\Models\User;
+use Spatie\Permission\Models\Role;
+>>>>>>> 110d6c1665173eac4f7eaa1c4347a0e9cf341702
 class main extends Controller
 {
    public function ingreso()
    {
+<<<<<<< HEAD
+=======
+      // Recuperar el usuario de la sesión actual
+      $usuario = Auth::user();
+      // $roles = $usuario->roles->pluck('name')->toArray();
+      $roles = $usuario->roles;
+
+      $permisos = [];
+      foreach($roles as $rol){
+         foreach($rol->permissions as $permiso){
+            array_push($permisos, $permiso->name);
+         }
+      }
+      
+      $roles = Role::all();
+
+>>>>>>> 110d6c1665173eac4f7eaa1c4347a0e9cf341702
       // traer de la tabla tb_admision todos los registros
       $ingresos = tb_admision::all();
       $maestrias = tb_maestria::all();
@@ -28,19 +51,42 @@ class main extends Controller
       $ningresos = tb_nuevo_ingreso::all();
       $reingresos = tb_re_ingreso::all();
       // retornar con Inertia a menusComponentes/TabMenu y pasarle los registros
+<<<<<<< HEAD
       return Inertia::render('menusComponentes/Ingreso/TabMenu', ['maestrias' => $maestrias,'ingresos' => $ingresos, 'equivalencias' => $equivalencias, 'ningresos' => $ningresos, 'reingresos' => $reingresos]);
    }
 
 
    public function bajas() {
+=======
+      return Inertia::render('menusComponentes/Ingreso/TabMenu', ['usuario ' => $usuario, 'roles' => $roles, 'permisos' => $permisos,'maestrias' => $maestrias,'ingresos' => $ingresos, 'equivalencias' => $equivalencias, 'ningresos' => $ningresos, 'reingresos' => $reingresos]);
+   }
+
+   public function bajas() {
+      $roles = Auth::user()->roles;
+
+      foreach($roles as $rol){
+         $rol->permissions;
+      }
+      
+>>>>>>> 110d6c1665173eac4f7eaa1c4347a0e9cf341702
       return Inertia::render('menusComponentes/Bajas');
    }
 
    public function matricula(){
+<<<<<<< HEAD
+=======
+      $roles = Auth::user()->roles;
+
+      foreach($roles as $rol){
+         $rol->permissions;
+      }
+      
+>>>>>>> 110d6c1665173eac4f7eaa1c4347a0e9cf341702
       return Inertia::render('menusComponentes/Matricula');
    }
 
    public function egresados(){
+<<<<<<< HEAD
       $egresados = tb_egresados::all();
       $egresados_totales = tb_egresados_totales::all();
       return Inertia::render('menusComponentes/Egresados/TabMenuEgre',['egresados'=>$egresados,'totales'=>$egresados_totales]);
@@ -55,16 +101,60 @@ class main extends Controller
    }
 
    public function becas(){
+=======
+      $roles = Auth::user()->roles;
+
+      foreach($roles as $rol){
+         $rol->permissions;
+      }
+      
+      return Inertia::render('menusComponentes/Egresados');
+   }
+
+   public function titulados(){
+      $roles = Auth::user()->roles;
+
+      foreach($roles as $rol){
+         $rol->permissions;
+      }
+      
+      return Inertia::render('menusComponentes/Titulados');
+   }
+
+   public function becas(){
+      $roles = Auth::user()->roles;
+
+      foreach($roles as $rol){
+         $rol->permissions;
+      }
+      
+>>>>>>> 110d6c1665173eac4f7eaa1c4347a0e9cf341702
       return Inertia::render('menusComponentes/Becas');
    }
 
    public function transporte(){
+<<<<<<< HEAD
       $solicitudes = tb_transporte_solicitudes_seleccionados::all();
       $rutas = tb_transporte_lugares::all();
       return Inertia::render('menusComponentes/Transporte/TabMenu',['solicitudes'=> $solicitudes,'rutas'=>$rutas]);
+=======
+      $roles = Auth::user()->roles;
+
+      foreach($roles as $rol){
+         $rol->permissions;
+      }
+      
+      return Inertia::render('menusComponentes/Transporte');
+>>>>>>> 110d6c1665173eac4f7eaa1c4347a0e9cf341702
    }
 
    public function cambioDeCarrera(){
+      $roles = Auth::user()->roles;
+
+      foreach($roles as $rol){
+         $rol->permissions;
+      }
+      
       return Inertia::render('menusComponentes/CambioDeCarrera');
    }
 

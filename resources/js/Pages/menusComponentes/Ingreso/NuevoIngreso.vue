@@ -38,6 +38,7 @@ export default {
     InputNumber,
   },
   props: {
+    // permisos: Array,
     ningresos: Array,
   },
   setup() {},
@@ -144,7 +145,20 @@ export default {
       this.submitted = false;
     },
     registrarNIngreso() {
+<<<<<<< HEAD
       this.submitted = true; 
+=======
+      this.submitted = true;
+      if (this.NIhombres == 0 && this.NImujeres == 0) {
+        this.$toast.add({
+          severity: "error",
+          summary: "Error",
+          detail: "No se puede registrar un reingreso con 0 hombres y 0 mujeres, ingrese un numero de solicitudes valido en hombres y/o mujeres",
+          life: 3000,
+        });
+        return false;
+      }
+>>>>>>> 110d6c1665173eac4f7eaa1c4347a0e9cf341702
       if (
         this.NIcarreras == null ||
         this.totalIngresos == 0 ||
@@ -192,17 +206,34 @@ export default {
       }
     },
     editarNIngreso() {
+<<<<<<< HEAD
       this.submitted = true; 
+=======
+      this.submitted = true;
+      if (this.product.hombres == 0 && this.product.mujeres == 0) {
+        this.$toast.add({
+          severity: "error",
+          summary: "Error",
+          detail: "No se puede editar un reingreso con 0 hombres y 0 mujeres, ingrese un numero de solicitudes valido en hombres y/o mujeres",
+          life: 3000,
+        });
+        return false;
+      }
+>>>>>>> 110d6c1665173eac4f7eaa1c4347a0e9cf341702
       if (
         this.product.id == null ||
-        this.product.carrera == null ||
+        this.Ecarrera == null ||
         this.product.total_ingresos == 0 ||
         this.product.sexo == 0 ||
         this.product.generacion == 0 ||
         this.product.admitidos == 0 ||
         this.product.inscritos == 0 ||
+<<<<<<< HEAD
         this.product.proceso == null ||
         this.product.periodo == null
+=======
+        this.Eproceso == null
+>>>>>>> 110d6c1665173eac4f7eaa1c4347a0e9cf341702
       ) {
         // si alguno de los campos esta vacio, no enviar el formulario y mostrar un mensaje de error
         this.$toast.add({
@@ -215,15 +246,19 @@ export default {
       } else {
        const data = {
           id: this.product.id,
-          carrera: this.product.carrera,
+          carrera: this.Ecarrera,
           totalIngresos: this.product.total_ingresos,
           examinados: this.product.examinados,
           sexo: this.product.sexo,
           generacion: this.product.generacion,
           admitidos: this.product.admitidos,
           inscritos: this.product.inscritos,
+<<<<<<< HEAD
           procesos: this.product.proceso,
           periodos: this.product.periodo,
+=======
+          procesos: this.Eproceso,
+>>>>>>> 110d6c1665173eac4f7eaa1c4347a0e9cf341702
         };
         this.$inertia.post(`/editar-NIngreso/${this.product.id}`, data, {
           preserveState: true,
@@ -242,6 +277,8 @@ export default {
     },
     editProduct(product) {
       this.product = { ...product }; // esto es para que se muestre los datos del producto en el formulario
+      this.Ecarrera = product.carrera;
+      this.Eproceso = product.proceso;
       this.editDialog = true;
     },
     confirmDeleteProduct(product) {
@@ -291,6 +328,115 @@ export default {
     confirmDeleteSelected() {
       this.deleteProductsDialog = true;
     },
+<<<<<<< HEAD
+=======
+    hasPermission(permiso) {
+      return this.$page.props.user.roles[0].permissions.some(permission => permission.name === permiso);
+    },
+    openImportExcel() {
+      this.importExcelDialog = true;
+      // cada que se abra se resetea el valor del array de datosExcel para que no se repitan los datos
+      this.datosExcel = [];
+    },
+    subirExcel() {
+      const input = document.getElementById("inputExcel");
+
+      // si el archivo no es .xlsx no se sube y mandar un mensaje de error
+      if (input.files[0].type != "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet") {
+        this.$toast.add({
+          severity: "error",
+          summary: "Error",
+          detail: "El archivo debe ser .xlsx",
+          life: 6000,
+        });
+        return false;
+      } else {
+        readXlsxFile(input.files[0]).then((rows) => {
+          //mandar a datosExcel los datos apartir de la psicion 1 del array
+          this.datosExcel = rows.slice(1);
+          // mandar a columnasExcel las columnas del archivo
+          this.columnasExcel = rows[0];
+          console.log(this.datosExcel)
+          console.log(this.columnasExcel)
+          // si el archivo no tiene las columnas 'carrera', 'total_ingresos', 'generacion', 'hombres', 'mujeres', 'inscritos', 'proceso', 'periodo
+          if (
+            this.columnasExcel[1] != "Carrera" ||
+            this.columnasExcel[2] != "Total Ingresos" ||
+            this.columnasExcel[3] != "Generacion" ||
+            this.columnasExcel[4] != "Hombres" ||
+            this.columnasExcel[5] != "Mujeres" ||
+            this.columnasExcel[6] != "Admitidos" ||
+            this.columnasExcel[7] != "Inscritos" ||
+            this.columnasExcel[8] != "Proceso" ||
+            this.columnasExcel[9] != "Periodo"
+
+          ) {
+            this.wrongFormatExcel = true;
+            this.$toast.add({
+              severity: "error",
+              summary: "Error",
+              detail: "Formato de archivo incorrecto",
+              life: 5000,
+            });
+            return false;
+          } else {
+            this.wrongFormatExcel = false;
+          }
+
+        });
+      }
+    },
+    importarExcel() {
+      const datosInsertar = []
+      for (let i = 0; i < this.datosExcel.length; i++) {
+        datosInsertar.push({
+          carrera: this.datosExcel[i][1],
+          total_ingresos: this.datosExcel[i][2],
+          generacion: this.datosExcel[i][3],
+          hombres: this.datosExcel[i][4],
+          mujeres: this.datosExcel[i][5],
+          admitidos: this.datosExcel[i][6],
+          inscritos: this.datosExcel[i][7],
+          proceso: this.datosExcel[i][8],
+          periodo: this.datosExcel[i][9],
+        });
+      }
+
+      const data = {
+        datos: datosInsertar,
+      };
+
+      this.$inertia.post("/importar-excel-ningresos", data, {
+        preserveState: true,
+        preserveScroll: true,
+        onSuccess: () => {
+          this.importExcelDialog = false;
+          this.$toast.add({
+            severity: "success",
+            summary: "Exito",
+            detail: "Importado exitosamente",
+            life: 3000,
+          });
+        },
+      });
+
+    },
+    filtroCarreras() {
+      let data = {
+        carrera: this.filters.carrera.value,
+      };
+      axios
+        .post("/obtener-filtro-carreras-admision", data)
+        .then((response) => {
+          this.datosFiltrados = response.data.datosCarrerasFiltro;
+          this.admisionesTodosLosRegistros = response.data.admisiones;
+          // Aquí puedes realizar otras operaciones con los datos recibidos
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+>>>>>>> 110d6c1665173eac4f7eaa1c4347a0e9cf341702
   },
   data() {
     return {
@@ -299,6 +445,12 @@ export default {
         Proceso: { value: null, matchMode: FilterMatchMode.IN },
         fecha: { value: null, matchMode: FilterMatchMode.IN },
       },
+<<<<<<< HEAD
+=======
+      datosFiltrados: [],
+      datosExcel: [],
+      columnasExcel: [],
+>>>>>>> 110d6c1665173eac4f7eaa1c4347a0e9cf341702
       carrerasLista: [
         { name: "Manufactura", code: "Manufactura" },
         { name: "Mecatronica", code: "Mecatronica" },
@@ -334,6 +486,29 @@ export default {
       deleteProductDialog: false,
       selectedProducts: null,
       deleteProductsDialog: false,
+<<<<<<< HEAD
+=======
+      importExcelDialog: false,
+      Ecarrera: null,
+      Eproceso: null,
+      columnasPreviewExcel: [
+        { name: "ID", code: "0" },
+        { name: "Carrera", code: "1" },
+        { name: "Total Ingresos", code: "2" },
+        { name: "Generacion", code: "3" },
+        { name: "Hombres", code: "4" },
+        { name: "Mujeres", code: "5" },
+        { name: "Admitidos", code: "6" },
+        { name: "Inscritos", code: "7" },
+        { name: "Proceso", code: "8" },
+        { name: "Periodo", code: "9" },
+      ],
+      procesosLista: [
+        { name: "1er Proceso", code: "1er Proceso" },
+        { name: "2do Proceso", code: "2do Proceso" },
+        { name: "3er Proceso", code: "3er Proceso" },
+      ],
+>>>>>>> 110d6c1665173eac4f7eaa1c4347a0e9cf341702
     };
   },
 };
@@ -343,6 +518,7 @@ export default {
   <!-- new button -->
   <Toolbar class="mb-4">
     <template #start>
+<<<<<<< HEAD
       <Button
         label="Nuevo Registro"
         icon="pi pi-plus"
@@ -356,6 +532,18 @@ export default {
         @click="confirmDeleteSelected"
         :disabled="!selectedProducts || !selectedProducts.length"
       />
+=======
+      <Button v-if="hasPermission('registrar_ingreso')" label="Nuevo Registro" icon="pi pi-plus"
+        class="p-button-success !mr-2" @click="openNew" />
+      <Button v-else disabled label="Nuevo Registro" icon="pi pi-plus" class="p-button-success !mr-2" @click="openNew" />
+      <Button v-if="hasPermission('eliminar_ingreso')" label="Eliminar" icon="pi pi-trash" class="p-button-danger"
+        @click="confirmDeleteSelected" :disabled="!selectedProducts || !selectedProducts.length" />
+      <Button v-else disabled label="Eliminar" icon="pi pi-trash" class="p-button-danger" @click="confirmDeleteSelected"
+        :disabled="!selectedProducts || !selectedProducts.length" />
+
+      <!-- button dialog para importar excel-->
+      <Button label="Importar Excel" icon="pi pi-upload" class="!ml-2" @click="openImportExcel" />
+>>>>>>> 110d6c1665173eac4f7eaa1c4347a0e9cf341702
     </template>
   </Toolbar>
 
@@ -429,6 +617,7 @@ export default {
         </div>
       </div>
 
+<<<<<<< HEAD
       <DataTable
         :value="ningresos"
         :paginator="true"
@@ -447,6 +636,12 @@ export default {
           style="width: 3rem"
           :exportable="false"
         ></Column>
+=======
+      <DataTable exportFilename="Nuevo Ingresos" :value="ningresos" :paginator="true" class="p-datatable-customers"
+        :rows="7" ref="dt" v-model:filters="filters" v-model:selection="selectedProducts" :emptyMessage="noDataMessage"
+        stripedRows sortMode="multiple" removableSort>
+        <Column selectionMode="multiple" style="width: 3rem" :exportable="false"></Column>
+>>>>>>> 110d6c1665173eac4f7eaa1c4347a0e9cf341702
         <Column field="id" header="ID" :sortable="true" hidden></Column>
         <Column field="carrera" header="Carrera" :sortable="true"></Column>
         <Column
@@ -466,9 +661,13 @@ export default {
         <Column field="periodo" header="Periodo" :sortable="true"></Column>
         <Column :exportable="false" style="min-width: 8rem" class="p-6">
           <template #body="slotProps">
-            <Button icon="pi pi-pencil" class="p-button-rounded p-button-success !mr-2"
+            <Button v-if="hasPermission('editar_ingreso')" icon="pi pi-pencil"
+              class="p-button-rounded p-button-success !mr-2" @click="editProduct(slotProps.data)" />
+            <Button v-else disabled icon="pi pi-pencil" class="p-button-rounded p-button-success !mr-2"
               @click="editProduct(slotProps.data)" />
-            <Button icon="pi pi-trash" class="p-button-rounded p-button-warning"
+            <Button v-if="hasPermission('eliminar_ingreso')" icon="pi pi-trash" class="p-button-rounded p-button-warning"
+              @click="confirmDeleteProduct(slotProps.data)" />
+            <Button v-else disabled icon="pi pi-trash" class="p-button-rounded p-button-warning"
               @click="confirmDeleteProduct(slotProps.data)" />
           </template>
         </Column>
@@ -654,7 +853,12 @@ export default {
         
             <div class="p-field p-col-12 p-md-12">
               <label for="carrera">Carrera</label>
+<<<<<<< HEAD
               <InputText id="carrera" v-model="product.carrera" />
+=======
+              <Dropdown v-model="Ecarrera" :options="carrerasLista" optionLabel="name" optionValue="code" :filter="true"
+                placeholder="Carrera..." class="!mt-3" />
+>>>>>>> 110d6c1665173eac4f7eaa1c4347a0e9cf341702
             </div>
 
             
@@ -686,7 +890,12 @@ export default {
 
             <div class="p-field p-col-12 p-md-12">
               <label for="total_ingresos">Proceso</label>
+<<<<<<< HEAD
               <InputText id="total_ingresos" v-model="product.proceso"  />
+=======
+              <Dropdown v-model="Eproceso" :options="procesosLista" optionLabel="name" optionValue="code"
+              placeholder="Proceso" class="!mt-3" />
+>>>>>>> 110d6c1665173eac4f7eaa1c4347a0e9cf341702
             </div>
 
             <div class="p-field p-col-12 p-md-12">
