@@ -463,7 +463,7 @@ export default {
         <Column field="ruta" header="Ruta" :sortable="true"></Column>
         <Column field="lugares_disp" header="Lugares Disponibles" :sortable="true"></Column>
         <Column field="pagados" header="Lugares Pagados" :sortable="true"></Column>
-        <Column field="cuatrimestre" header="Periodo" :sortable="true"></Column>
+        <Column field="cuatrimestre" header="Cuatrimestre" :sortable="true"></Column>
         <Column field="turno" header="Turno" :sortable="true"></Column>
         <Column :exportable="false" style="min-width: 8rem" class="p-6">
           <template #body="slotProps">

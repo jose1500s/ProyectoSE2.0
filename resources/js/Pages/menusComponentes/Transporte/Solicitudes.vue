@@ -17,8 +17,6 @@ import ConfirmDialog from "primevue/confirmdialog";
 import Toolbar from "primevue/toolbar";
 import Dropdown from "primevue/dropdown";
 import InputNumber from "primevue/inputnumber";
-import axios from "axios";
-import readXlsxFile from "read-excel-file";
 
 export default {
   components: {
@@ -106,6 +104,7 @@ export default {
         confirmDeleteSelected() {
             this.deleteProductsDialog = true;
         },
+<<<<<<< HEAD
         saveImage() {
       // guardar la grafica como imagen en el escritorio
       const contenedorGrafica = document.getElementById("contenedorGrafica");
@@ -121,6 +120,8 @@ export default {
       // cada que se abra se resetea el valor del array de datosExcel para que no se repitan los datos
       this.datosExcel = [];
     },
+=======
+>>>>>>> 8757f7016d5fa15e537193bb052d8f74a8e30551
         editarSolicitud() {
       this.submitted = true; 
       if (
@@ -273,82 +274,6 @@ export default {
     confirmDeleteSelected() {
       this.deleteProductsDialog = true;
     },
-    subirExcel() {
-      const input = document.getElementById("inputExcel");
-
-      // si el archivo no es .xlsx no se sube y mandar un mensaje de error
-      if (input.files[0].type != "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet") {
-        this.$toast.add({
-          severity: "error",
-          summary: "Error",
-          detail: "El archivo debe ser .xlsx",
-          life: 6000,
-        });
-        return false;
-      } else {
-        readXlsxFile(input.files[0]).then((rows) => {
-          //mandar a datosExcel los datos apartir de la psicion 1 del array
-          this.datosExcel = rows.slice(1);
-          // mandar a columnasExcel las columnas del archivo
-          this.columnasExcel = rows[0];
-          console.log(this.datosExcel)
-          console.log(this.columnasExcel)
-          // si el archivo no tiene las columnas 'carrera', 'aspirantes', 'examinados', 'no admitidos' y 'periodo' no se sube y mandar un mensaje de error
-          if (
-            this.columnasExcel[1] != "Carrera" ||
-            this.columnasExcel[2] != "Aspirantes" ||
-            this.columnasExcel[3] != "Examinados" ||
-            this.columnasExcel[4] != "No Admitidos" ||
-            this.columnasExcel[5] != "Periodo"
-          ) {
-            this.wrongFormatExcel = true;
-            this.$toast.add({
-              severity: "error",
-              summary: "Error",
-              detail: "Formato de archivo incorrecto",
-              life: 5000,
-            });
-            return false;
-          } else {
-            this.wrongFormatExcel = false;
-          }
-
-        });
-      }
-    },
-    importarExcel() {
-      const datosInsertar = []
-      for (let i = 0; i < this.datosExcel.length; i++) {
-        datosInsertar.push({
-          carrera: this.datosExcel[i][1],
-          ruta: this.datosExcel[i][2],
-          solicitudes: this.datosExcel[i][3],
-          hombres: this.datosExcel[i][4],
-          mujeres: this.datosExcel[i][5],
-          periodo: this.datosExcel[i][6],
-          turno: this.datosExcel[i][7],
-        })
-      }
-
-      const data = {
-        datos: datosInsertar,
-      };
-
-      this.$inertia.post("/importar-excel-solicitudes", data, {
-        preserveState: true,
-        preserveScroll: true,
-        onSuccess: () => {
-          this.importExcelDialog = false;
-          this.$toast.add({
-            severity: "success",
-            summary: "Exito",
-            detail: "Importado exitosamente",
-            life: 3000,
-          });
-        },
-      });
-
-    },
     },
     data(){
         return {
@@ -391,7 +316,6 @@ export default {
                 { name: "SEP-DIC 2021", code: "SEP-DIC 2021" },
             ],
             noDataMessage: "No se encontraron datos",
-            importExcelDialog: false,
             displayResponsive: false,
             productDialog: false,
             editDialog: false,
@@ -425,17 +349,6 @@ export default {
                 @click="confirmDeleteSelected"
                 :disabled="!selectedProducts || !selectedProducts.length"
             />
-            <Button
-              icon="pi pi-external-link"
-              label="Exportar Excel"
-              @click="exportCSV($event)"
-            />
-            <Button 
-              label="Importar Excel" 
-              icon="pi pi-upload" 
-              class="!ml-2" 
-              @click="openImportExcel" 
-            />
         </template>
     </Toolbar>
     <section class="bg-white" id="tablaIngreso">
@@ -445,9 +358,18 @@ export default {
                 <div>
                     <Toast />
                 </div>
+<<<<<<< HEAD
                 <!-- model para abrir grafica -->
                 <Button label="Grafica" icon="pi pi-chart-bar" @click="openResponsive"/>
                 
+=======
+                <Button
+                    icon="pi pi-external-link"
+                    label="Exportar Excel"
+                    @click="exportCSV($event)"
+                />
+
+>>>>>>> 8757f7016d5fa15e537193bb052d8f74a8e30551
                 <MultiSelect
                     v-model="filters.carrera.value"
                     :options="filtrarCarreras()"
@@ -509,7 +431,7 @@ export default {
         <Column field="hombres" header="Hombres" :sortable="true"></Column>
         <Column field="mujeres" header="Mujeres" :sortable="true"></Column>
         <Column field="seleccionados" header="Seleccionados" :sortable="true"></Column>
-        <Column field="cuatrimestre" header="Periodo" :sortable="true"></Column>
+        <Column field="cuatrimestre" header="Cuatrimestre" :sortable="true"></Column>
         <Column field="turno" header="Turno" :sortable="true"></Column>
         <Column :exportable="false" style="min-width: 8rem" class="p-6">
           <template #body="slotProps">
@@ -525,6 +447,7 @@ export default {
           </div>
         </template>    
     </DataTable>
+<<<<<<< HEAD
 
 
 
@@ -561,6 +484,8 @@ export default {
 
   </Dialog>
   
+=======
+>>>>>>> 8757f7016d5fa15e537193bb052d8f74a8e30551
 
         <Dialog
         v-model:visible="productDialog"
@@ -774,7 +699,6 @@ export default {
           <Button label="Si" icon="pi pi-check" class="p-button-text" @click="eliminarSolicitud" />
         </template>
       </Dialog>
-      
     </div>
     </section>
 </template>

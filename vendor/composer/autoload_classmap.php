@@ -14,15 +14,14 @@ return array(
     'App\\Actions\\Jetstream\\DeleteUser' => $baseDir . '/app/Actions/Jetstream/DeleteUser.php',
     'App\\Console\\Kernel' => $baseDir . '/app/Console/Kernel.php',
     'App\\Exceptions\\Handler' => $baseDir . '/app/Exceptions/Handler.php',
-    'App\\Http\\Controllers\\BajasController' => $baseDir . '/app/Http/Controllers/BajasController.php',
-    'App\\Http\\Controllers\\BecasController' => $baseDir . '/app/Http/Controllers/BecasController.php',
     'App\\Http\\Controllers\\Controller' => $baseDir . '/app/Http/Controllers/Controller.php',
-    'App\\Http\\Controllers\\EgresadosController' => $baseDir . '/app/Http/Controllers/EgresadosController.php',
-    'App\\Http\\Controllers\\IngresoController' => $baseDir . '/app/Http/Controllers/IngresoController.php',
     'App\\Http\\Controllers\\Ingreso\\admisionGraficasController' => $baseDir . '/app/Http/Controllers/Ingreso/admisionGraficasController.php',
+<<<<<<< HEAD
     'App\\Http\\Controllers\\MatriculaController' => $baseDir . '/app/Http/Controllers/MatriculaController.php',
     'App\\Http\\Controllers\\TituladosController' => $baseDir . '/app/Http/Controllers/TituladosController.php',
     'App\\Http\\Controllers\\TransporteController' => $baseDir . '/app/Http/Controllers/TransporteController.php',
+=======
+>>>>>>> 8757f7016d5fa15e537193bb052d8f74a8e30551
     'App\\Http\\Controllers\\main' => $baseDir . '/app/Http/Controllers/main.php',
     'App\\Http\\Kernel' => $baseDir . '/app/Http/Kernel.php',
     'App\\Http\\Middleware\\Authenticate' => $baseDir . '/app/Http/Middleware/Authenticate.php',
@@ -38,6 +37,7 @@ return array(
     'App\\Models\\Baja' => $baseDir . '/app/Models/Baja.php',
     'App\\Models\\User' => $baseDir . '/app/Models/User.php',
     'App\\Models\\tb_admision' => $baseDir . '/app/Models/tb_admision.php',
+<<<<<<< HEAD
     'App\\Models\\tb_bajas_academicas' => $baseDir . '/app/Models/tb_bajas_academicas.php',
     'App\\Models\\tb_bajas_administrativas' => $baseDir . '/app/Models/tb_bajas_administrativas.php',
     'App\\Models\\tb_bajas_temporales' => $baseDir . '/app/Models/tb_bajas_temporales.php',
@@ -49,19 +49,17 @@ return array(
     'App\\Models\\tb_becas_cardenal_azuls' => $baseDir . '/app/Models/tb_becas_cardenal_azuls.php',
     'App\\Models\\tb_becas_excelencia_academica' => $baseDir . '/app/Models/tb_becas_excelencia_academica.php',
     'App\\Models\\tb_becas_por_proyectos' => $baseDir . '/app/Models/tb_becas_por_proyectos.php',
+=======
+>>>>>>> 8757f7016d5fa15e537193bb052d8f74a8e30551
     'App\\Models\\tb_egresados' => $baseDir . '/app/Models/tb_egresados.php',
     'App\\Models\\tb_egresados_totales' => $baseDir . '/app/Models/tb_egresados_totales.php',
-    'App\\Models\\tb_egresados_totales_generacion' => $baseDir . '/app/Models/tb_egresados_totales_generacion.php',
     'App\\Models\\tb_equivalencia' => $baseDir . '/app/Models/tb_equivalencia.php',
     'App\\Models\\tb_indicador_equivalencia' => $baseDir . '/app/Models/tb_indicador_equivalencia.php',
     'App\\Models\\tb_indicador_titulados' => $baseDir . '/app/Models/tb_indicador_titulados.php',
     'App\\Models\\tb_ingreso' => $baseDir . '/app/Models/tb_ingreso.php',
     'App\\Models\\tb_maestria' => $baseDir . '/app/Models/tb_maestria.php',
-    'App\\Models\\tb_matricula' => $baseDir . '/app/Models/tb_matricula.php',
     'App\\Models\\tb_nuevo_ingreso' => $baseDir . '/app/Models/tb_nuevo_ingreso.php',
     'App\\Models\\tb_re_ingreso' => $baseDir . '/app/Models/tb_re_ingreso.php',
-    'App\\Models\\tb_titulados_totales' => $baseDir . '/app/Models/tb_titulados_totales.php',
-    'App\\Models\\tb_titulados_totales_carreras' => $baseDir . '/app/Models/tb_titulados_totales_carreras.php',
     'App\\Models\\tb_transporte' => $baseDir . '/app/Models/tb_transporte.php',
     'App\\Models\\tb_transporte_lugares' => $baseDir . '/app/Models/tb_transporte_lugares.php',
     'App\\Models\\tb_transporte_solicitudes_seleccionados' => $baseDir . '/app/Models/tb_transporte_solicitudes_seleccionados.php',

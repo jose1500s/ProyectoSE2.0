@@ -19,11 +19,8 @@ return new class extends Migration
             $table->integer('hombres');
             $table->integer('mujeres');
             $table->integer('egresados');
-            $table->integer('titulados');
-            $table->integer('no_titulados');
             $table->string('periodo');
-            $table->integer('año');
-            $table->string('periodo_con_año');
+            $table->integer('anio');
             $table->timestamps();
         });
     }
