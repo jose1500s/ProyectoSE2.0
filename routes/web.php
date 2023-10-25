@@ -7,9 +7,6 @@ use Illuminate\Support\Facades\Auth;
 // importar el componente Register.vue de la carpeta Auth dentro de pages
 use resources\js\pages\Auth\Login;  
 use App\Http\Controllers\main;
-<<<<<<< HEAD
-use App\Http\Controllers\Ingreso\admisionGraficasController;
-=======
 
 use App\Http\Controllers\ControladorUsuarios;
 
@@ -23,7 +20,6 @@ use App\Http\Controllers\Ingreso\admisionGraficasController;
 use App\Http\Controllers\MatriculaController;
 use App\Http\Controllers\WelcomeController;
 use App\Http\Controllers\CambioCarreraController;
->>>>>>> 110d6c1665173eac4f7eaa1c4347a0e9cf341702
 
 
 /*
@@ -61,27 +57,6 @@ Route::middleware([
     })->name('dashboard');
 
     // ruta para abrir el perfil del usuario
-<<<<<<< HEAD
-    Route::get('/ingreso', [main::class, 'ingreso'])->name('usuario.ingreso');
-
-    // ruta para abrir el menu de bajas
-    Route::get('/bajas', [main::class, 'bajas'])->name('usuario.bajas');
-    
-    // Ruta para abrir el menu de matricula
-    Route::get('/matricula', [main::class, 'matricula'])->name('usuario.matricula');
-    
-    // Ruta para abrir el menu de egresados
-    Route::get('/egresados', [main::class, 'egresados'])->name('usuario.egresados');
-
-    // Ruta para abrir el menu de titulados
-    Route::get('/titulados', [main::class, 'titulados'])->name('usuario.titulados');
-
-    // Ruta para abrir el menu de becas
-    Route::get('/becas', [main::class, 'becas'])->name('usuario.becas');
-
-    // Ruta para abrir el menu de transporte
-    Route::get('/transporte', [main::class, 'transporte'])->name('usuario.transporte');
-=======
     Route::get('/ingreso', [IngresoController::class, 'ingreso'])->middleware(CheckPermissions::class . ':consultar_ingreso')->name('usuario.ingreso');
 
     // ruta para abrir el menu de bajas
@@ -101,7 +76,6 @@ Route::middleware([
 
     // Ruta para abrir el menu de transporte
     Route::get('/transporte', [TransporteController::class, 'transporte'])->middleware(CheckPermissions::class . ":consultar_transporte")->name('usuario.transporte');
->>>>>>> 110d6c1665173eac4f7eaa1c4347a0e9cf341702
 
     // Ruta para abrir el menu de cambio de carrera
   
@@ -126,8 +100,6 @@ Route::middleware([
 
     // ---------- FIN TAB ADMISIONES ------------
 
-<<<<<<< HEAD
-=======
     // ---------- TAB MATRICULA ------------
 
     Route::post('/registro-Matricula', [MatriculaController::class, 'registrarMatricula']);
@@ -142,7 +114,6 @@ Route::middleware([
 
     // ---------- FIN TAB MATRICULA ------------
 
->>>>>>> 110d6c1665173eac4f7eaa1c4347a0e9cf341702
     // ---------- TAB TITULADOS ------------
 
     // ruta del indicador TITULADOS, para REGISTRAR una admision
@@ -224,11 +195,7 @@ Route::middleware([
     
     Route::post('/editar-rutas/{id}', [main::class, 'editarTranspRutas']);
 
-<<<<<<< HEAD
-    Route::post('eliminar-ruta', [main::class, 'eliminarTranspRuta']);
-=======
     Route::post('/eliminar-ruta', [TransporteController::class, 'eliminarTranspRuta']);
->>>>>>> 110d6c1665173eac4f7eaa1c4347a0e9cf341702
 
     // --------------------------- FIN TRANSPORTE -----------------------
 
@@ -265,7 +232,6 @@ Route::middleware([
 
     Route::post('/eliminar-Egresos-Totales', [main::class, 'eliminarEgresosTotales']);
 
-<<<<<<< HEAD
     Route::post('/editar-Egreso-Totales/{id}', [EgresadosController::class, 'editarEgresoTotales']);
 
     Route::post('/importar-excel-egresados-Totales', [EgresadosController::class, 'importarDataExcelEgresadosTotales']);
@@ -366,15 +332,10 @@ Route::middleware([
     Route::post('/importar-excel-bajas-totales', [BajasController::class, 'importarExcelBajasTotales']);
 
     //------------------------------------------------- FIN BAJAS ---------------------------------------------
-=======
     Route::post('/editar-Egreso-Totales/{id}', [main::class, 'editarEgresoTotales']);
->>>>>>> 8757f7016d5fa15e537193bb052d8f74a8e30551
     // ---------- rutas para GRAFICAS -------------
     Route::post('/obtener-filtro-carreras-admision', [admisionGraficasController::class, 'filtrarDatosCarreras']);
     // ruta para importar excels
-<<<<<<< HEAD
-     Route::post('/importar-excel-admisiones', [main::class, 'importarDataExcelAdmisiones']);
-=======
     Route::post('/importar-excel-admisiones', [IngresoController::class, 'importarDataExcelAdmisiones']);
 
     Route::post('/importar-excel-ningresos', [IngresoController::class, 'importarDataExcelNIngresos']);
@@ -430,5 +391,4 @@ Route::middleware([
 
     Route::get('/exportar-plantilla-becas', [WelcomeController::class, 'exportExcelBecas']);
 
->>>>>>> 110d6c1665173eac4f7eaa1c4347a0e9cf341702
 });
